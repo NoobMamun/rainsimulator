@@ -168,6 +168,142 @@
             animation: fadeIn 0.25s ease-out forwards;
         }
 
+        /* ============================================
+           RED ALERT SYSTEM
+        ============================================ */
+        @keyframes redAlertFlash {
+            0%, 100% { background: rgba(232, 0, 29, 0.92); box-shadow: 0 0 0 0 rgba(232, 0, 29, 0.8), 0 8px 40px rgba(232,0,29,0.5); }
+            50% { background: rgba(160, 0, 10, 0.98); box-shadow: 0 0 0 12px rgba(232, 0, 29, 0), 0 8px 60px rgba(232,0,29,0.9); }
+        }
+        @keyframes redAlertBorderPulse {
+            0%, 100% { border-color: #E8001D; }
+            50% { border-color: #ff6b6b; }
+        }
+        @keyframes alertSlideDown {
+            from { opacity: 0; transform: translateY(-30px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0)  scale(1); }
+        }
+        @keyframes alertSlideUp {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to   { opacity: 0; transform: translateY(-30px) scale(0.97); }
+        }
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1) rotate(-5deg); }
+            50% { transform: scale(1.18) rotate(5deg); }
+        }
+        @keyframes safeSlideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Compact canvas-overlay alert --- */
+        #red-alert-panel {
+            display: none;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 50;
+            max-width: 260px;
+            border-radius: 10px;
+            border: 2px solid #E8001D;
+            padding: 8px 30px 8px 10px;
+            color: #fff;
+            font-family: 'Inter', 'Hind Siliguri', sans-serif;
+            animation: redAlertFlash 0.9s ease-in-out infinite,
+                       redAlertBorderPulse 0.9s ease-in-out infinite;
+            user-select: none;
+            pointer-events: all;
+        }
+        #red-alert-panel.show {
+            display: flex;
+            align-items: flex-start;
+            gap: 7px;
+            animation: alertSlideDown 0.3s cubic-bezier(0.2,0.8,0.2,1) forwards,
+                       redAlertFlash 0.9s 0.3s ease-in-out infinite,
+                       redAlertBorderPulse 0.9s 0.3s ease-in-out infinite;
+        }
+        #red-alert-panel.hide {
+            display: flex;
+            animation: alertSlideUp 0.25s ease-in forwards;
+        }
+        .alert-icon {
+            font-size: 1.3rem;
+            line-height: 1;
+            animation: iconPulse 0.9s ease-in-out infinite;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .alert-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+        .alert-title {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+            line-height: 1.25;
+            white-space: nowrap;
+        }
+        .alert-sub {
+            font-size: 0.62rem;
+            font-weight: 500;
+            opacity: 0.9;
+            line-height: 1.35;
+        }
+        .alert-status-bar {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.58rem;
+            font-weight: 700;
+            opacity: 0.85;
+            margin-top: 2px;
+        }
+        .alert-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #fff;
+            animation: iconPulse 0.9s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+        .alert-dismiss {
+            position: absolute;
+            top: 5px; right: 7px;
+            font-size: 0.75rem;
+            opacity: 0.7;
+            cursor: pointer;
+            font-weight: 700;
+            line-height: 1;
+            transition: opacity 0.15s;
+        }
+        .alert-dismiss:hover { opacity: 1; }
+
+        /* Safe notification — also inside canvas */
+        #safe-panel {
+            display: none;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 50;
+            border-radius: 8px;
+            border: 1.5px solid #1CAB55;
+            padding: 6px 10px;
+            background: rgba(12, 70, 40, 0.95);
+            color: #fff;
+            font-family: 'Inter', 'Hind Siliguri', sans-serif;
+            gap: 6px;
+            align-items: center;
+            animation: safeSlideDown 0.3s ease-out forwards;
+            pointer-events: none;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+        #safe-panel.show { display: flex; }
+
+        /* Canvas red glow when alert is active */
+        #canvas-container.wet-alert {
+            box-shadow: 0 0 0 3px #E8001D, 0 0 28px rgba(232,0,29,0.35) !important;
+            transition: box-shadow 0.3s;
+        }
+
         /* Scrollbar styling */
         ::-webkit-scrollbar {
             width: 8px;
@@ -195,12 +331,7 @@
             <h1 class="text-3xl md:text-4xl font-extrabold text-[#931212] mb-1 tracking-tight bn">
                 বৃষ্টি ও ছাতা সংক্রান্ত আপেক্ষিক বেগ
             </h1>
-            <p class="text-gray-500 text-sm font-medium">বৃষ্টি ও ছাতা সংক্রান্ত আপেক্ষিক বেগ সিমুলেশন • শ্রেণী: এইচএসসি • বিষয়: পদার্থবিজ্ঞান ১ম পত্র • অধ্যায়: ভেক্টর</p>
-            <div class="mt-3 flex justify-center gap-2">
-                <span class="px-3 py-1 text-xs font-semibold bg-gray-100 text-gray-700 rounded-full border border-gray-200">ভেক্টর বীজগণিত</span>
-                <span class="px-3 py-1 text-xs font-semibold bg-gray-100 text-gray-700 rounded-full border border-gray-200">আপেক্ষিক গতি</span>
-                <span class="px-3 py-1 text-xs font-semibold bg-gray-100 text-gray-700 rounded-full border border-gray-200">ইন্টারেক্টিভ ল্যাব</span>
-            </div>
+
         </header>
 
         <!-- Main Layout -->
@@ -235,9 +366,26 @@
                             <button id="btn-view-vector" class="px-3 py-1 text-xs font-bold rounded-lg text-gray-600">ভেক্টর ল্যাব</button>
                         </div>
 
-                        <!-- Canvas Guide Tooltip -->
-                        <div class="absolute top-4 right-4 z-10 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-gray-200 text-[11px] text-gray-700 pointer-events-none flex items-center gap-1.5 select-none shadow-sm">
-                            <i data-lucide="help-circle" class="w-3.5 h-3.5 text-amber-500"></i> বেগ পরিবর্তন করতে ভেক্টর ল্যাবের উজ্জ্বল বিন্দুগুলো ড্র্যাগ করুন!
+                        <!-- Canvas Guide Tooltip removed to place Red Alert here -->
+
+                        <!-- 🚨 RED ALERT — small overlay inside canvas (top-right) -->
+                        <div id="red-alert-panel" role="alert" aria-live="assertive">
+                            <span class="alert-icon">🚨</span>
+                            <div class="alert-body">
+                                <div class="alert-title">🔴 রেড অ্যালার্ট: মানুষটি ভিজে যাচ্ছে!</div>
+                                <div class="alert-sub">⚠️ সতর্কবার্তা: ব্যক্তিটি বৃষ্টিতে ভিজছেন। দ্রুত আশ্রয় নিন!</div>
+                                <div class="alert-status-bar">
+                                    <span class="alert-dot"></span>
+                                    <span id="alert-detail-text">বৃষ্টির পানি সরাসরি গায়ে পড়ছে</span>
+                                </div>
+                            </div>
+                            <span class="alert-dismiss" id="alert-dismiss-btn" title="Dismiss">✕</span>
+                        </div>
+
+                        <!-- ✅ Safe panel — small, same position -->
+                        <div id="safe-panel">
+                            <span>✅</span>
+                            <span>মানুষটি এখন সুরক্ষিত আছেন!</span>
                         </div>
                     </div>
                 </div>
@@ -266,12 +414,9 @@
 
                     <!-- Tab Content: Problem Solver -->
                     <div id="content-problems" class="hidden space-y-4 animate-fadeIn">
-                        <div class="flex flex-wrap gap-1.5 mb-2">
-                            <button id="btn-prob-1" class="px-2.5 py-1.5 text-[11px] font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ১</button>
-                            <button id="btn-prob-2" class="px-2.5 py-1.5 text-[11px] font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ২</button>
-                            <button id="btn-prob-3" class="px-2.5 py-1.5 text-[11px] font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ৩</button>
-                            <button id="btn-prob-4" class="px-2.5 py-1.5 text-[11px] font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ৪</button>
-                            <button id="btn-prob-5" class="px-2.5 py-1.5 text-[11px] font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ৫</button>
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            <button id="btn-prob-1" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ১</button>
+                            <button id="btn-prob-2" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ২</button>
                         </div>
                         
                         <!-- Problem Solutions Container -->
@@ -319,7 +464,7 @@
                     </div>
 
                     <!-- Slider: Wind's velocity -->
-                    <div class="mb-6">
+                    <div class="mb-5">
                         <div class="flex justify-between mb-1.5">
                             <label class="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
@@ -329,6 +474,26 @@
                         </div>
                         <input type="range" id="slider-vw" min="-15" max="15" step="0.2" value="0" 
                                class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#EA580C]">
+                    </div>
+
+                    <!-- Slider: Umbrella Angle -->
+                    <div class="mb-6 p-3 bg-amber-50/70 rounded-xl border border-amber-200/90 shadow-xs">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#E7B946]"></span>
+                                ছাতার কোণ (<i>&theta;</i><sub>ছাতা</sub>):
+                            </label>
+                            <div class="flex items-center gap-1.5">
+                                <span id="umb-angle-val" class="text-xs font-extrabold text-amber-800 bg-white px-2 py-0.5 rounded-md border border-amber-300">53.1°</span>
+                                <button id="btn-toggle-auto-umb" class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-[#1CAB55] text-white border border-[#0E7B4F] cursor-pointer shadow-xs">অটো</button>
+                            </div>
+                        </div>
+                        <input type="range" id="slider-umb" min="-89" max="89" step="0.1" value="53.1" 
+                               class="w-full h-1.5 bg-amber-200 rounded-lg appearance-none cursor-pointer accent-[#E7B946]">
+                        <div id="umb-status-hint" class="text-[11px] font-bold mt-1.5 flex items-center justify-between">
+                            <span id="umb-status-badge" class="text-[#1CAB55]">✅ সঠিক কোণ (সুরক্ষিত)</span>
+                            <span id="req-angle-hint" class="text-gray-500 font-semibold">প্রয়োজনীয়: 53.1°</span>
+                        </div>
                     </div>
 
                     <!-- Presets Header -->
@@ -348,65 +513,9 @@
                         </button>
                     </div>
 
-                    <!-- HSC Exam Problems Header -->
-                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2.5">HSC Exam Problems (এইচএসসি সমস্যা)</div>
-                    <div class="grid grid-cols-5 gap-1.5">
-                        <button id="btn-preset-q1" class="py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-xs font-bold cursor-pointer text-center shadow-sm">Q1</button>
-                        <button id="btn-preset-q2" class="py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-xs font-bold cursor-pointer text-center shadow-sm">Q2</button>
-                        <button id="btn-preset-q3" class="py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-xs font-bold cursor-pointer text-center shadow-sm">Q3</button>
-                        <button id="btn-preset-q4" class="py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-xs font-bold cursor-pointer text-center shadow-sm">Q4</button>
-                        <button id="btn-preset-q5" class="py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-xs font-bold cursor-pointer text-center shadow-sm">Q5</button>
-                    </div>
                 </div>
 
-                <!-- Live Calculations Card -->
-                <div class="card bg-white border border-gray-200 shadow-sm">
-                    <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                        <i data-lucide="zap" class="w-5 h-5 text-amber-500 mr-2"></i>লাইভ ফলাফল (Live Calculations)
-                    </h2>
-                    
-                    <div class="grid grid-cols-2 gap-4 mb-5">
-                        <div class="bg-[#FFF5D6] p-4 rounded-xl border border-[#FFEAB4]/70">
-                            <div class="text-xs text-gray-500 flex items-center gap-1.5 font-bold">
-                                <span class="w-2 h-2 rounded-full bg-[#EA580C]"></span> কোণ (<i>&theta;</i>)
-                            </div>
-                            <div id="out-theta" class="text-3xl font-black text-[#A23F00] mt-1">53.13°</div>
-                            <div id="out-direction-text" class="text-[11px] text-[#A23F00]/80 mt-1 font-bold">সামনের দিকে</div>
-                        </div>
-                        <div class="bg-[#D8F3FF] p-4 rounded-xl border border-[#AFC3E6]/70">
-                            <div class="text-xs text-gray-500 flex items-center gap-1.5 font-bold">
-                                <span class="w-2 h-2 rounded-full bg-[#274FE3]"></span> আপেক্ষিক বেগ (<i>v</i><sub>rm</sub>)
-                            </div>
-                            <div id="out-vrm" class="text-3xl font-black text-[#274FE3] mt-1">10.0 m/s</div>
-                            <div class="text-[11px] text-gray-500 mt-1 font-semibold">লোকের অনুভূতিতে</div>
-                        </div>
-                    </div>
 
-                    <!-- Step-by-Step KaTeX Math Board -->
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 overflow-x-auto">
-                        <div class="text-[#931212] font-extrabold text-xs tracking-wider uppercase text-center border-b border-gray-200 pb-2 mb-3">
-                            ধাপ-ভিত্তিক ভেক্টর সমাধান
-                        </div>
-                        <div class="space-y-4 text-xs font-mono text-gray-700">
-                            <div>
-                                <span class="text-gray-500 font-semibold">১. ভেক্টর প্রকাশ:</span>
-                                <div id="math-vec-rep" class="py-1 ml-2 text-gray-900 text-center font-bold"></div>
-                            </div>
-                            <div>
-                                <span class="text-gray-500 font-semibold">২. আপেক্ষিক বেগ ভেক্টর:</span>
-                                <div id="math-rel-vec" class="py-1 ml-2 text-gray-900 text-center font-bold"></div>
-                            </div>
-                            <div>
-                                <span class="text-gray-500 font-semibold">৩. মান (<i>v</i><sub>rm</sub>):</span>
-                                <div id="math-mag" class="py-1 ml-2 text-[#274FE3] text-center font-bold"></div>
-                            </div>
-                            <div>
-                                <span class="text-gray-500 font-semibold">৪. উল্লম্বের সাথে ছাতার কোণ (<i>&theta;</i>):</span>
-                                <div id="math-angle" class="py-1.5 ml-2 text-[#A23F00] text-center font-bold"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </div>
@@ -473,18 +582,29 @@
 
         const problemDisplay = document.getElementById('problem-display');
 
+        // Umbrella Angle Control DOM Elements
+        const sliderUmb = document.getElementById('slider-umb');
+        const txtUmbVal = document.getElementById('umb-angle-val');
+        const btnToggleAutoUmb = document.getElementById('btn-toggle-auto-umb');
+        const umbStatusBadge = document.getElementById('umb-status-badge');
+        const reqAngleHint = document.getElementById('req-angle-hint');
+
         // Physics Variables
         let v_m = parseFloat(sliderVm.value);
         let v_r = parseFloat(sliderVr.value);
         let v_w = parseFloat(sliderVw.value);
         let theta = 0;
         let v_rm = 0;
+        let isAutoUmbrella = true;
 
         // Visual Engine Variables
         let isEarthFrame = true;
         let viewMode = 'split'; // 'split', 'simulation', 'vector'
         let raindrops = [];
         let windStreaks = [];
+        let bodyDroplets = [];      // Persistent water droplets remaining visible on body
+        let canopySplashes = [];    // Water splashes bouncing off top of umbrella canopy
+        let personWetThisFrame = false;
         let roadScroll = 0;
         let runnerPos = 150;
         let walkPhase = 0;
@@ -517,45 +637,61 @@
             let ry = v_r;
             v_rm = Math.sqrt(rx * rx + ry * ry);
             
-            // Calculate angle with the vertical (y-axis)
-            theta = Math.atan2(Math.abs(rx), ry); // radians
-            let thetaDeg = theta * (180 / Math.PI);
+            // Calculate signed angle with the vertical (y-axis): negative for forward, positive for backward
+            let reqThetaRad = Math.atan2(rx, ry);
+            let reqThetaDeg = reqThetaRad * (180 / Math.PI);
 
-            // Display numerical outputs
-            outTheta.innerText = `${thetaDeg.toFixed(2)}°`;
-            outVrm.innerText = `${v_rm.toFixed(1)} m/s`;
-
-            // Determine relative direction text and assign proper theme colors
-            if (Math.abs(rx) < 0.01) {
-                outDirectionText.innerText = "উল্লম্বভাবে ধরতে হবে (সোজা উপরে)";
-                outDirectionText.className = "text-[11px] text-[#1CAB55] mt-1 font-bold";
-            } else if (rx < 0) {
-                outDirectionText.innerText = "সামনের দিকে হেলে ধরতে হবে";
-                outDirectionText.className = "text-[11px] text-[#274FE3] mt-1 font-bold";
-            } else {
-                outDirectionText.innerText = "পেছনের দিকে হেলে ধরতে হবে";
-                outDirectionText.className = "text-[11px] text-[#EA580C] mt-1 font-bold";
+            // If Auto-align is ON, auto-sync umbrella slider to exact required angle
+            if (isAutoUmbrella && sliderUmb) {
+                sliderUmb.value = reqThetaDeg.toFixed(1);
             }
 
-            // Render LaTeX Equations using KaTeX
-            if (window.katex) {
+            let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : reqThetaDeg;
+            if (txtUmbVal) txtUmbVal.innerText = `${actualUmbDeg.toFixed(1)}°`;
+            if (reqAngleHint) reqAngleHint.innerText = `প্রয়োজনীয়: ${reqThetaDeg.toFixed(1)}°`;
+
+            let angleDiff = Math.abs(actualUmbDeg - reqThetaDeg);
+            let isPersonWet = (typeof personWetThisFrame !== 'undefined' && personWetThisFrame) || (typeof bodyDroplets !== 'undefined' && bodyDroplets.length > 2);
+
+            if (umbStatusBadge) {
+                if (isPersonWet) {
+                    umbStatusBadge.className = "text-[#E8001D] font-bold";
+                    umbStatusBadge.innerText = `🚨 মানুষটি ভিজছেন! (বিচ্যুতি: ${angleDiff.toFixed(1)}°)`;
+                } else {
+                    umbStatusBadge.className = "text-[#1CAB55] font-bold";
+                    umbStatusBadge.innerText = "✅ সঠিক কোণ (সুরক্ষিত)";
+                }
+            }
+
+            // Determine relative direction text and assign proper theme colors
+            if (outDirectionText) {
+                if (Math.abs(rx) < 0.01) {
+                    outDirectionText.innerText = "উল্লম্বভাবে ধরতে হবে (সোজা উপরে)";
+                    outDirectionText.className = "text-[11px] text-[#1CAB55] mt-1 font-bold";
+                } else if (rx < 0) {
+                    outDirectionText.innerText = "সামনের দিকে হেলে ধরতে হবে";
+                    outDirectionText.className = "text-[11px] text-[#274FE3] mt-1 font-bold";
+                } else {
+                    outDirectionText.innerText = "পেছনের দিকে হেলে ধরতে হবে";
+                    outDirectionText.className = "text-[11px] text-[#EA580C] mt-1 font-bold";
+                }
+            }
+
+            // Render KaTeX Equations if old container elements exist
+            if (window.katex && mathVecRep && mathRelVec && mathMag && mathAngle) {
                 let signWind = v_w >= 0 ? '+' : '-';
                 let signRel = (v_w - v_m) >= 0 ? '+' : '-';
                 let signMath = rx < 0 ? '-' : '+';
                 
-                // 1. Vector representations
                 let strVec = `\\vec{v}_m = ${v_m.toFixed(1)}\\hat{i}\\\\ \\vec{v}_r = ${v_w >= 0 ? '' : '-'}${Math.abs(v_w).toFixed(1)}\\hat{i} - ${v_r.toFixed(1)}\\hat{j}`;
                 katex.render(strVec, mathVecRep, { throwOnError: false });
 
-                // 2. Relative Velocity equation
                 let strRel = `\\vec{v}_{rm} = \\vec{v}_r - \\vec{v}_m = (${v_w.toFixed(1)} - ${v_m.toFixed(1)})\\hat{i} - ${v_r.toFixed(1)}\\hat{j}\\\\ \\vec{v}_{rm} = ${rx >= 0 ? '' : '-'}${Math.abs(rx).toFixed(1)}\\hat{i} - ${v_r.toFixed(1)}\\hat{j}`;
                 katex.render(strRel, mathRelVec, { throwOnError: false });
 
-                // 3. Magnitude calculation
                 let strMag = `v_{rm} = \\sqrt{(${rx.toFixed(1)})^2 + (${v_r.toFixed(1)})^2} = \\sqrt{${(rx*rx).toFixed(1)} + ${(v_r*v_r).toFixed(1)}} = ${v_rm.toFixed(2)}\\text{ m/s}`;
                 katex.render(strMag, mathMag, { throwOnError: false });
 
-                // 4. Angle calculation
                 let strAngle = `\\tan\\theta = \\frac{|v_w - v_m|}{v_r} = \\frac{|${v_w.toFixed(1)} - ${v_m.toFixed(1)}|}{${v_r.toFixed(1)}}\\\\ \\theta = \\tan^{-1}(${(Math.abs(rx)/ry).toFixed(3)}) = ${thetaDeg.toFixed(2)}^\\circ`;
                 katex.render(strAngle, mathAngle, { throwOnError: false });
             }
@@ -573,36 +709,23 @@
                     }
                 }
 
-                // Update UI button highlights conforming to Light theme + green/grey buttons
-                for (let i = 1; i <= 5; i++) {
+                // Update UI button highlights for Problem 1 & Problem 2
+                for (let i = 1; i <= 2; i++) {
                     const btn = document.getElementById(`btn-prob-${i}`);
-                    const presetBtn = document.getElementById(`btn-preset-q${i}`);
-                    
                     if (matchedProblem === i) {
-                        if (btn) btn.className = "px-2.5 py-1.5 text-[11px] font-bold rounded-lg bg-[#1CAB55] text-white border border-[#0E7B4F] transition cursor-pointer shadow-sm";
-                        if (presetBtn) presetBtn.className = "py-1.5 bg-[#1CAB55] text-white rounded-lg border border-[#0E7B4F] transition text-xs font-bold cursor-pointer text-center shadow-sm";
-                        
-                        if (activeProblemId !== i || !mathRendered) {
-                            activeProblemId = i;
-                            updateProblemDisplay(i);
-                        }
+                        if (btn) btn.className = "px-3.5 py-1.5 text-xs font-bold rounded-lg bg-[#1CAB55] text-white border border-[#0E7B4F] transition cursor-pointer shadow-sm";
+                        activeProblemId = i;
                     } else {
-                        if (btn) btn.className = "px-2.5 py-1.5 text-[11px] font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm";
-                        if (presetBtn) presetBtn.className = "py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-xs font-bold cursor-pointer text-center shadow-sm";
+                        if (btn) btn.className = "px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm";
                     }
                 }
 
                 if (!matchedProblem) {
                     activeProblemId = null;
-                    if (problemDisplay) {
-                        problemDisplay.innerHTML = `
-                            <div class="text-center text-gray-500 py-6 text-xs">
-                                <p class="mb-1.5">Adjusting sliders manually...</p>
-                                <p>Select any <strong>HSC Board Problem</strong> above or in the preset panel to view its textbook standard solution step-by-step.</p>
-                            </div>
-                        `;
-                    }
                 }
+
+                // Dynamically update Problem Solver Math Board to reflect current Control Panel inputs
+                updateProblemDisplay(v_m, v_r, v_w, activeProblemId);
             }
         }
 
@@ -630,8 +753,14 @@
 
         btnPresetUpright.addEventListener('click', () => {
             sliderVm.value = 8;
-            sliderVr.value = 8;
-            sliderVw.value = 8;
+            sliderVr.value = 6;
+            sliderVw.value = 0;
+            isAutoUmbrella = false;
+            if (btnToggleAutoUmb) {
+                btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer shadow-xs";
+                btnToggleAutoUmb.innerText = "ম্যানুয়াল";
+            }
+            if (sliderUmb) sliderUmb.value = 0;
             updatePhysicsValues();
         });
 
@@ -639,6 +768,26 @@
         sliderVm.addEventListener('input', updatePhysicsValues);
         sliderVr.addEventListener('input', updatePhysicsValues);
         sliderVw.addEventListener('input', updatePhysicsValues);
+
+        if (sliderUmb) {
+            sliderUmb.addEventListener('input', () => {
+                isAutoUmbrella = false;
+                if (btnToggleAutoUmb) {
+                    btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer shadow-xs";
+                    btnToggleAutoUmb.innerText = "ম্যানুয়াল";
+                }
+                updatePhysicsValues();
+            });
+        }
+
+        if (btnToggleAutoUmb) {
+            btnToggleAutoUmb.addEventListener('click', () => {
+                isAutoUmbrella = true;
+                btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-[#1CAB55] text-white border border-[#0E7B4F] cursor-pointer shadow-xs";
+                btnToggleAutoUmb.innerText = "অটো";
+                updatePhysicsValues();
+            });
+        }
 
         // Frame selection buttons toggling aligned to success color CTA
         btnFrameEarth.addEventListener('click', () => {
@@ -665,7 +814,7 @@
             btnViewSim.className = "px-3 py-1 text-xs font-bold rounded-lg text-gray-600";
         });
 
-        // --- HSC Problems Solver Logic ---
+        // --- HSC Problems Solver Logic (Dynamic math from Control Panel) ---
         let activeProblemId = null;
 
         const hscProblems = [
@@ -675,9 +824,7 @@
                 vr: 10.0,
                 vw: 0.0,
                 direction: "পূর্বদিক",
-                qText: "একজন ব্যক্তি পূর্বদিকে $5\\text{ m/s}$ বেগে হাঁটছে। বৃষ্টি উল্লম্বভাবে নিচের দিকে $10\\text{ m/s}$ বেগে পড়ছে। ব্যক্তি বৃষ্টির হাত থেকে বাঁচার জন্য উল্লম্বের সাথে কত কোণে ছাতা ধরবে?",
-                ansAngle: "26.6",
-                ansText: "ব্যক্তিকে পূর্বমুখী চলার দিকের দিকে উল্লম্বের সাথে $26.6^\\circ$ কোণে ছাতা ধরতে হবে।"
+                qText: "একজন ব্যক্তি পূর্বদিকে 5.0 m/s বেগে হাঁটছেন। বৃষ্টি উল্লম্বভাবে নিচের দিকে 10.0 m/s বেগে পড়ছে। ব্যক্তি বৃষ্টির হাত থেকে বাঁচার জন্য উল্লম্বের সাথে কত কোণে ছাতা ধরবেন?"
             },
             {
                 id: 2,
@@ -685,39 +832,7 @@
                 vr: 8.0,
                 vw: 0.0,
                 direction: "উত্তরদিক",
-                qText: "একজন छात्र উত্তরদিকে $6\\text{ m/s}$ বেগে দৌড়াচ্ছে। বৃষ্টি উল্লম্বভাবে $8\\text{ m/s}$ বেগে পড়ছে। তাকে উল্লম্বের সাথে কত কোণে ছাতা ধরতে হবে?",
-                ansAngle: "36.87",
-                ansText: "ছাত্রকে উত্তরমুখী চলার দিকের দিকে উল্লম্বের সাথে $36.87^\\circ$ কোণে ছাতা ধরতে হবে।"
-            },
-            {
-                id: 3,
-                vm: 4.0,
-                vr: 12.0,
-                vw: 0.0,
-                direction: "পশ্চিমদিক",
-                qText: "এক ব্যক্তি পশ্চিমদিকে $4\\text{ m/s}$ বেগে হাঁটছে। বৃষ্টি উল্লম্বভাবে $12\\text{ m/s}$ বেগে পড়ছে। কত কোণে ছাতা ধরলে সে ভিজবে না?",
-                ansAngle: "18.4",
-                ansText: "ব্যক্তিকে পশ্চিমমুখী চলার দিকের দিকে উল্লম্বের সাথে $18.4^\\circ$ কোণে ছাতা ধরতে হবে।"
-            },
-            {
-                id: 4,
-                vm: 8.0,
-                vr: 15.0,
-                vw: 0.0,
-                direction: "পূর্বদিক",
-                qText: "বৃষ্টি উল্লম্বভাবে $15\\text{ m/s}$ বেগে পড়ছে। একজন ব্যক্তি $8\\text{ m/s}$ বেগে পূর্বদিকে দৌড়ালে ছাতাটি উল্লম্বের সাথে কত কোণে ধরতে হবে?",
-                ansAngle: "28.1",
-                ansText: "ব্যক্তিকে পূর্বদিকে চলার দিকের দিকে উল্লম্বের সাথে $28.1^\\circ$ কোণে ছাতা ধরতে হবে।"
-            },
-            {
-                id: 5,
-                vm: 10.0,
-                vr: 10.0,
-                vw: 0.0,
-                direction: "দক্ষিণদিক",
-                qText: "একজন ব্যক্তি দক্ষিণদিকে $10\\text{ m/s}$ বেগে সাইকেল চালাচ্ছে। বৃষ্টি উল্লম্বভাবে $10\\text{ m/s}$ বেগে পড়ছে। সে বৃষ্টির হাত থেকে বাঁচার জন্য উল্লম্বের সাথে কত কোণে ছাতা ধরবে?",
-                ansAngle: "45",
-                ansText: "ব্যক্তিকে দক্ষিণমুখী চলার দিকের দিকে উল্লম্বের সাথে $45^\\circ$ কোণে ছাতা ধরতে হবে।"
+                qText: "একজন ছাত্র উত্তরদিকে 6.0 m/s বেগে দৌড়াচ্ছে। বৃষ্টি উল্লম্বভাবে 8.0 m/s বেগে পড়ছে। তাকে উল্লম্বের সাথে কত কোণে ছাতা ধরতে হবে?"
             }
         ];
 
@@ -738,62 +853,83 @@
         tabConcepts.addEventListener('click', () => switchTab('concepts'));
         tabProblems.addEventListener('click', () => switchTab('problems'));
 
-        function updateProblemDisplay(id) {
-            const prob = hscProblems[id - 1];
+        // Dynamic Problem Display reflecting live Control Panel inputs
+        function updateProblemDisplay(vmVal, vrVal, vwVal, probId = null) {
             if (!problemDisplay) return;
+
+            let rx = vwVal - vmVal;
+            let ry = vrVal;
+            let vrmVal = Math.sqrt(rx * rx + ry * ry);
+            let thetaRad = Math.atan2(Math.abs(rx), ry);
+            let thetaDeg = thetaRad * (180 / Math.PI);
+            let valRatio = Math.abs(rx) / ry;
+
+            let directionText = "";
+            if (Math.abs(rx) < 0.01) {
+                directionText = "সোজা উপরের দিকে (উল্লম্বভাবে 0°)";
+            } else if (rx < 0) {
+                directionText = `চলার সামনের দিকে হেলে উল্লম্বের সাথে ${thetaDeg.toFixed(2)}°`;
+            } else {
+                directionText = `চলার পেছনের দিকে হেলে উল্লম্বের সাথে ${thetaDeg.toFixed(2)}°`;
+            }
+
+            let probTitleHeader = probId ? `সমস্যা ${probId}` : "নিয়ন্ত্রণ প্যানেল এর মান অনুযায়ী গণনাকৃত সমস্যা";
+            
+            let problemQuestionText = probId ? hscProblems[probId - 1].qText : `একজন ব্যক্তি ${vmVal.toFixed(1)} m/s বেগে হাঁটছেন। বৃষ্টি উল্লম্বভাবে ${vrVal.toFixed(1)} m/s বেগে পড়ছে${Math.abs(vwVal) > 0.01 ? ` এবং বাতাস ${Math.abs(vwVal).toFixed(1)} m/s বেগে ${vwVal > 0 ? 'পূর্বদিকে' : 'পশ্চিমদিকে'} বইছে` : ''}। ব্যক্তি বৃষ্টির হাত থেকে বাঁচার জন্য উল্লম্বের সাথে কত কোণে ছাতা ধরবেন?`;
 
             problemDisplay.innerHTML = `
                 <div class="space-y-4">
                     <div class="text-[#931212] font-bold border-b border-gray-200 pb-2 text-sm leading-relaxed">
-                        সমস্যা ${prob.id}: ${prob.qText}
+                        ${probTitleHeader}: ${problemQuestionText}
                     </div>
                     
                     <div class="space-y-2">
-                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–১: প্রদত্ত মানসমূহ (Given Values)</h4>
+                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–১: প্রদত্ত মানসমূহ (GIVEN VALUES FROM CONTROL PANEL)</h4>
                         <div class="pl-3 border-l-2 border-[#274FE3] text-gray-600 space-y-1 text-xs">
-                            <div>• ব্যক্তির বেগ (<i>u</i> / <i>v</i><sub>m</sub>) = <span class="text-[#274FE3] font-semibold">${prob.vm.toFixed(1)} m/s</span> (${prob.direction})</div>
-                            <div>• বৃষ্টির বেগ (<i>v</i> / <i>v</i><sub>r</sub>) = <span class="text-[#1CAB55] font-semibold">${prob.vr.toFixed(1)} m/s</span> (উল্লম্বভাবে নিচের দিকে)</div>
+                            <div>• ব্যক্তির বেগ (<i>v</i><sub>m</sub>) = <span class="text-[#274FE3] font-semibold">${vmVal.toFixed(1)} m/s</span></div>
+                            <div>• বৃষ্টির বেগ (<i>v</i><sub>r</sub>) = <span class="text-[#1CAB55] font-semibold">${vrVal.toFixed(1)} m/s</span> (উল্লম্বভাবে নিচে)</div>
+                            <div>• বাতাসের বেগ (<i>v</i><sub>w</sub>) = <span class="text-[#EA580C] font-semibold">${vwVal.toFixed(1)} m/s</span></div>
+                            <div>• অনুভূমিক আপেক্ষিক বেগ (|<i>v</i><sub>w</sub> - <i>v</i><sub>m</sub>|) = <span class="text-[#274FE3] font-semibold">${Math.abs(rx).toFixed(1)} m/s</span></div>
                         </div>
                     </div>
 
                     <div class="space-y-2">
-                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–২: ভেক্টর চিত্র অঙ্কন (Vector Diagram)</h4>
+                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–২: ভেক্টর চিত্র অঙ্কন (VECTOR DIAGRAM)</h4>
                         <p class="text-xs text-gray-500 leading-relaxed">
-                            পরীক্ষার খাতায় একটি সমকোণী ত্রিভুজ আঁকবে যেখানে উল্লম্ব বাহুটি বৃষ্টির বেগ (<i>v</i>) এবং অনুভূমিক বাহুটি ব্যক্তির বেগ (<i>u</i>) নির্দেশ করে। 
-                            অতিভুজটি হবে আপেক্ষিক বেগ (<i>v</i><sub>rm</sub>)। উল্লম্বের সাথে কোণটি হবে <i>&theta;</i>। 
-                            (উপরে বাম পাশের <strong>Vector Space Lab</strong> চিত্রে হলুদ অতিভুজটি দেখুন)।
+                            পরীক্ষার খাতায় একটি সমকোণী ত্রিভুজ আঁকবে যেখানে উল্লম্ব বাহুটি বৃষ্টির বেগ (<i>v</i><sub>r</sub> = ${vrVal.toFixed(1)} m/s) এবং অনুভূমিক বাহুটি অনুভূমিক আপেক্ষিক বেগ (|<i>v</i><sub>w</sub> - <i>v</i><sub>m</sub>| = ${Math.abs(rx).toFixed(1)} m/s) নির্দেশ করে। অতিভুজটি হবে আপেক্ষিক বেগ (<i>v</i><sub>rm</sub> = ${vrmVal.toFixed(2)} m/s)। উল্লম্বের সাথে কোণটি হবে <i>&theta;</i> = ${thetaDeg.toFixed(2)}°।
                         </p>
                     </div>
 
                     <div class="space-y-2">
-                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–৩: সূত্র ও গণনা (Formula & Calculation)</h4>
-                        <div class="bg-white p-3 rounded-xl border border-gray-200 font-mono text-center text-xs">
-                            <div id="prob-math-formula" class="py-1 text-gray-800"></div>
+                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–৩: সূত্র ও গণনা (FORMULA & CALCULATION)</h4>
+                        <div class="bg-white p-3 rounded-xl border border-gray-200 font-mono text-center text-xs space-y-2">
+                            <div id="prob-math-formula" class="py-1 text-gray-800 font-semibold"></div>
                             <div id="prob-math-calc" class="py-1 text-gray-800"></div>
+                            <div id="prob-math-mag" class="py-1 text-[#274FE3] font-bold"></div>
                             <div id="prob-math-ans" class="py-2 text-[#EA580C] font-bold border-t border-gray-200 mt-2 text-sm"></div>
                         </div>
                     </div>
 
                     <div class="space-y-2">
-                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–৪: উত্তর লেখার সঠিক পদ্ধতি (Final Answer)</h4>
+                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–৪: উত্তর লেখার সঠিক পদ্ধতি (FINAL ANSWER)</h4>
                         <div class="bg-[#FFF5D6] text-[#A23F00] p-2.5 rounded-lg border border-[#FFEAB4] text-xs font-semibold leading-relaxed">
-                            "${prob.ansText}"
+                            "ব্যক্তিকে ${directionText} কোণে ছাতা ধরতে হবে। এই অবস্থায় লোকটির সাপেক্ষে বৃষ্টির আপেক্ষিক বেগের মান হবে ${vrmVal.toFixed(2)} m/s।"
                         </div>
                     </div>
                 </div>
             `;
 
-            // Render equations
+            // Render equations using KaTeX
             if (window.katex) {
-                katex.render(`\\tan \\theta = \\frac{\\text{অনুভূমিক বেগ (ব্যক্তির বেগ)}}{\\text{উল্লম্ব বেগ (বৃষ্টির বেগ)}} = \\frac{u}{v}`, document.getElementById('prob-math-formula'), { throwOnError: false });
+                katex.render(`\\tan \\theta = \\frac{|v_w - v_m|}{v_r} = \\frac{|${vwVal.toFixed(1)} - ${vmVal.toFixed(1)}|}{${vrVal.toFixed(1)}}`, document.getElementById('prob-math-formula'), { throwOnError: false });
                 
-                let valRatio = prob.vm / prob.vr;
-                katex.render(`\\tan \\theta = \\frac{${prob.vm.toFixed(1)}}{${prob.vr.toFixed(1)}} = ${valRatio.toFixed(3)} \\implies \\theta = \\tan^{-1}(${valRatio.toFixed(3)})`, document.getElementById('prob-math-calc'), { throwOnError: false });
+                katex.render(`\\tan \\theta = \\frac{${Math.abs(rx).toFixed(1)}}{${vrVal.toFixed(1)}} = ${valRatio.toFixed(3)} \\implies \\theta = \\tan^{-1}(${valRatio.toFixed(3)}) = ${thetaDeg.toFixed(2)}^\\circ`, document.getElementById('prob-math-calc'), { throwOnError: false });
                 
-                katex.render(`\\theta = ${prob.ansAngle}^\\circ`, document.getElementById('prob-math-ans'), { throwOnError: false, displayMode: true });
+                katex.render(`v_{rm} = \\sqrt{(${rx.toFixed(1)})^2 + (${vrVal.toFixed(1)})^2} = ${vrmVal.toFixed(2)} \\text{ m/s}`, document.getElementById('prob-math-mag'), { throwOnError: false });
+
+                katex.render(`\\theta = ${thetaDeg.toFixed(2)}^\\circ`, document.getElementById('prob-math-ans'), { throwOnError: false, displayMode: true });
             }
             
-            // Resolve newly created Lucide icon placeholders
             if (window.lucide) {
                 lucide.createIcons();
             }
@@ -812,13 +948,10 @@
             updatePhysicsValues();
         }
 
-        // Setup Problem Solver click handlers
-        for (let i = 1; i <= 5; i++) {
+        // Setup Problem Solver click handlers for 2 problems
+        for (let i = 1; i <= 2; i++) {
             const btn = document.getElementById(`btn-prob-${i}`);
             if (btn) btn.addEventListener('click', () => selectProblem(i));
-            
-            const presetBtn = document.getElementById(`btn-preset-q${i}`);
-            if (presetBtn) presetBtn.addEventListener('click', () => selectProblem(i));
         }
 
         // --- p5.js Animation Visual Engine ---
@@ -961,36 +1094,146 @@
                 if (ws.x < -ws.len) ws.x = simWidth;
             }
 
-            // Draw Raindrops
-            stroke(175, 195, 230, 180); // Info soft raindrops (#AFC3E6)
+            // ── Umbrella Canopy & Body Geometry Calculation ──────────────
+            let groundY = height - 100;
+            let handX = runnerPos + 12;
+            let handY = groundY - 48;
+            let rx = v_w - v_m;
+            let ry = v_r;
+            let reqThetaRad = Math.atan2(rx, ry);
+            let reqThetaDeg = reqThetaRad * (180 / Math.PI);
+
+            let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : reqThetaDeg;
+            let actualUmbRad = actualUmbDeg * (Math.PI / 180);
+
+            let cosT = Math.cos(actualUmbRad);
+            let sinT = Math.sin(actualUmbRad);
+
+            // World coordinates of umbrella canopy chord line (-47.5 to +47.5 at height -65)
+            let P1x = handX + (-47.5)*cosT - (-65)*sinT;
+            let P1y = handY + (-47.5)*sinT + (-65)*cosT;
+            let P2x = handX + ( 47.5)*cosT - (-65)*sinT;
+            let P2y = handY + ( 47.5)*sinT + (-65)*cosT;
+
+            let angleDiff = Math.abs(actualUmbDeg - reqThetaDeg);
+            let isAngleCorrect = (angleDiff <= 3.5);
+
+            // Person body bounding box
+            let bodyLeft   = runnerPos - 22;
+            let bodyRight  = runnerPos + 22;
+            let bodyTop    = groundY - 92;
+            let bodyBottom = groundY - 10;
+
+            personWetThisFrame = false;
+
+            // Draw Raindrops with Canopy Interception & Body Hit Detection
+            stroke(175, 195, 230, 190); // Soft sky blue raindrops
             strokeWeight(1.5);
+            
             for (let drop of raindrops) {
-                // Visual rain tilt depends on reference frame
                 let horizontalShift = relativeWindX;
-                
-                line(drop.x, drop.y, drop.x + (horizontalShift * 0.5), drop.y + drop.len);
+                let nextX = drop.x + (horizontalShift * 0.5 * drop.speedMod);
+                let nextY = drop.y + (rainYSpeed * drop.speedMod);
 
-                // Update positions
-                drop.y += rainYSpeed * drop.speedMod;
-                drop.x += horizontalShift * drop.speedMod;
+                // 1. Check if raindrop segment intersects umbrella canopy chord
+                let hit = _checkCanopyHit(drop.x, drop.y, nextX, nextY, P1x, P1y, P2x, P2y);
 
-                // Warp raindrops back
-                if (drop.y > height - 100) {
-                    drop.y = random(-40, 0);
-                    drop.x = random(0, simWidth);
+                if (hit) {
+                    // 💥 CANOPY DEFLECTION SPLASH: Drop hits umbrella canopy!
+                    if (canopySplashes.length < 35 && random() < 0.5) {
+                        canopySplashes.push({
+                            x: hit.x,
+                            y: hit.y,
+                            vx: random(-2.5, 2.5),
+                            vy: random(-2.8, -0.8),
+                            r: random(1.5, 2.5),
+                            alpha: 240
+                        });
+                    }
+                    // Reset raindrop back to top
+                    drop.y = random(-40, -5);
+                    drop.x = drop.x + random(-5, 5);
+                    if (drop.x > simWidth) drop.x = random(0, simWidth);
+                    if (drop.x < 0) drop.x = random(0, simWidth);
+                    continue;
+                }
+
+                // 2. Check if raindrop hits person's body (unshielded by canopy)
+                if (drop.x >= bodyLeft && drop.x <= bodyRight &&
+                    drop.y >= bodyTop  && drop.y <= bodyBottom) {
+                    
+                    personWetThisFrame = true;
+
+                    // 💧 WATER DROPLET ACCUMULATION: Add persistent droplet onto person's body!
+                    if (bodyDroplets.length < 55) {
+                        let part = random();
+                        let relX, relY;
+                        if (part < 0.25) {
+                            relX = random(-7, 7);   relY = random(-82, -67); // Head
+                        } else if (part < 0.65) {
+                            relX = random(-13, 13); relY = random(-65, -30); // Torso/Arms
+                        } else {
+                            relX = random(-11, 11); relY = random(-30, -5);  // Legs
+                        }
+                        bodyDroplets.push({
+                            relX: relX,
+                            relY: relY,
+                            r: random(2.2, 3.8),
+                            alpha: 255,
+                            drip: random(0.03, 0.12)
+                        });
+                    }
+
+                    // Reset raindrop in same column
+                    drop.y = random(-40, -5);
+                    drop.x = drop.x + random(-5, 5);
+                    if (drop.x > simWidth) drop.x = random(0, simWidth);
+                    if (drop.x < 0) drop.x = random(0, simWidth);
+                    continue;
+                }
+
+                // Normal unblocked raindrop falling
+                line(drop.x, drop.y, nextX, drop.y + drop.len);
+
+                // Update drop positions
+                drop.y = nextY;
+                drop.x += horizontalShift * 0.2;
+
+                // Warp raindrops back when reaching ground in same column
+                if (drop.y > groundY) {
+                    drop.y = random(-40, -5);
+                    drop.x = drop.x + random(-5, 5);
+                    if (drop.x > simWidth) drop.x = random(0, simWidth);
+                    if (drop.x < 0) drop.x = random(0, simWidth);
                 }
                 if (drop.x > simWidth) drop.x = 0;
                 if (drop.x < 0) drop.x = simWidth;
             }
 
-            // DRAW RUNNING CHARACTER AND UMBRELLA
-            drawRunner(runnerPos, height - 100);
+            // ── DRAW CANOPY SPLASHES ──────────────────────────────────────────
+            for (let i = canopySplashes.length - 1; i >= 0; i--) {
+                let sp = canopySplashes[i];
+                stroke(224, 242, 254, sp.alpha);
+                strokeWeight(sp.r);
+                point(sp.x, sp.y);
+                sp.x += sp.vx;
+                sp.y += sp.vy;
+                sp.vy += 0.25; // gravity
+                sp.alpha -= 20;
+                if (sp.alpha <= 0) canopySplashes.splice(i, 1);
+            }
+
+            // ── WET DETECTION & ALERTS ──────────────────────────────────────
+            detectRaindropCollision(rainYSpeed, relativeWindX);
+
+            // DRAW RUNNING CHARACTER, WATER DROPLETS ON BODY, AND UMBRELLA
+            drawRunner(runnerPos, groundY);
 
             // Draw a neat label for wind speed direction banner
             drawSimulationIndicators(simWidth);
         }
 
-        // Draw stick runner with legs walking cycle and custom umbrella rotation
+        // Draw stick runner with walking cycle, persistent body droplets, and umbrella
         function drawRunner(x, y) {
             push();
             // Character base scale
@@ -1034,16 +1277,51 @@
             // Torso to hand
             line(x, torsoTopY + 10, handX, handY);
 
-            // 5. UMBRELLA DRAWING
+            // 💧 5. PERSISTENT BODY WATER DROPLETS (remain visible on person's body)
+            push();
+            for (let i = bodyDroplets.length - 1; i >= 0; i--) {
+                let drop = bodyDroplets[i];
+                let dropX = x + drop.relX;
+                let dropY = y + drop.relY;
+
+                // Outer water glow aura
+                noStroke();
+                fill(56, 189, 248, drop.alpha * 0.45);
+                circle(dropX, dropY, drop.r * 2.2);
+
+                // Water bead core
+                fill(224, 242, 254, drop.alpha);
+                circle(dropX, dropY, drop.r);
+
+                // Specular highlight dot
+                fill(255, 255, 255, drop.alpha);
+                circle(dropX - drop.r * 0.25, dropY - drop.r * 0.25, drop.r * 0.4);
+
+                // Drip trickle down body
+                drop.relY += drop.drip;
+
+                // Slow evaporation when sheltered / dry
+                if (!personWetThisFrame) {
+                    drop.alpha -= 0.12;
+                }
+                if (drop.alpha <= 0 || drop.relY > 0) {
+                    bodyDroplets.splice(i, 1);
+                }
+            }
+            pop();
+
+            // 6. UMBRELLA DRAWING
             push();
             translate(handX, handY); // Move origin to hand location
             
             // Rain relative angle calculations
             let rx = v_w - v_m;
             let ry = v_r;
-            let calcTheta = Math.atan2(rx, ry); // actual angle with sign
+            let reqThetaRad = Math.atan2(rx, ry);
+            let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : (reqThetaRad * 180 / Math.PI);
+            let actualUmbRad = actualUmbDeg * (Math.PI / 180);
 
-            rotate(calcTheta); // Rotate umbrella to align facing relative rain
+            rotate(actualUmbRad); // Rotate umbrella to actual held angle
 
             // Umbrella handle stick
             stroke(241, 245, 249);
@@ -1383,6 +1661,188 @@
             const container = document.getElementById('canvas-container');
             resizeCanvas(container.offsetWidth, 480);
         }
+
+        // ============================================================
+        //  RED ALERT SYSTEM
+        //  Continuously monitors whether the person is getting wet.
+        //  Wet condition: rain is falling (v_r > 0) AND one of:
+        //    1. Umbrella tilt angle exceeds 70° from vertical — the
+        //       canopy can no longer shield the body laterally.
+        //    2. Person is stationary (v_m ≈ 0) and strong crosswind
+        //       (|v_w| > 4 m/s) blows rain under a vertical umbrella.
+        // ============================================================
+        const redAlertPanel   = document.getElementById('red-alert-panel');
+        const safePanel       = document.getElementById('safe-panel');
+        const alertDetailText = document.getElementById('alert-detail-text');
+        const alertDismissBtn = document.getElementById('alert-dismiss-btn');
+        const canvasContainer = document.getElementById('canvas-container');
+
+        let alertActive       = false;   // current alert state
+        let alertDismissed    = false;   // user manually dismissed
+        let safePanelTimer    = null;
+        let alertAudioCtx     = null;
+
+        // Create Web Audio beep for the alert
+        function playAlertBeep() {
+            try {
+                if (!alertAudioCtx) {
+                    alertAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                const ctx = alertAudioCtx;
+                // Two-tone urgency beep
+                const beepFreqs = [880, 660];
+                beepFreqs.forEach((freq, i) => {
+                    const osc  = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.15);
+                    gain.gain.setValueAtTime(0.0, ctx.currentTime + i * 0.15);
+                    gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + i * 0.15 + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.14);
+                    osc.start(ctx.currentTime + i * 0.15);
+                    osc.stop(ctx.currentTime + i * 0.15 + 0.15);
+                });
+            } catch(e) { /* audio unavailable */ }
+        }
+
+        // Show the Red Alert panel
+        function showRedAlert(reason) {
+            if (alertDismissed) return;
+            if (alertActive) return; // already showing
+            alertActive = true;
+
+            // Clear any lingering safe notification
+            if (safePanelTimer) { clearTimeout(safePanelTimer); safePanelTimer = null; }
+            safePanel.classList.remove('show');
+
+            alertDetailText.textContent = reason;
+            redAlertPanel.classList.remove('hide');
+            redAlertPanel.classList.add('show');
+            canvasContainer.classList.add('wet-alert');
+
+            playAlertBeep();
+            // Repeat beep every 2.5 s while alert is active
+            if (window._alertBeepInterval) clearInterval(window._alertBeepInterval);
+            window._alertBeepInterval = setInterval(() => {
+                if (alertActive && !alertDismissed) playAlertBeep();
+                else clearInterval(window._alertBeepInterval);
+            }, 2500);
+        }
+
+        // Hide the Red Alert panel and briefly show safe notification
+        function hideRedAlert() {
+            if (!alertActive) return;
+            alertActive = false;
+            clearInterval(window._alertBeepInterval);
+
+            redAlertPanel.classList.remove('show');
+            redAlertPanel.classList.add('hide');
+            canvasContainer.classList.remove('wet-alert');
+
+            // After slide-up animation, fully hide
+            setTimeout(() => {
+                redAlertPanel.classList.remove('hide');
+            }, 320);
+
+            // Show safe notification for 2.5 s
+            safePanel.classList.add('show');
+            safePanelTimer = setTimeout(() => {
+                safePanel.classList.remove('show');
+                safePanelTimer = null;
+            }, 2500);
+        }
+
+        // Dismiss button — user manually closes; alert won't auto-reopen until
+        // conditions change (go safe then wet again)
+        alertDismissBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            alertDismissed = true;
+            hideRedAlert();
+            // Re-enable auto-alerts after 5 s to allow conditions to be rechecked
+            setTimeout(() => { alertDismissed = false; }, 5000);
+        });
+
+        // ================================================================
+        //  RAINDROP-PARTICLE WET DETECTION  (ray-chord intersection)
+        //
+        //  Each frame, for every raindrop inside the person's body box:
+        //    Cast a ray backward (anti-rain direction).
+        //    Does it hit the canopy chord?  YES → blocked → dry.
+        //                                  NO  → bypassed → person WET.
+        //  Hysteresis: 3 wet frames → alert ON   /   4 dry frames → alert OFF
+        // ================================================================
+        let wetFrames = 0;
+        let dryFrames = 0;
+
+        // 2-D ray vs finite-segment intersection (Cramer's rule).
+        // Ray: P + t*(rdx,rdy),  t > 0
+        // Segment: P1 + s*(P2-P1),  s ∈ [0,1]
+        // 2-D raindrop segment vs canopy segment intersection
+        function _checkCanopyHit(x1, y1, x2, y2, p1x, p1y, p2x, p2y) {
+            let dx1 = x2 - x1;
+            let dy1 = y2 - y1;
+            let dx2 = p2x - p1x;
+            let dy2 = p2y - p1y;
+            let det = dx1 * dy2 - dy1 * dx2;
+            if (Math.abs(det) < 0.0001) return null;
+            let t = ((p1x - x1) * dy2 - (p1y - y1) * dx2) / det;
+            let u = ((p1x - x1) * dy1 - (p1y - y1) * dx1) / det;
+            if (t >= 0.0 && t <= 1.0 && u >= 0.0 && u <= 1.0) {
+                return { x: x1 + t * dx1, y: y1 + t * dy1 };
+            }
+            return null;
+        }
+
+        // Returns true  ↔  the upward anti-rain ray hits the canopy chord.
+        function _canopyBlocks(px, py, rdx, rdy, P1x, P1y, P2x, P2y) {
+            const sdx = P2x - P1x;
+            const sdy = P2y - P1y;
+            const det = -rdx * sdy + sdx * rdy;
+            if (Math.abs(det) < 0.05) return false;   // parallel → not blocked
+            const cx = P1x - px;
+            const cy = P1y - py;
+            const t  = (-cx * sdy + sdx * cy) / det;
+            const s  = ( rdx * cy  - cx * rdy) / det;
+            return t > 0 && s >= 0 && s <= 1;
+        }
+
+        function detectRaindropCollision(rainYSpeed, relativeWindX) {
+            if (v_r <= 0) {                 // No rain → safe
+                wetFrames = 0;
+                if (++dryFrames >= 4 && alertActive) hideRedAlert();
+                return;
+            }
+
+            // Empirical Wet State: Person is wet if raindrops physically hit body in current frame OR water droplets exist on body
+            let isPersonWet = personWetThisFrame || bodyDroplets.length > 0;
+
+            if (isPersonWet) {
+                dryFrames = 0;
+                if (++wetFrames >= 2 && !alertActive && !alertDismissed) {
+                    let rx = v_w - v_m;
+                    let reqThetaDeg = Math.atan2(rx, v_r) * (180 / Math.PI);
+                    let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : reqThetaDeg;
+                    showRedAlert(
+                        `সতর্কবার্তা: বৃষ্টির পানি শরীরে এসে পড়ছে! ছাতার কোণ: ${actualUmbDeg.toFixed(1)}° (প্রয়োজনীয়: ${reqThetaDeg.toFixed(1)}°)`
+                    );
+                }
+                if (umbStatusBadge) {
+                    umbStatusBadge.className = "text-[#E8001D] font-bold";
+                    umbStatusBadge.innerText = `🚨 মানুষটি ভিজছেন!`;
+                }
+            } else {
+                wetFrames = 0;
+                if (++dryFrames >= 4 && alertActive) hideRedAlert();
+                if (umbStatusBadge && bodyDroplets.length === 0) {
+                    umbStatusBadge.className = "text-[#1CAB55] font-bold";
+                    umbStatusBadge.innerText = "✅ সঠিক কোণ (সুরক্ষিত)";
+                }
+            }
+        }
+
+
     </script>
 </body>
 </html>
