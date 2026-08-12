@@ -596,6 +596,7 @@
         let isAutoUmbrella = true;
 
         // Visual Engine Variables
+        let urlSyncEnabled = false; // stays false until initial query-param load finishes, so it can't clobber the incoming URL
         let isEarthFrame = true;
         let viewMode = 'split'; // 'split', 'simulation', 'vector'
         let raindrops = [];
@@ -731,6 +732,27 @@
 
             // Sync scenario button active highlights
             updateScenarioHighlights();
+
+            // Reflect the live state in the address bar so the current URL always reproduces it
+            syncUrlFromState();
+        }
+
+        // Rewrites the URL's query string to match current on-screen state (no reload, no history entry)
+        function syncUrlFromState() {
+            if (!urlSyncEnabled) return;
+
+            const params = new URLSearchParams();
+            params.set('vm', v_m.toFixed(1));
+            params.set('vr', v_r.toFixed(1));
+            params.set('vw', v_w.toFixed(1));
+            if (sliderUmb) params.set('angle', parseFloat(sliderUmb.value).toFixed(1));
+            params.set('auto', isAutoUmbrella ? 'true' : 'false');
+            params.set('frame', isEarthFrame ? 'earth' : 'man');
+            if (viewMode === 'simulation') params.set('view', 'sim');
+            else if (viewMode === 'vector') params.set('view', 'vector');
+
+            const newUrl = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
+            window.history.replaceState(null, '', newUrl);
         }
 
         let activeScenarioKey = null;
@@ -845,12 +867,14 @@
             isEarthFrame = true;
             btnFrameEarth.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm text-white bg-[#1CAB55] border border-[#0E7B4F]";
             btnFrameMan.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-gray-600 hover:text-gray-900";
+            syncUrlFromState();
         });
 
         btnFrameMan.addEventListener('click', () => {
             isEarthFrame = false;
             btnFrameMan.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm text-white bg-[#1CAB55] border border-[#0E7B4F]";
             btnFrameEarth.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-gray-600 hover:text-gray-900";
+            syncUrlFromState();
         });
 
         // Mobile View Mode Switcher
@@ -858,11 +882,13 @@
             viewMode = 'simulation';
             btnViewSim.className = "px-3 py-1 text-xs font-bold rounded-lg text-white bg-[#1CAB55] border border-[#0E7B4F]";
             btnViewVector.className = "px-3 py-1 text-xs font-bold rounded-lg text-gray-600";
+            syncUrlFromState();
         });
         btnViewVector.addEventListener('click', () => {
             viewMode = 'vector';
             btnViewVector.className = "px-3 py-1 text-xs font-bold rounded-lg text-white bg-[#1CAB55] border border-[#0E7B4F]";
             btnViewSim.className = "px-3 py-1 text-xs font-bold rounded-lg text-gray-600";
+            syncUrlFromState();
         });
 
         // --- HSC Problems Solver Logic (Dynamic math from Control Panel) ---
@@ -1140,6 +1166,10 @@
                 if (!appliedFromQuery) {
                     selectProblem(1);
                 }
+                // Only now start reflecting live state back into the URL — enabling this earlier
+                // would overwrite the incoming query string before applyQueryParams() reads it
+                urlSyncEnabled = true;
+                syncUrlFromState();
             }, 100);
 
             // Trigger initial Lucide render
