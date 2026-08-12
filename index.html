@@ -915,6 +915,7 @@
         let canopySplashes = [];    // Water splashes bouncing off top of umbrella canopy
         let personWetThisFrame = false;
         let roadScroll = 0;
+        let sceneryScroll = 0; // background house/trees scroll offset, accumulates slower than the road for a parallax feel
         let runnerPos = 150;
         let walkPhase = 0;
         let mathRendered = false;
@@ -1793,6 +1794,92 @@
             }
         }
 
+        // A small night-village silhouette (house + trees + fence) sitting on the ground line,
+        // behind the road/rain/runner. Trees and the house drift at a slower rate than the road
+        // (parallax depth); the fence sits at road-depth. All layers stay put in Earth's Frame,
+        // since the ground itself is the stationary reference there.
+        function drawHouse(x, groundY) {
+            push();
+            translate(x, groundY);
+            const wallW = 84, wallH = 50;
+            const wallX = -wallW / 2, wallY = -wallH;
+
+            noStroke();
+            fill(0, 0, 0, 50);
+            ellipse(0, 2, wallW * 1.15, 12);
+
+            fill(176, 216, 230); // light sky-blue walls
+            stroke(90, 150, 170);
+            strokeWeight(1.5);
+            rect(wallX, wallY, wallW, wallH, 2);
+
+            noStroke();
+            fill(82, 52, 30); // door
+            rect(-9, -28, 18, 28, 2, 2, 0, 0);
+
+            fill(92, 62, 38); // windows
+            rect(wallX + 9, wallY + 13, 15, 15, 1);
+            rect(wallX + wallW - 24, wallY + 13, 15, 15, 1);
+            stroke(50, 35, 20);
+            strokeWeight(1);
+            line(wallX + 9, wallY + 20.5, wallX + 24, wallY + 20.5);
+            line(wallX + 16.5, wallY + 13, wallX + 16.5, wallY + 28);
+            line(wallX + wallW - 24, wallY + 20.5, wallX + wallW - 9, wallY + 20.5);
+            line(wallX + wallW - 16.5, wallY + 13, wallX + wallW - 16.5, wallY + 28);
+
+            noStroke();
+            const overhang = 11;
+            fill(196, 42, 42); // roof
+            triangle(wallX - overhang, wallY, wallX + wallW + overhang, wallY, 0, wallY - 32);
+            fill(222, 64, 64); // roof highlight edge
+            triangle(wallX - overhang, wallY, 0, wallY - 32, wallX + 6, wallY);
+
+            fill(255, 218, 140, 190); // porch light glow
+            ellipse(wallW / 2 - 8, -13, 6, 6);
+            pop();
+        }
+
+        function drawTree(x, groundY) {
+            push();
+            translate(x, groundY);
+            noStroke();
+            fill(45, 30, 20);
+            rect(-3, -20, 6, 20);
+            fill(18, 66, 34);
+            ellipse(0, -28, 28, 24);
+            ellipse(-9, -20, 18, 16);
+            ellipse(9, -20, 18, 16);
+            fill(28, 90, 44);
+            ellipse(-3, -32, 14, 12);
+            pop();
+        }
+
+        function drawBackgroundScenery(simWidth, groundY) {
+            // Distant treeline — slow parallax scroll, tiles continuously
+            const treeSpacing = 190;
+            let treeOffset = ((sceneryScroll * 0.4) % treeSpacing + treeSpacing) % treeSpacing;
+            for (let tx = treeOffset - treeSpacing; tx < simWidth + treeSpacing; tx += treeSpacing) {
+                drawTree(tx, groundY);
+            }
+
+            // A single house drifting past at a mid-depth rate, cycling in and out of view.
+            // Anchored at 68% of the width so it's visible at rest (sceneryScroll = 0, e.g. Earth's Frame).
+            const houseCycle = simWidth + 260;
+            const houseBaseX = simWidth * 0.68;
+            let houseOffset = (((houseBaseX + sceneryScroll * 0.6) % houseCycle) + houseCycle) % houseCycle;
+            drawHouse(houseOffset - 130, groundY - 4);
+
+            // Foreground fence, same depth as the road
+            stroke(150, 90, 40, 200);
+            strokeWeight(1.5);
+            line(0, groundY - 12, simWidth, groundY - 12);
+            const postSpacing = 34;
+            let postOffset = ((roadScroll % postSpacing) + postSpacing) % postSpacing;
+            for (let px = postOffset; px < simWidth; px += postSpacing) {
+                line(px, groundY, px, groundY - 14);
+            }
+        }
+
         // Draw Simulation View on Left Part of Canvas
         function drawSimulationView(simWidth) {
             // Ground
@@ -1802,19 +1889,23 @@
             fill(15, 23, 42); // slate-950 top stripe
             rect(0, height - 100, simWidth, 10);
 
+            // Background village scenery (house/trees/fence) — sits on the ground, behind the road/rain/runner
+            drawBackgroundScenery(simWidth, height - 100);
+
             // Dynamic Road Scrolling elements
             if (isEarthFrame) {
                 // Ground stays stationary, runner wraps around
                 runnerPos += v_m * 0.15;
                 if (runnerPos > simWidth + 40) runnerPos = -40;
                 if (runnerPos < -40) runnerPos = simWidth + 40;
-                
+
                 // Animate leg walking phase
                 walkPhase += (v_m * 0.05);
             } else {
                 // Runner is static in center, environment scrolls
                 runnerPos = simWidth * 0.45;
                 roadScroll = (roadScroll - v_m * 1.5) % 40;
+                sceneryScroll -= v_m * 0.6; // slower than the road, for a background-depth parallax feel
                 walkPhase += (v_m * 0.05);
 
                 // Drawing scrolling road lines
