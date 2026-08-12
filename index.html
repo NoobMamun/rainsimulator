@@ -1734,10 +1734,10 @@
             for (let i = 0; i < 4; i++) {
                 clouds.push({
                     x: random(0, width),
-                    y: random(20, 80),
-                    w: random(90, 160),
-                    h: random(30, 45),
-                    alpha: random(90, 150),
+                    y: random(25, 85),
+                    w: random(110, 190),
+                    h: random(50, 72),
+                    alpha: random(130, 190),
                     driftSpeed: random(0.15, 0.35) * (random() < 0.5 ? -1 : 1)
                 });
             }
@@ -1889,13 +1889,37 @@
         }
 
         // Slow-drifting storm clouds, high in the sky
+        // Layered, moonlit-cumulus style clouds: dark indigo shadowed base,
+        // a mid tone, and a soft silvery-blue highlight lit from above.
         function drawClouds(simWidth) {
             noStroke();
             for (let c of clouds) {
-                fill(60, 65, 80, c.alpha);
-                ellipse(c.x, c.y, c.w, c.h * 0.6);
-                ellipse(c.x - c.w * 0.3, c.y + c.h * 0.15, c.w * 0.6, c.h * 0.5);
-                ellipse(c.x + c.w * 0.3, c.y + c.h * 0.1, c.w * 0.55, c.h * 0.45);
+                push();
+                translate(c.x, c.y);
+                let a = c.alpha;
+
+                // Shadowed underside — widest, lowest layer
+                fill(24, 32, 56, a * 0.95);
+                ellipse(0, c.h * 0.30, c.w, c.h * 0.60);
+                ellipse(-c.w * 0.34, c.h * 0.36, c.w * 0.58, c.h * 0.46);
+                ellipse(c.w * 0.34, c.h * 0.34, c.w * 0.54, c.h * 0.44);
+                ellipse(-c.w * 0.12, c.h * 0.18, c.w * 0.42, c.h * 0.38);
+                ellipse(c.w * 0.16, c.h * 0.14, c.w * 0.44, c.h * 0.4);
+
+                // Mid-tone body
+                fill(52, 68, 102, a);
+                ellipse(-c.w * 0.12, -c.h * 0.02, c.w * 0.58, c.h * 0.52);
+                ellipse(c.w * 0.2, c.h * 0.02, c.w * 0.5, c.h * 0.46);
+                ellipse(0, -c.h * 0.16, c.w * 0.46, c.h * 0.42);
+
+                // Moonlit highlight — smaller, upper-center, brightest layer
+                fill(150, 172, 205, a * 0.9);
+                ellipse(-c.w * 0.04, -c.h * 0.32, c.w * 0.34, c.h * 0.3);
+                ellipse(c.w * 0.12, -c.h * 0.26, c.w * 0.28, c.h * 0.26);
+                fill(196, 210, 232, a * 0.55);
+                ellipse(-c.w * 0.02, -c.h * 0.38, c.w * 0.18, c.h * 0.16);
+
+                pop();
 
                 c.x += c.driftSpeed;
                 if (c.driftSpeed >= 0 && c.x - c.w > simWidth) c.x = -c.w;
