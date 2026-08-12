@@ -322,13 +322,13 @@
 </head>
 <body class="text-slate-900 bg-gray-50 min-h-screen">
 
-    <div class="max-w-[1216px] mx-auto px-4 md:px-6 py-6 bn flex flex-col gap-6">
+    <div class="max-w-[1216px] mx-auto px-4 md:px-6 py-2 sm:py-6 bn flex flex-col gap-3 sm:gap-6">
         <!-- Header -->
-        <header class="mb-4 text-center relative">
-            <div class="mt-2 mb-3 flex justify-center">
+        <header class="mb-1 sm:mb-4 text-center relative">
+            <div class="mt-1 sm:mt-2 mb-1.5 sm:mb-3 flex justify-center">
                 <span class="px-2.5 py-1 text-[11px] font-bold tracking-wider bg-[#E8001D]/10 text-[#E8001D] rounded-full border border-[#E8001D]/30 uppercase">১০ মিনিট স্কুল ইন্টারেক্টিভ ল্যাব</span>
             </div>
-            <h1 class="text-sm sm:text-base md:text-4xl font-extrabold text-[#931212] mb-1 tracking-tight bn">
+            <h1 class="text-sm sm:text-base md:text-4xl font-extrabold text-[#931212] mb-0 sm:mb-1 tracking-tight bn">
                 বৃষ্টি ও ছাতা সংক্রান্ত আপেক্ষিক বেগ
             </h1>
 
@@ -339,19 +339,19 @@
             
             <!-- Visualizer Canvas Card: 1st on mobile, left column top on desktop -->
             <div class="lg:col-span-7 lg:col-start-1 lg:row-start-1">
-                <div class="card bg-white border border-gray-200 shadow-sm">
-                    <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
-                        <div class="flex items-center gap-2">
+                <div class="card bg-white border border-gray-200 shadow-sm p-3 sm:p-4">
+                    <div class="flex flex-wrap justify-between sm:justify-between items-center mb-2 sm:mb-4 gap-2 sm:gap-4">
+                        <div class="hidden sm:flex items-center gap-2">
                             <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
                             <h2 class="text-lg font-bold text-gray-900">ইন্টারেক্টিভ ক্যানভাস</h2>
                         </div>
                         
                         <!-- Toggle Controls inside visualizer -->
-                        <div class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1">
-                            <button id="btn-frame-earth" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm text-white bg-[#1CAB55] border border-[#0E7B4F]">
+                        <div class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1 w-full sm:w-auto justify-center">
+                            <button id="btn-frame-earth" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm text-white bg-[#1CAB55] border border-[#0E7B4F]">
                                 ভূপৃষ্ঠের সাপেক্ষে
                             </button>
-                            <button id="btn-frame-man" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-gray-600 hover:text-gray-900">
+                            <button id="btn-frame-man" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-gray-600 hover:text-gray-900">
                                 চলন্ত লোকের সাপেক্ষে
                             </button>
                         </div>
