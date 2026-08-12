@@ -913,6 +913,8 @@
         let windStreaks = [];
         let bodyDroplets = [];      // Persistent water droplets remaining visible on body
         let canopySplashes = [];    // Water splashes bouncing off top of umbrella canopy
+        let groundSplashes = [];    // Crown-shaped droplet/mud burst where raindrops hit open ground
+        let groundRipples = [];     // Expanding rings marking each ground impact
         let personWetThisFrame = false;
         let roadScroll = 0;
         let sceneryScroll = 0; // background house/trees scroll offset, accumulates slower than the road for a parallax feel
@@ -2055,6 +2057,28 @@
 
                 // Warp raindrops back when reaching ground in same column
                 if (drop.y > groundY) {
+                    // 💦 GROUND SPLASH: a small crown of droplets + mud flecks, plus an expanding ripple
+                    if (random() < 0.12) {
+                        if (groundRipples.length < 20) {
+                            groundRipples.push({ x: drop.x, y: groundY, r: 1, alpha: 150 });
+                        }
+                        if (groundSplashes.length < 50) {
+                            let dropletCount = Math.floor(random(4, 7));
+                            for (let i = 0; i < dropletCount; i++) {
+                                let angle = (i / dropletCount) * TWO_PI + random(-0.3, 0.3);
+                                let speed = random(1.2, 2.6);
+                                groundSplashes.push({
+                                    x: drop.x,
+                                    y: groundY,
+                                    vx: cos(angle) * speed,
+                                    vy: -Math.abs(sin(angle)) * speed - random(0.8, 1.8),
+                                    r: random(1, 2),
+                                    alpha: 220,
+                                    mud: random() < 0.3
+                                });
+                            }
+                        }
+                    }
                     drop.y = random(-40, -5);
                     drop.x = drop.x + random(-5, 5);
                     if (drop.x > simWidth) drop.x = random(0, simWidth);
@@ -2075,6 +2099,35 @@
                 sp.vy += 0.25; // gravity
                 sp.alpha -= 20;
                 if (sp.alpha <= 0) canopySplashes.splice(i, 1);
+            }
+
+            // ── DRAW GROUND IMPACT RIPPLES (expanding rings) ───────────────────
+            for (let i = groundRipples.length - 1; i >= 0; i--) {
+                let rp = groundRipples[i];
+                noFill();
+                stroke(200, 220, 235, rp.alpha);
+                strokeWeight(1);
+                ellipse(rp.x, rp.y, rp.r * 2, rp.r * 0.6); // flattened for ground-plane perspective
+                rp.r += 1.1;
+                rp.alpha -= 12;
+                if (rp.alpha <= 0) groundRipples.splice(i, 1);
+            }
+
+            // ── DRAW GROUND SPLASH CROWNS (droplets + mud flecks) ──────────────
+            for (let i = groundSplashes.length - 1; i >= 0; i--) {
+                let sp = groundSplashes[i];
+                if (sp.mud) {
+                    stroke(120, 90, 60, sp.alpha);
+                } else {
+                    stroke(210, 230, 245, sp.alpha);
+                }
+                strokeWeight(sp.r);
+                point(sp.x, sp.y);
+                sp.x += sp.vx;
+                sp.y += sp.vy;
+                sp.vy += 0.28; // gravity
+                sp.alpha -= 18;
+                if (sp.alpha <= 0 || sp.y > groundY + 6) groundSplashes.splice(i, 1);
             }
 
             // ── WET DETECTION & ALERTS ──────────────────────────────────────
