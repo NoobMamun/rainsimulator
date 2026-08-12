@@ -728,17 +728,46 @@
                 // Dynamically update Problem Solver Math Board to reflect current Control Panel inputs
                 updateProblemDisplay(v_m, v_r, v_w, activeProblemId);
             }
+
+            // Sync scenario button active highlights
+            updateScenarioHighlights();
+        }
+
+        let activeScenarioKey = null;
+
+        function updateScenarioHighlights() {
+            let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : 0;
+            
+            let isClassic = Math.abs(v_m - 8) < 0.1 && Math.abs(v_r - 6) < 0.1 && Math.abs(v_w - 0) < 0.1 && (isAutoUmbrella || Math.abs(actualUmbDeg - 53.1) < 1.0);
+            let isWindWith = Math.abs(v_m - 10) < 0.1 && Math.abs(v_r - 5) < 0.1 && Math.abs(v_w - 4) < 0.1;
+            let isWindAgainst = Math.abs(v_m - 6) < 0.1 && Math.abs(v_r - 8) < 0.1 && Math.abs(v_w - (-4)) < 0.1;
+            let isUpright = Math.abs(v_m - 8) < 0.1 && Math.abs(v_r - 6) < 0.1 && Math.abs(v_w - 0) < 0.1 && !isAutoUmbrella && Math.abs(actualUmbDeg - 0) < 0.5;
+
+            const activeClass = "px-2 py-1.5 bg-[#1CAB55] text-white font-bold rounded-lg border border-[#0E7B4F] transition text-[11px] flex items-center justify-center text-center cursor-pointer shadow-sm";
+            const inactiveClass = "px-2 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-[11px] font-semibold flex items-center justify-center text-center cursor-pointer shadow-sm";
+
+            if (btnPresetClassic) btnPresetClassic.className = (activeScenarioKey === 'classic' || (activeScenarioKey === null && isClassic && !isUpright)) ? activeClass : inactiveClass;
+            if (btnPresetWindWith) btnPresetWindWith.className = (activeScenarioKey === 'windWith' || (activeScenarioKey === null && isWindWith)) ? activeClass : inactiveClass;
+            if (btnPresetWindAgainst) btnPresetWindAgainst.className = (activeScenarioKey === 'windAgainst' || (activeScenarioKey === null && isWindAgainst)) ? activeClass : inactiveClass;
+            if (btnPresetUpright) btnPresetUpright.className = (activeScenarioKey === 'upright' || (activeScenarioKey === null && isUpright)) ? activeClass : inactiveClass;
         }
 
         // Preset Button Event Listeners
         btnPresetClassic.addEventListener('click', () => {
+            activeScenarioKey = 'classic';
             sliderVm.value = 8;
             sliderVr.value = 6;
             sliderVw.value = 0;
+            isAutoUmbrella = true;
+            if (btnToggleAutoUmb) {
+                btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-[#1CAB55] text-white border border-[#0E7B4F] cursor-pointer shadow-xs";
+                btnToggleAutoUmb.innerText = "অটো";
+            }
             updatePhysicsValues();
         });
 
         btnPresetWindWith.addEventListener('click', () => {
+            activeScenarioKey = 'windWith';
             sliderVm.value = 10;
             sliderVr.value = 5;
             sliderVw.value = 4;
@@ -746,6 +775,7 @@
         });
 
         btnPresetWindAgainst.addEventListener('click', () => {
+            activeScenarioKey = 'windAgainst';
             sliderVm.value = 6;
             sliderVr.value = 8;
             sliderVw.value = -4;
@@ -753,6 +783,7 @@
         });
 
         btnPresetUpright.addEventListener('click', () => {
+            activeScenarioKey = 'upright';
             sliderVm.value = 8;
             sliderVr.value = 6;
             sliderVw.value = 0;
