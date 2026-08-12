@@ -746,10 +746,10 @@
             params.set('vr', v_r.toFixed(1));
             params.set('vw', v_w.toFixed(1));
             if (sliderUmb) params.set('angle', parseFloat(sliderUmb.value).toFixed(1));
-            params.set('auto', isAutoUmbrella ? 'true' : 'false');
-            params.set('frame', isEarthFrame ? 'earth' : 'man');
-            if (viewMode === 'simulation') params.set('view', 'sim');
-            else if (viewMode === 'vector') params.set('view', 'vector');
+            // Only add these when they diverge from the default, to keep the URL clean
+            if (!isAutoUmbrella) params.set('auto', 'false');
+            if (!isEarthFrame) params.set('frame', 'man');
+            if (viewMode === 'vector') params.set('view', 'vector');
 
             const newUrl = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
             window.history.replaceState(null, '', newUrl);
