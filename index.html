@@ -318,6 +318,93 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--gray-400);
         }
+
+        /* ============================================
+           GUIDED TUTORIAL / PRODUCT TOUR
+        ============================================ */
+        #tour-spotlight {
+            position: fixed;
+            border-radius: 14px;
+            border: 2px solid var(--ten-red);
+            box-shadow: 0 0 0 9999px rgba(3, 7, 18, 0.72);
+            pointer-events: none;
+            opacity: 0;
+            transition: top .3s var(--ease-out), left .3s var(--ease-out),
+                        width .3s var(--ease-out), height .3s var(--ease-out), opacity .2s;
+            z-index: 9998;
+        }
+        #tour-card {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: min(320px, calc(100vw - 24px));
+            background: #fff;
+            border-radius: var(--r-lg);
+            border: 1px solid var(--border);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+            padding: 16px;
+            z-index: 10000;
+            transition: top .3s var(--ease-out), left .3s var(--ease-out);
+        }
+        .tour-step-badge {
+            flex-shrink: 0;
+            background: var(--ten-red);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 999px;
+            line-height: 1.4;
+        }
+        .tour-title { flex: 1; font-size: 14px; font-weight: 800; color: var(--fg-1); line-height: 1.4; }
+        .tour-close {
+            flex-shrink: 0;
+            background: none;
+            border: none;
+            color: var(--fg-3);
+            font-size: 13px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 2px;
+        }
+        .tour-close:hover { color: var(--fg-1); }
+        .tour-desc { font-size: 12.5px; color: var(--fg-2); line-height: 1.65; margin: 8px 0 12px; }
+        .tour-progress { display: flex; gap: 4px; margin-bottom: 14px; }
+        .tour-progress span { flex: 1; height: 4px; border-radius: 2px; background: var(--gray-200); transition: background .2s; }
+        .tour-progress span.done { background: var(--ten-red); }
+        .tour-actions { display: flex; justify-content: space-between; align-items: center; }
+        .tour-skip {
+            background: none;
+            border: none;
+            color: var(--fg-3);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 6px 4px;
+        }
+        .tour-skip:hover { color: var(--fg-1); text-decoration: underline; }
+        .tour-back {
+            background: #fff;
+            border: 1px solid var(--border);
+            color: var(--fg-2);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .tour-back:disabled { opacity: .35; cursor: not-allowed; }
+        .tour-next {
+            background: var(--success);
+            border: 1px solid var(--success-dark);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .tour-next:hover { background: #17994B; }
     </style>
 </head>
 <body class="text-slate-900 bg-gray-50 min-h-screen">
@@ -325,6 +412,10 @@
     <div class="max-w-[1216px] mx-auto px-4 md:px-6 py-2 sm:py-6 bn flex flex-col gap-3 sm:gap-6">
         <!-- Header -->
         <header class="mb-1 sm:mb-4 text-center relative">
+            <button id="btn-tutorial" type="button" class="absolute top-0 right-0 flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[#931212] hover:bg-[#7a0f0f] text-white text-[10px] sm:text-xs font-bold shadow-sm transition cursor-pointer">
+                <i data-lucide="compass" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                <span>টিউটোরিয়াল</span>
+            </button>
             <div class="mt-1 sm:mt-2 mb-1.5 sm:mb-3 flex justify-center">
                 <span class="px-2.5 py-1 text-[11px] font-bold tracking-wider bg-[#E8001D]/10 text-[#E8001D] rounded-full border border-[#E8001D]/30 uppercase">১০ মিনিট স্কুল ইন্টারেক্টিভ ল্যাব</span>
             </div>
@@ -347,7 +438,7 @@
                         </div>
                         
                         <!-- Toggle Controls inside visualizer -->
-                        <div class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1 w-full sm:w-auto justify-center">
+                        <div id="frame-toggle-group" class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1 w-full sm:w-auto justify-center">
                             <button id="btn-frame-earth" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm text-white bg-[#1CAB55] border border-[#0E7B4F]">
                                 ভূপৃষ্ঠের সাপেক্ষে
                             </button>
@@ -360,7 +451,7 @@
                     <!-- Canvas parent container -->
                     <div id="canvas-container" class="w-full flex justify-center bg-[#0B1117] rounded-2xl overflow-hidden shadow-inner border border-gray-800 relative">
                         <!-- Canvas View Mode Switcher overlay (Mobile/Tablet helper) -->
-                        <div class="lg:hidden absolute bottom-4 left-4 z-10 flex bg-white/90 backdrop-blur-sm p-1 rounded-xl border border-gray-200 shadow-lg gap-1">
+                        <div id="mobile-view-switcher" class="lg:hidden absolute bottom-4 left-4 z-10 flex bg-white/90 backdrop-blur-sm p-1 rounded-xl border border-gray-200 shadow-lg gap-1">
                             <button id="btn-view-sim" class="px-3 py-1 text-xs font-bold rounded-lg text-white bg-[#1CAB55] border border-[#0E7B4F]">সিমুলেশন</button>
                             <button id="btn-view-vector" class="px-3 py-1 text-xs font-bold rounded-lg text-gray-600">ভেক্টর ল্যাব</button>
                         </div>
@@ -396,7 +487,7 @@
                     </h2>
                     
                     <!-- Slider: Man's velocity -->
-                    <div class="mb-3.5 sm:mb-5">
+                    <div id="control-vm-group" class="mb-3.5 sm:mb-5">
                         <div class="flex justify-between mb-1.5">
                             <label class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#274FE3]"></span>
@@ -409,7 +500,7 @@
                     </div>
 
                     <!-- Slider: Rain's velocity -->
-                    <div class="mb-3.5 sm:mb-5">
+                    <div id="control-vr-group" class="mb-3.5 sm:mb-5">
                         <div class="flex justify-between mb-1.5">
                             <label class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#1CAB55]"></span>
@@ -422,7 +513,7 @@
                     </div>
 
                     <!-- Slider: Wind's velocity -->
-                    <div class="mb-3.5 sm:mb-5">
+                    <div id="control-vw-group" class="mb-3.5 sm:mb-5">
                         <div class="flex justify-between mb-1.5">
                             <label class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
@@ -435,7 +526,7 @@
                     </div>
 
                     <!-- Slider: Umbrella Angle -->
-                    <div class="mb-4 sm:mb-6 p-2.5 sm:p-3 bg-amber-50/70 rounded-xl border border-amber-200/90 shadow-xs">
+                    <div id="control-umbrella-group" class="mb-4 sm:mb-6 p-2.5 sm:p-3 bg-amber-50/70 rounded-xl border border-amber-200/90 shadow-xs">
                         <div class="flex justify-between items-center mb-1.5">
                             <label class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#E7B946]"></span>
@@ -460,7 +551,7 @@
 
                     <!-- Presets Header -->
                     <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2.5">সিমুলেশন কেসসমূহ (Scenarios)</div>
-                    <div class="grid grid-cols-2 gap-2 mb-4">
+                    <div id="control-presets-group" class="grid grid-cols-2 gap-2 mb-4">
                         <button id="btn-preset-classic" class="px-2 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-[11px] font-semibold flex items-center justify-center text-center cursor-pointer shadow-sm">
                             বাতাসহীন (স্বাভাবিক)
                         </button>
@@ -481,7 +572,7 @@
             <!-- Explanation & Problem Solver Tabs: 3rd on mobile, left column bottom on desktop -->
             <div class="lg:col-span-7 lg:col-start-1 lg:row-start-2">
                 <div class="card bg-white border border-gray-200 shadow-sm flex flex-col gap-4">
-                    <div class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1.5 w-full mb-2">
+                    <div id="explanation-tabs-group" class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1.5 w-full mb-2">
                         <button id="tab-concepts" class="group-tab active">
                             <i data-lucide="book-open" class="w-4 h-4 inline-block align-middle mr-1.5"></i>তাত্ত্বিক আলোচনা
                         </button>
@@ -503,7 +594,7 @@
 
                     <!-- Tab Content: Problem Solver -->
                     <div id="content-problems" class="hidden space-y-4 animate-fadeIn">
-                        <div class="flex flex-wrap gap-2 mb-2">
+                        <div id="problem-buttons-group" class="flex flex-wrap gap-2 mb-2">
                             <button id="btn-prob-1" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ১</button>
                             <button id="btn-prob-2" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ২</button>
                         </div>
@@ -522,6 +613,27 @@
         <footer class="mt-12 text-center text-white/50 text-sm border-t border-white/10 pt-6 pb-6 bg-[#0A0004] rounded-t-2xl -mx-4 md:-mx-6 px-4">
             <p>এইচএসসি পদার্থবিজ্ঞান শিক্ষার্থীদের জন্য ডিজাইনকৃত • ভেক্টর আপেক্ষিক বেগ ভিজ্যুয়ালাইজেশন টুল</p>
         </footer>
+    </div>
+
+    <!-- Guided Tutorial Overlay -->
+    <div id="tour-overlay" class="hidden fixed inset-0 z-[9999]">
+        <div id="tour-spotlight"></div>
+        <div id="tour-card" role="dialog" aria-modal="true" aria-label="Tutorial">
+            <div class="flex items-start gap-2">
+                <span id="tour-step-badge" class="tour-step-badge"></span>
+                <h3 id="tour-title" class="tour-title"></h3>
+                <button id="tour-close" type="button" class="tour-close" aria-label="Close tutorial">✕</button>
+            </div>
+            <p id="tour-desc" class="tour-desc"></p>
+            <div id="tour-progress" class="tour-progress"></div>
+            <div class="tour-actions">
+                <button id="tour-skip" type="button" class="tour-skip">এড়িয়ে যান</button>
+                <div class="flex gap-2">
+                    <button id="tour-back" type="button" class="tour-back">পেছনে</button>
+                    <button id="tour-next" type="button" class="tour-next">পরবর্তী</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1030,6 +1142,205 @@
             const btn = document.getElementById(`btn-prob-${i}`);
             if (btn) btn.addEventListener('click', () => selectProblem(i));
         }
+
+        // ============================================
+        // GUIDED TUTORIAL / PRODUCT TOUR
+        // Walks a first-time user through every control: what it is and
+        // exactly what happens when they interact with it.
+        // ============================================
+        const btnTutorial = document.getElementById('btn-tutorial');
+        const tourOverlay = document.getElementById('tour-overlay');
+        const tourSpotlight = document.getElementById('tour-spotlight');
+        const tourCard = document.getElementById('tour-card');
+        const tourStepBadge = document.getElementById('tour-step-badge');
+        const tourTitleEl = document.getElementById('tour-title');
+        const tourDescEl = document.getElementById('tour-desc');
+        const tourProgressEl = document.getElementById('tour-progress');
+        const tourSkipBtn = document.getElementById('tour-skip');
+        const tourBackBtn = document.getElementById('tour-back');
+        const tourNextBtn = document.getElementById('tour-next');
+        const tourCloseBtn = document.getElementById('tour-close');
+
+        const tourStepDefs = [
+            {
+                target: '#frame-toggle-group',
+                title: 'প্রসঙ্গ কাঠামো পরিবর্তন করুন',
+                desc: '"ভূপৃষ্ঠের সাপেক্ষে" ক্লিক করলে আপনি স্থির দর্শক হিসেবে দৃশ্য দেখবেন। "চলন্ত লোকের সাপেক্ষে" ক্লিক করলে দৌড়ানো মানুষটি স্থির থাকবে ও চারপাশ সরে যাবে — শুধু দেখার কোণ বদলায়, পদার্থবিজ্ঞান একই থাকে।'
+            },
+            {
+                target: '#canvas-container',
+                title: 'সিমুলেশন ক্যানভাস',
+                desc: 'বৃষ্টি, বাতাস, দৌড়ানো মানুষ ও ছাতা এখানে লাইভ অ্যানিমেশনে দেখা যায়। ডানপাশের যেকোনো নিয়ন্ত্রণ বদলালে এই দৃশ্য সাথে সাথে আপডেট হয়ে যাবে।'
+            },
+            {
+                target: '#mobile-view-switcher',
+                title: 'ভিউ পরিবর্তন (মোবাইল)',
+                desc: '"সিমুলেশন" ক্লিক করলে অ্যানিমেশন দেখা যাবে, "ভেক্টর ল্যাব" ক্লিক করলে ভেক্টর হিসাব-নিকাশ দেখা যাবে — ছোট স্ক্রিনে দুটো একসাথে ধরে না বলে এই সুইচার দেওয়া হয়েছে।'
+            },
+            {
+                target: '#control-vm-group',
+                title: 'চলন্ত লোকের বেগ (vm)',
+                desc: 'স্লাইডার টেনে মানুষটির হাঁটা/দৌড়ানোর গতি (0–20 m/s) বদলান। এটি বদলালে ছাতা ধরার প্রয়োজনীয় কোণও সাথে সাথে বদলে যাবে।'
+            },
+            {
+                target: '#control-vr-group',
+                title: 'বৃষ্টির বেগ (vr)',
+                desc: 'বৃষ্টি কত দ্রুত সোজা নিচের দিকে পড়ছে (1–20 m/s) তা এখান থেকে ঠিক করুন।'
+            },
+            {
+                target: '#control-vw-group',
+                title: 'বাতাসের বেগ (vw)',
+                desc: 'ডানে টানলে বাতাস মানুষের চলার দিকে বইবে, বামে টানলে বিপরীত দিকে। মান 0 রাখলে বাতাসহীন অবস্থা বোঝাবে।'
+            },
+            {
+                target: '#control-umbrella-group',
+                title: 'ছাতার কোণ নিয়ন্ত্রণ',
+                desc: '"অটো" চালু থাকলে ছাতা নিজে থেকেই সঠিক কোণে সেট হয়ে যায়। "ম্যানুয়াল"-এ পাল্টে স্লাইডার বা সংখ্যা বক্সে নিজের ইচ্ছেমতো কোণ দিন — ভুল কোণে ধরলে মানুষটি ভিজে যাবে ও লাল সতর্কতা দেখা যাবে।'
+            },
+            {
+                target: '#control-presets-group',
+                title: 'প্রস্তুত সিমুলেশন কেসসমূহ',
+                desc: 'এই চারটি বাটনের যেকোনো একটিতে ক্লিক করলে vm, vr, vw এবং ছাতার কোণ — সবকিছু একসাথে একটি নির্দিষ্ট বাস্তব উদাহরণে সেট হয়ে যাবে।'
+            },
+            {
+                target: '#explanation-tabs-group',
+                title: 'তত্ত্ব বনাম সমস্যা সমাধান',
+                desc: '"তাত্ত্বিক আলোচনা" ট্যাবে ধারণাগত ব্যাখ্যা পাবেন। "এইচএসসি সমস্যা সমাধান" ট্যাবে ক্লিক করলে ধাপে ধাপে সমাধান করা বোর্ড পরীক্ষার প্রশ্ন দেখা যাবে।'
+            },
+            {
+                target: '#problem-buttons-group',
+                title: 'নির্দিষ্ট সমস্যা লোড করুন',
+                beforeShow: () => switchTab('problems'),
+                desc: '"সমস্যা ১" বা "সমস্যা ২" ক্লিক করলে সেই প্রশ্নের হুবহু মান নিয়ন্ত্রণ প্যানেলে বসে যাবে এবং নিচে সম্পূর্ণ ধাপে ধাপে গাণিতিক সমাধান দেখাবে।'
+            },
+            {
+                target: null,
+                title: 'লিংক শেয়ার করুন',
+                desc: 'আপনি যা যা বদলান, ঠিকানা বার (URL) সাথে সাথে সেই অনুযায়ী আপডেট হয়ে যায়। তাই এই মুহূর্তের ঠিকানাটি কপি করে বন্ধু বা শিক্ষকের সাথে শেয়ার করলে তিনি ঠিক একই সেটআপ দেখতে পাবেন। টিউটোরিয়াল আবার দেখতে উপরে ডানে "টিউটোরিয়াল" বাটনে ক্লিক করুন।'
+            }
+        ];
+
+        let tourSteps = [];
+        let tourIndex = 0;
+        let tourWasOnProblemsTab = false;
+
+        function isElementVisible(el) {
+            if (!el) return false;
+            const rect = el.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+        }
+
+        function positionTourSpotlight(target) {
+            if (!target) {
+                tourSpotlight.style.opacity = '0';
+                return;
+            }
+            tourSpotlight.style.opacity = '1';
+            const pad = 8;
+            const rect = target.getBoundingClientRect();
+            tourSpotlight.style.top = `${rect.top - pad}px`;
+            tourSpotlight.style.left = `${rect.left - pad}px`;
+            tourSpotlight.style.width = `${rect.width + pad * 2}px`;
+            tourSpotlight.style.height = `${rect.height + pad * 2}px`;
+        }
+
+        function positionTourCard(target) {
+            const cardRect = tourCard.getBoundingClientRect();
+            const margin = 14;
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+
+            if (!target) {
+                tourCard.style.top = `${Math.max(margin, (vh - cardRect.height) / 2)}px`;
+                tourCard.style.left = `${Math.max(margin, (vw - cardRect.width) / 2)}px`;
+                return;
+            }
+
+            const rect = target.getBoundingClientRect();
+            let top = rect.bottom + margin;
+
+            // Flip above the target if there's not enough room below
+            if (top + cardRect.height > vh - margin) {
+                top = rect.top - cardRect.height - margin;
+            }
+            if (top < margin) top = margin;
+
+            let left = rect.left;
+            if (left + cardRect.width > vw - margin) left = vw - cardRect.width - margin;
+            if (left < margin) left = margin;
+
+            tourCard.style.top = `${top}px`;
+            tourCard.style.left = `${left}px`;
+        }
+
+        function renderTourStep() {
+            const step = tourSteps[tourIndex];
+            if (!step) { endTour(); return; }
+
+            if (typeof step.beforeShow === 'function') step.beforeShow();
+
+            const targetEl = step.target ? document.querySelector(step.target) : null;
+            if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            tourStepBadge.innerText = `${tourIndex + 1}/${tourSteps.length}`;
+            tourTitleEl.innerText = step.title;
+            tourDescEl.innerText = step.desc;
+
+            tourProgressEl.innerHTML = tourSteps.map((_, i) =>
+                `<span class="${i <= tourIndex ? 'done' : ''}"></span>`
+            ).join('');
+
+            tourBackBtn.disabled = (tourIndex === 0);
+            tourNextBtn.innerText = (tourIndex === tourSteps.length - 1) ? 'সম্পন্ন' : 'পরবর্তী';
+
+            // Small delay lets scrollIntoView / tab switches settle before measuring positions
+            setTimeout(() => {
+                positionTourSpotlight(targetEl);
+                positionTourCard(targetEl);
+            }, targetEl ? 320 : 0);
+        }
+
+        function startTour() {
+            tourWasOnProblemsTab = !!(contentProblems && !contentProblems.classList.contains('hidden'));
+            tourSteps = tourStepDefs.filter(s =>
+                !s.target || s.beforeShow || isElementVisible(document.querySelector(s.target))
+            );
+            tourIndex = 0;
+            tourOverlay.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            renderTourStep();
+        }
+
+        function endTour() {
+            tourOverlay.classList.add('hidden');
+            document.body.style.overflow = '';
+            switchTab(tourWasOnProblemsTab ? 'problems' : 'concepts');
+        }
+
+        if (btnTutorial) btnTutorial.addEventListener('click', startTour);
+        tourCloseBtn.addEventListener('click', endTour);
+        tourSkipBtn.addEventListener('click', endTour);
+        tourNextBtn.addEventListener('click', () => {
+            if (tourIndex >= tourSteps.length - 1) { endTour(); return; }
+            tourIndex++;
+            renderTourStep();
+        });
+        tourBackBtn.addEventListener('click', () => {
+            if (tourIndex <= 0) return;
+            tourIndex--;
+            renderTourStep();
+        });
+        window.addEventListener('resize', () => {
+            if (!tourOverlay.classList.contains('hidden')) {
+                const step = tourSteps[tourIndex];
+                const targetEl = step && step.target ? document.querySelector(step.target) : null;
+                positionTourSpotlight(targetEl);
+                positionTourCard(targetEl);
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !tourOverlay.classList.contains('hidden')) endTour();
+        });
 
         function getResponsiveCanvasHeight() {
             return window.innerWidth < 640 ? 340 : 480;
