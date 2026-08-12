@@ -368,15 +368,14 @@
 
                         <!-- Canvas Guide Tooltip removed to place Red Alert here -->
 
-                        <!-- 🚨 RED ALERT — small overlay inside canvas (top-right) -->
+                        <!-- 🚨 RED ALERT — compact overlay inside canvas (top-right) -->
                         <div id="red-alert-panel" role="alert" aria-live="assertive">
                             <span class="alert-icon">🚨</span>
                             <div class="alert-body">
-                                <div class="alert-title">🔴 রেড অ্যালার্ট: মানুষটি ভিজে যাচ্ছে!</div>
-                                <div class="alert-sub">⚠️ সতর্কবার্তা: ব্যক্তিটি বৃষ্টিতে ভিজছেন। দ্রুত আশ্রয় নিন!</div>
+                                <div class="alert-title">মানুষটি ভিজছেন!</div>
                                 <div class="alert-status-bar">
                                     <span class="alert-dot"></span>
-                                    <span id="alert-detail-text">বৃষ্টির পানি সরাসরি গায়ে পড়ছে</span>
+                                    <span id="alert-detail-text">ছাতা: 0.0° (প্রয়োজনীয়: 0.0°)</span>
                                 </div>
                             </div>
                             <span class="alert-dismiss" id="alert-dismiss-btn" title="Dismiss">✕</span>
@@ -1835,13 +1834,15 @@
 
             if (isPersonWet) {
                 dryFrames = 0;
-                if (++wetFrames >= 2 && !alertActive && !alertDismissed) {
-                    let rx = v_w - v_m;
-                    let reqThetaDeg = Math.atan2(rx, v_r) * (180 / Math.PI);
-                    let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : reqThetaDeg;
-                    showRedAlert(
-                        `সতর্কবার্তা: বৃষ্টির পানি শরীরে এসে পড়ছে! ছাতার কোণ: ${actualUmbDeg.toFixed(1)}° (প্রয়োজনীয়: ${reqThetaDeg.toFixed(1)}°)`
-                    );
+                let rx = v_w - v_m;
+                let reqThetaDeg = Math.atan2(rx, v_r) * (180 / Math.PI);
+                let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : reqThetaDeg;
+                let shortReason = `ছাতা: ${actualUmbDeg.toFixed(1)}° (প্রয়োজনীয়: ${reqThetaDeg.toFixed(1)}°)`;
+
+                if (!alertActive && !alertDismissed && ++wetFrames >= 2) {
+                    showRedAlert(shortReason);
+                } else if (alertActive) {
+                    alertDetailText.textContent = shortReason;
                 }
                 if (umbStatusBadge) {
                     umbStatusBadge.className = "text-[#E8001D] font-bold";
