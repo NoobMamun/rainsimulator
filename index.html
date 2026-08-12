@@ -390,9 +390,9 @@
             <!-- Controls Panel: 2nd on mobile (immediately under Canvas!), right column on desktop -->
             <div class="lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:row-span-2">
                 <div class="card bg-white border border-gray-200 shadow-sm">
-                    <h2 class="text-lg font-bold text-gray-900 mb-6 border-b border-gray-200 pb-3 flex justify-between items-center">
-                        <span class="flex items-center"><i data-lucide="sliders" class="w-5 h-5 text-gray-500 mr-2"></i>নিয়ন্ত্রণ প্যানেল (Controls)</span>
-                        <span class="px-2.5 py-1 bg-[#E8001D]/10 text-[#E8001D] border border-[#E8001D]/20 text-[11px] font-bold rounded-full">চলকসমূহ</span>
+                    <h2 class="text-xs sm:text-lg font-bold text-gray-900 mb-3 sm:mb-6 border-b border-gray-200 pb-2 sm:pb-3 flex justify-between items-center">
+                        <span class="flex items-center"><i data-lucide="sliders" class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-gray-500 mr-1.5 sm:mr-2"></i>নিয়ন্ত্রণ প্যানেল (Controls)</span>
+                        <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-[#E8001D]/10 text-[#E8001D] border border-[#E8001D]/20 text-[10px] sm:text-[11px] font-bold rounded-full">চলকসমূহ</span>
                     </h2>
                     
                     <!-- Slider: Man's velocity -->
@@ -1377,41 +1377,54 @@
 
         // HUD indicators inside visualizer area
         function drawSimulationIndicators(simWidth) {
+            let isMobile = window.innerWidth < 640;
+            
+            let boxX = isMobile ? 8 : 10;
+            let boxY = isMobile ? 8 : 10;
+            let boxW = isMobile ? 145 : 210;
+            let boxH = isMobile ? 54 : 80;
+            let padX = isMobile ? 12 : 18;
+            let titleY = isMobile ? 12 : 16;
+            let line1Y = isMobile ? 26 : 36;
+            let line2Y = isMobile ? 39 : 54;
+            let tSizeTitle = isMobile ? 9.5 : 12;
+            let tSizeSub = isMobile ? 8.5 : 11;
+
             noStroke();
             fill(11, 17, 23, 190);
-            rect(10, 10, 210, 80, 8);
-            borderRect(10, 10, 210, 80, color(71, 85, 105, 150));
+            rect(boxX, boxY, boxW, boxH, 8);
+            borderRect(boxX, boxY, boxW, boxH, color(71, 85, 105, 150));
 
             // Text labels
             fill(255);
-            textSize(12);
+            textSize(tSizeTitle);
             textStyle(BOLD);
             textAlign(LEFT, TOP);
-            text("সিমুলেশন ভিউপোর্ট", 18, 16);
+            text("সিমুলেশন ভিউপোর্ট", padX, titleY);
 
-            textSize(11);
+            textSize(tSizeSub);
             textStyle(NORMAL);
             fill(148, 163, 184);
             let labelFrame = "প্রসঙ্গ কাঠামো: ";
-            text(labelFrame, 18, 36);
+            text(labelFrame, padX, line1Y);
             
             if (isEarthFrame) {
                 fill(COLOR_VM_GLOW); // sky blue
-                text("ভূপৃষ্ঠ", 18 + textWidth(labelFrame), 36);
+                text("ভূপৃষ্ঠ", padX + textWidth(labelFrame), line1Y);
             } else {
                 fill(COLOR_VR_GLOW); // mint green
-                text("চলন্ত লোক", 18 + textWidth(labelFrame), 36);
+                text("চলন্ত লোক", padX + textWidth(labelFrame), line1Y);
             }
 
             fill(148, 163, 184);
             let labelWind = "অনুভূমিক বাতাস: ";
-            text(labelWind, 18, 54);
+            text(labelWind, padX, line2Y);
             if (Math.abs(v_w) < 0.1) {
                 fill(148, 163, 184);
-                text("নেই", 18 + textWidth(labelWind), 54);
+                text("নেই", padX + textWidth(labelWind), line2Y);
             } else {
                 fill(COLOR_VW_GLOW); // pink/fuchsia wind text
-                text(`${v_w > 0 ? '→' : '←'} ${Math.abs(v_w).toFixed(1)} m/s`, 18 + textWidth(labelWind), 54);
+                text(`${v_w > 0 ? '→' : '←'} ${Math.abs(v_w).toFixed(1)} m/s`, padX + textWidth(labelWind), line2Y);
             }
         }
 
