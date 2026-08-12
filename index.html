@@ -651,7 +651,7 @@
             if (reqAngleHint) reqAngleHint.innerText = `প্রয়োজনীয়: ${reqThetaDeg.toFixed(1)}°`;
 
             let angleDiff = Math.abs(actualUmbDeg - reqThetaDeg);
-            let isPersonWet = (typeof personWetThisFrame !== 'undefined' && personWetThisFrame) || (typeof bodyDroplets !== 'undefined' && bodyDroplets.length > 2);
+            let isPersonWet = (typeof personWetThisFrame !== 'undefined' && personWetThisFrame) || (typeof bodyDroplets !== 'undefined' && bodyDroplets.length > 0);
 
             if (umbStatusBadge) {
                 if (isPersonWet) {
@@ -1158,8 +1158,23 @@
                     continue;
                 }
 
-                // 2. Check if raindrop hits person's body (unshielded by canopy)
-                if (drop.x >= bodyLeft && drop.x <= bodyRight &&
+                // 2. Check if raindrop is blocked by umbrella canopy (rain shadow cast)
+                let dropRdx = horizontalShift * 0.5 * drop.speedMod;
+                let dropRdy = rainYSpeed * drop.speedMod;
+                let blocked = _canopyBlocks(drop.x, drop.y, dropRdx, dropRdy, P1x, P1y, P2x, P2y);
+
+                if (blocked) {
+                    if (drop.y >= bodyTop - 15) {
+                        drop.y = random(-40, -5);
+                        drop.x = drop.x + random(-5, 5);
+                        if (drop.x > simWidth) drop.x = random(0, simWidth);
+                        if (drop.x < 0) drop.x = random(0, simWidth);
+                        continue;
+                    }
+                }
+
+                // 3. Check if raindrop hits person's body (unshielded by canopy)
+                if (!blocked && drop.x >= bodyLeft && drop.x <= bodyRight &&
                     drop.y >= bodyTop  && drop.y <= bodyBottom) {
                     
                     personWetThisFrame = true;
@@ -1300,9 +1315,9 @@
                 // Drip trickle down body
                 drop.relY += drop.drip;
 
-                // Slow evaporation when sheltered / dry
+                // Fast evaporation when sheltered / dry
                 if (!personWetThisFrame) {
-                    drop.alpha -= 0.12;
+                    drop.alpha -= 15;
                 }
                 if (drop.alpha <= 0 || drop.relY > 0) {
                     bodyDroplets.splice(i, 1);
@@ -1805,7 +1820,7 @@
             const cy = P1y - py;
             const t  = (-cx * sdy + sdx * cy) / det;
             const s  = ( rdx * cy  - cx * rdy) / det;
-            return t > 0 && s >= 0 && s <= 1;
+            return t < 0 && s >= 0 && s <= 1;
         }
 
         function detectRaindropCollision(rainYSpeed, relativeWindX) {
@@ -1834,8 +1849,8 @@
                 }
             } else {
                 wetFrames = 0;
-                if (++dryFrames >= 4 && alertActive) hideRedAlert();
-                if (umbStatusBadge && bodyDroplets.length === 0) {
+                if (++dryFrames >= 3 && alertActive) hideRedAlert();
+                if (umbStatusBadge) {
                     umbStatusBadge.className = "text-[#1CAB55] font-bold";
                     umbStatusBadge.innerText = "✅ সঠিক কোণ (সুরক্ষিত)";
                 }
