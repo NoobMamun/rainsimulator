@@ -1009,6 +1009,100 @@
             return window.innerWidth < 640 ? 340 : 480;
         }
 
+        // ============================================
+        // URL QUERY PARAM STATE INITIALIZATION
+        // Lets this simulation be deep-linked with a preset state, e.g.
+        //   index.html?vm=10&vr=5&vw=4
+        //   index.html?scenario=windWith
+        //   index.html?problem=2
+        // Supported params:
+        //   vm       — man's velocity in m/s        (0 to 20)
+        //   vr       — rain's velocity in m/s        (1 to 20)
+        //   vw       — wind's velocity in m/s         (-15 to 15, + = same dir as man)
+        //   angle    — umbrella angle in degrees      (-89 to 89); implies auto=false
+        //   auto     — "true"/"false" umbrella auto-align (default true unless angle is set)
+        //   frame    — "earth" or "man" reference frame
+        //   scenario — "classic" | "windWith" | "windAgainst" | "upright" (built-in preset)
+        //   problem  — 1 or 2 (loads the matching HSC problem, also sets vm/vr/vw)
+        //   view     — "sim" or "vector" (mobile canvas view switcher)
+        // Precedence: scenario/problem presets apply first, then individual vm/vr/vw/angle/auto
+        // overrides apply on top, so a link can start from a preset and tweak one value.
+        // ============================================
+        function clampNum(val, min, max) {
+            return Math.max(min, Math.min(max, val));
+        }
+
+        function applyQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            if ([...params.keys()].length === 0) return false;
+
+            const q = {};
+            for (const [key, value] of params.entries()) q[key.toLowerCase()] = value;
+
+            const scenarioDefs = {
+                classic: btnPresetClassic,
+                'wind-with': btnPresetWindWith,
+                windwith: btnPresetWindWith,
+                'wind-against': btnPresetWindAgainst,
+                windagainst: btnPresetWindAgainst,
+                upright: btnPresetUpright
+            };
+
+            // 1. Apply named preset / HSC problem first (sets baseline vm/vr/vw)
+            const scenarioKey = (q.scenario || '').toLowerCase();
+            if (scenarioDefs[scenarioKey]) {
+                scenarioDefs[scenarioKey].click();
+            }
+
+            const problemId = parseInt(q.problem, 10);
+            if (!isNaN(problemId) && hscProblems[problemId - 1]) {
+                selectProblem(problemId);
+            }
+
+            // 2. Individual velocity overrides
+            if (q.vm !== undefined && !isNaN(parseFloat(q.vm))) {
+                sliderVm.value = clampNum(parseFloat(q.vm), parseFloat(sliderVm.min), parseFloat(sliderVm.max));
+            }
+            if (q.vr !== undefined && !isNaN(parseFloat(q.vr))) {
+                sliderVr.value = clampNum(parseFloat(q.vr), parseFloat(sliderVr.min), parseFloat(sliderVr.max));
+            }
+            if (q.vw !== undefined && !isNaN(parseFloat(q.vw))) {
+                sliderVw.value = clampNum(parseFloat(q.vw), parseFloat(sliderVw.min), parseFloat(sliderVw.max));
+            }
+
+            // 3. Umbrella angle / auto-align mode
+            const autoParam = (q.auto || '').toLowerCase();
+            if (autoParam === 'false' || autoParam === '0') isAutoUmbrella = false;
+            if (autoParam === 'true' || autoParam === '1') isAutoUmbrella = true;
+
+            if (q.angle !== undefined && !isNaN(parseFloat(q.angle))) {
+                sliderUmb.value = clampNum(parseFloat(q.angle), -89, 89);
+                isAutoUmbrella = false; // an explicit angle always means manual mode
+            }
+            if (btnToggleAutoUmb) {
+                if (isAutoUmbrella) {
+                    btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-[#1CAB55] text-white border border-[#0E7B4F] cursor-pointer shadow-xs";
+                    btnToggleAutoUmb.innerText = "অটো";
+                } else {
+                    btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer shadow-xs";
+                    btnToggleAutoUmb.innerText = "ম্যানুয়াল";
+                }
+            }
+
+            // 4. Reference frame
+            const frameParam = (q.frame || '').toLowerCase();
+            if (frameParam === 'man' || frameParam === 'runner') btnFrameMan.click();
+            else if (frameParam === 'earth') btnFrameEarth.click();
+
+            // 5. Mobile canvas view switcher
+            const viewParam = (q.view || '').toLowerCase();
+            if (viewParam === 'vector') btnViewVector.click();
+            else if (viewParam === 'sim' || viewParam === 'simulation') btnViewSim.click();
+
+            updatePhysicsValues();
+            return true;
+        }
+
         // --- p5.js Animation Visual Engine ---
         function setup() {
             const container = document.getElementById('canvas-container');
@@ -1038,10 +1132,14 @@
             }
 
             updatePhysicsValues();
-            
-            // Initialize with the first problem selected
+
+            // Initialize from URL query params if present (?vm=&vr=&vw=&angle=&scenario=&problem=...),
+            // otherwise fall back to the default demo (Problem 1)
             setTimeout(() => {
-                selectProblem(1);
+                const appliedFromQuery = applyQueryParams();
+                if (!appliedFromQuery) {
+                    selectProblem(1);
+                }
             }, 100);
 
             // Trigger initial Lucide render
