@@ -1730,20 +1730,14 @@
                 });
             }
 
-            // Populate drifting storm clouds — bump layout is fixed per cloud at creation
-            // so the scalloped silhouette doesn't reshuffle every frame
+            // Populate drifting storm clouds
             for (let i = 0; i < 4; i++) {
-                let cw = random(120, 195);
-                let ch = random(55, 76);
-                let layout = computeCloudBumps(cw, ch);
                 clouds.push({
                     x: random(0, width),
-                    y: random(28, 85),
-                    w: cw,
-                    h: ch,
-                    bumps: layout.bumps,
-                    outlinePoints: layout.outlinePoints,
-                    alpha: random(205, 245),
+                    y: random(25, 85),
+                    w: random(110, 190),
+                    h: random(50, 72),
+                    alpha: random(130, 190),
                     driftSpeed: random(0.15, 0.35) * (random() < 0.5 ? -1 : 1)
                 });
             }
@@ -1894,71 +1888,36 @@
             }
         }
 
-        // Fixed relative bump layout for one cloud's scalloped cumulus silhouette,
-        // plus the actual upper envelope of those overlapping circles — sampling each
-        // bump's own arc independently (or sorting those samples by x) produces jagged
-        // zigzags wherever bumps overlap, since points from different arcs interleave.
-        // The correct silhouette is, at each x, whichever bump's edge is topmost there.
-        function computeCloudBumps(w, h) {
-            const bumps = [
-                { dx: -w * 0.36, dy: h * 0.18, r: h * 0.40 },
-                { dx: -w * 0.16, dy: -h * 0.06, r: h * 0.52 },
-                { dx:  w * 0.06, dy: -h * 0.16, r: h * 0.58 },
-                { dx:  w * 0.26, dy: -h * 0.02, r: h * 0.48 },
-                { dx:  w * 0.42, dy:  h * 0.16, r: h * 0.36 }
-            ];
-
-            const left = -w * 0.42, right = w * 0.42;
-            const samples = 48;
-            const outlinePoints = [];
-            for (let i = 0; i <= samples; i++) {
-                let x = left + (right - left) * (i / samples);
-                let topY = Infinity;
-                for (let b of bumps) {
-                    let dx2 = (x - b.dx) * (x - b.dx);
-                    if (dx2 <= b.r * b.r) {
-                        let y = b.dy - Math.sqrt(b.r * b.r - dx2);
-                        if (y < topY) topY = y;
-                    }
-                }
-                if (topY !== Infinity) outlinePoints.push({ x, y: topY });
-            }
-
-            return { bumps, outlinePoints };
-        }
-
-        // Flat cartoon-style clouds: a solid indigo-purple scalloped silhouette
-        // with a soft moonlit highlight on one side and a clean outline —
-        // built from overlapping opaque bumps plus a traced scalloped outline.
+        // Slow-drifting storm clouds, high in the sky
+        // Layered, moonlit-cumulus style clouds: dark indigo shadowed base,
+        // a mid tone, and a soft silvery-blue highlight lit from above.
         function drawClouds(simWidth) {
+            noStroke();
             for (let c of clouds) {
                 push();
                 translate(c.x, c.y);
                 let a = c.alpha;
 
-                // Solid body — opaque bumps merge into one silhouette, flat rounded base fills the gap below
-                noStroke();
-                fill(58, 58, 168, a);
-                for (let b of c.bumps) ellipse(b.dx, b.dy, b.r * 2, b.r * 2);
-                rect(-c.w * 0.42, 0, c.w * 0.84, c.h * 0.32, c.h * 0.16);
+                // Shadowed underside — widest, lowest layer
+                fill(24, 32, 56, a * 0.95);
+                ellipse(0, c.h * 0.30, c.w, c.h * 0.60);
+                ellipse(-c.w * 0.34, c.h * 0.36, c.w * 0.58, c.h * 0.46);
+                ellipse(c.w * 0.34, c.h * 0.34, c.w * 0.54, c.h * 0.44);
+                ellipse(-c.w * 0.12, c.h * 0.18, c.w * 0.42, c.h * 0.38);
+                ellipse(c.w * 0.16, c.h * 0.14, c.w * 0.44, c.h * 0.4);
 
-                // Soft moonlit highlight on the upper-left
-                fill(122, 122, 224, a * 0.5);
-                ellipse(-c.w * 0.16, -c.h * 0.12, c.w * 0.42, c.h * 0.42);
+                // Mid-tone body
+                fill(52, 68, 102, a);
+                ellipse(-c.w * 0.12, -c.h * 0.02, c.w * 0.58, c.h * 0.52);
+                ellipse(c.w * 0.2, c.h * 0.02, c.w * 0.5, c.h * 0.46);
+                ellipse(0, -c.h * 0.16, c.w * 0.46, c.h * 0.42);
 
-                // Clean scalloped outline traced along each bump's own arc — dips
-                // between bumps where their circles overlap, giving real scallops
-                noFill();
-                stroke(158, 158, 238, a);
-                strokeWeight(2);
-                beginShape();
-                curveVertex(-c.w * 0.42, c.h * 0.3);
-                curveVertex(-c.w * 0.42, c.h * 0.3);
-                for (let p of c.outlinePoints) curveVertex(p.x, p.y);
-                curveVertex(c.w * 0.42, c.h * 0.3);
-                curveVertex(c.w * 0.42, c.h * 0.3);
-                endShape();
-                line(-c.w * 0.42, c.h * 0.3, c.w * 0.42, c.h * 0.3);
+                // Moonlit highlight — smaller, upper-center, brightest layer
+                fill(150, 172, 205, a * 0.9);
+                ellipse(-c.w * 0.04, -c.h * 0.32, c.w * 0.34, c.h * 0.3);
+                ellipse(c.w * 0.12, -c.h * 0.26, c.w * 0.28, c.h * 0.26);
+                fill(196, 210, 232, a * 0.55);
+                ellipse(-c.w * 0.02, -c.h * 0.38, c.w * 0.18, c.h * 0.16);
 
                 pop();
 
