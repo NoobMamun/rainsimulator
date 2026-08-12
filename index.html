@@ -915,6 +915,11 @@
         let canopySplashes = [];    // Water splashes bouncing off top of umbrella canopy
         let groundSplashes = [];    // Crown-shaped droplet/mud burst where raindrops hit open ground
         let groundRipples = [];     // Expanding rings marking each ground impact
+        let clouds = [];            // Slow-drifting storm clouds in the sky
+        let lightningTimer = 0;
+        let lightningNextIn = 400;  // frames until the next strike, re-randomized after each one
+        let lightningBolt = null;   // {points, life} while a bolt is visible
+        let lightningFlashAlpha = 0; // brief whole-scene brightening when a strike happens
         let personWetThisFrame = false;
         let roadScroll = 0;
         let sceneryScroll = 0; // background house/trees scroll offset, accumulates slower than the road for a parallax feel
@@ -1725,6 +1730,19 @@
                 });
             }
 
+            // Populate drifting storm clouds
+            for (let i = 0; i < 4; i++) {
+                clouds.push({
+                    x: random(0, width),
+                    y: random(20, 80),
+                    w: random(90, 160),
+                    h: random(30, 45),
+                    alpha: random(90, 150),
+                    driftSpeed: random(0.15, 0.35) * (random() < 0.5 ? -1 : 1)
+                });
+            }
+            lightningNextIn = random(300, 600);
+
             updatePhysicsValues();
 
             // Initialize from URL query params if present (?vm=&vr=&vw=&angle=&scenario=&problem=...),
@@ -1870,8 +1888,81 @@
             }
         }
 
+        // Slow-drifting storm clouds, high in the sky
+        function drawClouds(simWidth) {
+            noStroke();
+            for (let c of clouds) {
+                fill(60, 65, 80, c.alpha);
+                ellipse(c.x, c.y, c.w, c.h * 0.6);
+                ellipse(c.x - c.w * 0.3, c.y + c.h * 0.15, c.w * 0.6, c.h * 0.5);
+                ellipse(c.x + c.w * 0.3, c.y + c.h * 0.1, c.w * 0.55, c.h * 0.45);
+
+                c.x += c.driftSpeed;
+                if (c.driftSpeed >= 0 && c.x - c.w > simWidth) c.x = -c.w;
+                if (c.driftSpeed < 0 && c.x + c.w < 0) c.x = simWidth + c.w;
+            }
+        }
+
+        // Builds one jagged bolt from a random point in the sky down toward the ground
+        function generateLightningBolt(simWidth, groundY) {
+            let startX = random(simWidth * 0.2, simWidth * 0.8);
+            let startY = 8;
+            let endY = groundY - random(20, 70);
+            let points = [{ x: startX, y: startY }];
+            const segments = 6;
+            for (let i = 1; i <= segments; i++) {
+                let progress = i / segments;
+                let y = startY + (endY - startY) * progress;
+                let x = startX + random(-24, 24) * (1 - progress * 0.3);
+                points.push({ x, y });
+            }
+            return { points, life: 40 };
+        }
+
+        // Advances the lightning timer, occasionally striking a new bolt, and draws the current one
+        function updateLightning(simWidth, groundY) {
+            lightningTimer++;
+            if (lightningTimer >= lightningNextIn && !lightningBolt) {
+                lightningBolt = generateLightningBolt(simWidth, groundY);
+                lightningFlashAlpha = 165;
+                lightningTimer = 0;
+                lightningNextIn = random(500, 1000); // next strike roughly 8-17s later at 60fps
+            }
+
+            if (lightningBolt) {
+                let a = lightningBolt.life;
+                noFill();
+                stroke(180, 200, 255, a * 2); // soft outer glow
+                strokeWeight(4);
+                beginShape();
+                for (let p of lightningBolt.points) vertex(p.x, p.y);
+                endShape();
+                stroke(255, 255, 255, a * 4); // bright core
+                strokeWeight(2);
+                beginShape();
+                for (let p of lightningBolt.points) vertex(p.x, p.y);
+                endShape();
+
+                lightningBolt.life -= 4;
+                if (lightningBolt.life <= 0) lightningBolt = null;
+            }
+        }
+
+        // Brief whole-scene brightening timed to each lightning strike
+        function drawLightningFlash(simWidth, groundY) {
+            if (lightningFlashAlpha <= 0) return;
+            noStroke();
+            fill(220, 230, 255, lightningFlashAlpha);
+            rect(0, 0, simWidth, groundY + 20);
+            lightningFlashAlpha -= 15;
+        }
+
         // Draw Simulation View on Left Part of Canvas
         function drawSimulationView(simWidth) {
+            // Sky layer: drifting clouds + occasional lightning, behind the ground/rain/runner
+            drawClouds(simWidth);
+            updateLightning(simWidth, height - 100);
+
             // Ground
             noStroke();
             fill(30, 41, 59); // slate-800
@@ -2123,6 +2214,9 @@
 
             // DRAW RUNNING CHARACTER, WATER DROPLETS ON BODY, AND UMBRELLA
             drawRunner(runnerPos, groundY);
+
+            // Lightning flash washes over the whole scene, on top of everything but the HUD
+            drawLightningFlash(simWidth, groundY);
 
             // Draw a neat label for wind speed direction banner
             drawSimulationIndicators(simWidth);
