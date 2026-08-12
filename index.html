@@ -405,6 +405,30 @@
             cursor: pointer;
         }
         .tour-next:hover { background: #17994B; }
+
+        /* ============================================
+           LANGUAGE TOGGLE
+        ============================================ */
+        .lang-btn {
+            padding: 4px 9px;
+            border-radius: var(--r-pill);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--gray-600);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all var(--dur-base) var(--ease-out);
+            line-height: 1.4;
+        }
+        .lang-btn.active {
+            background: var(--success);
+            color: #fff;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.25);
+        }
+        @media (min-width: 640px) {
+            .lang-btn { padding: 5px 13px; font-size: 12px; }
+        }
     </style>
 </head>
 <body class="text-slate-900 bg-gray-50 min-h-screen">
@@ -412,14 +436,20 @@
     <div class="max-w-[1216px] mx-auto px-4 md:px-6 py-2 sm:py-6 bn flex flex-col gap-3 sm:gap-6">
         <!-- Header -->
         <header class="mb-1 sm:mb-4 text-center relative">
-            <button id="btn-tutorial" type="button" class="absolute top-0 right-0 flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[#931212] hover:bg-[#7a0f0f] text-white text-[10px] sm:text-xs font-bold shadow-sm transition cursor-pointer">
-                <i data-lucide="compass" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-                <span>টিউটোরিয়াল</span>
-            </button>
-            <div class="mt-1 sm:mt-2 mb-1.5 sm:mb-3 flex justify-center">
-                <span class="px-2.5 py-1 text-[11px] font-bold tracking-wider bg-[#E8001D]/10 text-[#E8001D] rounded-full border border-[#E8001D]/30 uppercase">১০ মিনিট স্কুল ইন্টারেক্টিভ ল্যাব</span>
+            <div class="absolute top-0 right-0 flex items-center gap-1.5 sm:gap-2">
+                <div id="lang-toggle" class="flex items-center bg-gray-100 border border-gray-200 rounded-full p-0.5 gap-0.5">
+                    <button id="lang-btn-bn" type="button" data-lang="bn" class="lang-btn active">বাং</button>
+                    <button id="lang-btn-en" type="button" data-lang="en" class="lang-btn">EN</button>
+                </div>
+                <button id="btn-tutorial" type="button" class="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[#931212] hover:bg-[#7a0f0f] text-white text-[10px] sm:text-xs font-bold shadow-sm transition cursor-pointer">
+                    <i data-lucide="compass" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                    <span data-i18n="tutorialBtn">টিউটোরিয়াল</span>
+                </button>
             </div>
-            <h1 class="text-sm sm:text-base md:text-4xl font-extrabold text-[#931212] mb-0 sm:mb-1 tracking-tight bn">
+            <div class="mt-1 sm:mt-2 mb-1.5 sm:mb-3 flex justify-center">
+                <span data-i18n="headerBadge" class="px-2.5 py-1 text-[11px] font-bold tracking-wider bg-[#E8001D]/10 text-[#E8001D] rounded-full border border-[#E8001D]/30 uppercase">১০ মিনিট স্কুল ইন্টারেক্টিভ ল্যাব</span>
+            </div>
+            <h1 data-i18n="pageTitle" class="text-sm sm:text-base md:text-4xl font-extrabold text-[#931212] mb-0 sm:mb-1 tracking-tight bn">
                 বৃষ্টি ও ছাতা সংক্রান্ত আপেক্ষিক বেগ
             </h1>
 
@@ -434,15 +464,15 @@
                     <div class="flex flex-wrap justify-between sm:justify-between items-center mb-2 sm:mb-4 gap-2 sm:gap-4">
                         <div class="hidden sm:flex items-center gap-2">
                             <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
-                            <h2 class="text-lg font-bold text-gray-900">ইন্টারেক্টিভ ক্যানভাস</h2>
+                            <h2 data-i18n="canvasTitle" class="text-lg font-bold text-gray-900">ইন্টারেক্টিভ ক্যানভাস</h2>
                         </div>
-                        
+
                         <!-- Toggle Controls inside visualizer -->
                         <div id="frame-toggle-group" class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1 w-full sm:w-auto justify-center">
-                            <button id="btn-frame-earth" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm text-white bg-[#1CAB55] border border-[#0E7B4F]">
+                            <button id="btn-frame-earth" data-i18n="frameEarthBtn" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer shadow-sm text-white bg-[#1CAB55] border border-[#0E7B4F]">
                                 ভূপৃষ্ঠের সাপেক্ষে
                             </button>
-                            <button id="btn-frame-man" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-gray-600 hover:text-gray-900">
+                            <button id="btn-frame-man" data-i18n="frameManBtn" class="flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-gray-600 hover:text-gray-900">
                                 চলন্ত লোকের সাপেক্ষে
                             </button>
                         </div>
@@ -452,15 +482,15 @@
                     <div id="canvas-container" class="w-full flex justify-center bg-[#0B1117] rounded-2xl overflow-hidden shadow-inner border border-gray-800 relative">
                         <!-- Canvas View Mode Switcher overlay (Mobile/Tablet helper) -->
                         <div id="mobile-view-switcher" class="lg:hidden absolute bottom-4 left-4 z-10 flex bg-white/90 backdrop-blur-sm p-1 rounded-xl border border-gray-200 shadow-lg gap-1">
-                            <button id="btn-view-sim" class="px-3 py-1 text-xs font-bold rounded-lg text-white bg-[#1CAB55] border border-[#0E7B4F]">সিমুলেশন</button>
-                            <button id="btn-view-vector" class="px-3 py-1 text-xs font-bold rounded-lg text-gray-600">ভেক্টর ল্যাব</button>
+                            <button id="btn-view-sim" data-i18n="viewSimBtn" class="px-3 py-1 text-xs font-bold rounded-lg text-white bg-[#1CAB55] border border-[#0E7B4F]">সিমুলেশন</button>
+                            <button id="btn-view-vector" data-i18n="viewVectorBtn" class="px-3 py-1 text-xs font-bold rounded-lg text-gray-600">ভেক্টর ল্যাব</button>
                         </div>
 
                         <!-- 🚨 RED ALERT — compact overlay inside canvas (top-right) -->
                         <div id="red-alert-panel" role="alert" aria-live="assertive">
                             <span class="alert-icon">🚨</span>
                             <div class="alert-body">
-                                <div class="alert-title">মানুষটি ভিজছেন!</div>
+                                <div class="alert-title" data-i18n="alertTitle">মানুষটি ভিজছেন!</div>
                                 <div class="alert-status-bar">
                                     <span class="alert-dot"></span>
                                     <span id="alert-detail-text">ছাতা: 0.0° (প্রয়োজনীয়: 0.0°)</span>
@@ -472,7 +502,7 @@
                         <!-- ✅ Safe panel — small, same position -->
                         <div id="safe-panel">
                             <span>✅</span>
-                            <span>মানুষটি এখন সুরক্ষিত আছেন!</span>
+                            <span data-i18n="safePanelText">মানুষটি এখন সুরক্ষিত আছেন!</span>
                         </div>
                     </div>
                 </div>
@@ -482,14 +512,14 @@
             <div class="lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:row-span-2">
                 <div class="card bg-white border border-gray-200 shadow-sm">
                     <h2 class="text-xs sm:text-lg font-bold text-gray-900 mb-3 sm:mb-6 border-b border-gray-200 pb-2 sm:pb-3 flex justify-between items-center">
-                        <span class="flex items-center"><i data-lucide="sliders" class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-gray-500 mr-1.5 sm:mr-2"></i>নিয়ন্ত্রণ প্যানেল (Controls)</span>
-                        <span class="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-[#E8001D]/10 text-[#E8001D] border border-[#E8001D]/20 text-[10px] sm:text-[11px] font-bold rounded-full">চলকসমূহ</span>
+                        <span data-i18n="controlsPanelTitle" class="flex items-center"><i data-lucide="sliders" class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-gray-500 mr-1.5 sm:mr-2"></i>নিয়ন্ত্রণ প্যানেল (Controls)</span>
+                        <span data-i18n="controlsBadge" class="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-[#E8001D]/10 text-[#E8001D] border border-[#E8001D]/20 text-[10px] sm:text-[11px] font-bold rounded-full">চলকসমূহ</span>
                     </h2>
                     
                     <!-- Slider: Man's velocity -->
                     <div id="control-vm-group" class="mb-3.5 sm:mb-5">
                         <div class="flex justify-between mb-1.5">
-                            <label class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                            <label data-i18n="vmLabel" class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#274FE3]"></span>
                                 চলন্ত লোকের বেগ (<i>v</i><sub>m</sub>):
                             </label>
@@ -502,7 +532,7 @@
                     <!-- Slider: Rain's velocity -->
                     <div id="control-vr-group" class="mb-3.5 sm:mb-5">
                         <div class="flex justify-between mb-1.5">
-                            <label class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                            <label data-i18n="vrLabel" class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#1CAB55]"></span>
                                 বৃষ্টির বেগ (<i>v</i><sub>r</sub>):
                             </label>
@@ -515,7 +545,7 @@
                     <!-- Slider: Wind's velocity -->
                     <div id="control-vw-group" class="mb-3.5 sm:mb-5">
                         <div class="flex justify-between mb-1.5">
-                            <label class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                            <label data-i18n="vwLabel" class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
                                 বাতাসের বেগ (<i>v</i><sub>w</sub>):
                             </label>
@@ -528,14 +558,14 @@
                     <!-- Slider: Umbrella Angle -->
                     <div id="control-umbrella-group" class="mb-4 sm:mb-6 p-2.5 sm:p-3 bg-amber-50/70 rounded-xl border border-amber-200/90 shadow-xs">
                         <div class="flex justify-between items-center mb-1.5">
-                            <label class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                            <label data-i18n="umbrellaLabel" class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#E7B946]"></span>
                                 ছাতার কোণ (<i>&theta;</i><sub>ছাতা</sub>):
                             </label>
                             <div class="flex items-center gap-1.5">
                                 <div class="relative flex items-center">
                                     <input type="number" id="umb-angle-input" min="-89" max="89" step="0.1" value="53.1"
-                                           class="w-16 text-center text-xs font-extrabold text-amber-800 bg-white px-1 py-0.5 rounded-md border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 shadow-xs" title="ম্যানুয়ালি কোণ লিখুন (Degree)">
+                                           class="w-16 text-center text-xs font-extrabold text-amber-800 bg-white px-1 py-0.5 rounded-md border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 shadow-xs" data-i18n-title="umbAngleInputTitle" title="ম্যানুয়ালি কোণ লিখুন (Degree)">
                                     <span class="text-xs font-extrabold text-amber-800 ml-0.5">°</span>
                                 </div>
                                 <button id="btn-toggle-auto-umb" class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-[#1CAB55] text-white border border-[#0E7B4F] cursor-pointer shadow-xs">অটো</button>
@@ -550,18 +580,18 @@
                     </div>
 
                     <!-- Presets Header -->
-                    <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2.5">সিমুলেশন কেসসমূহ (Scenarios)</div>
+                    <div data-i18n="presetsHeader" class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2.5">সিমুলেশন কেসসমূহ (Scenarios)</div>
                     <div id="control-presets-group" class="grid grid-cols-2 gap-2 mb-4">
-                        <button id="btn-preset-classic" class="px-2 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-[11px] font-semibold flex items-center justify-center text-center cursor-pointer shadow-sm">
+                        <button id="btn-preset-classic" data-i18n="presetClassic" class="px-2 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-[11px] font-semibold flex items-center justify-center text-center cursor-pointer shadow-sm">
                             বাতাসহীন (স্বাভাবিক)
                         </button>
-                        <button id="btn-preset-wind-with" class="px-2 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-[11px] font-semibold flex items-center justify-center text-center cursor-pointer shadow-sm">
+                        <button id="btn-preset-wind-with" data-i18n="presetWindWith" class="px-2 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-[11px] font-semibold flex items-center justify-center text-center cursor-pointer shadow-sm">
                             বাতাস ও লোক একই দিকে
                         </button>
-                        <button id="btn-preset-wind-against" class="px-2 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-[11px] font-semibold flex items-center justify-center text-center cursor-pointer shadow-sm">
+                        <button id="btn-preset-wind-against" data-i18n="presetWindAgainst" class="px-2 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-[11px] font-semibold flex items-center justify-center text-center cursor-pointer shadow-sm">
                             বাতাস ও লোক বিপরীত দিকে
                         </button>
-                        <button id="btn-preset-upright" class="px-2 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-[11px] font-semibold flex items-center justify-center text-center cursor-pointer shadow-sm">
+                        <button id="btn-preset-upright" data-i18n="presetUpright" class="px-2 py-1.5 bg-white hover:bg-gray-50 text-gray-700 rounded-lg border border-gray-200 hover:border-gray-300 transition text-[11px] font-semibold flex items-center justify-center text-center cursor-pointer shadow-sm">
                             ছাতা সোজা (উল্লম্ব)
                         </button>
                     </div>
@@ -574,29 +604,29 @@
                 <div class="card bg-white border border-gray-200 shadow-sm flex flex-col gap-4">
                     <div id="explanation-tabs-group" class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1.5 w-full mb-2">
                         <button id="tab-concepts" class="group-tab active">
-                            <i data-lucide="book-open" class="w-4 h-4 inline-block align-middle mr-1.5"></i>তাত্ত্বিক আলোচনা
+                            <i data-lucide="book-open" class="w-4 h-4 inline-block align-middle mr-1.5"></i><span data-i18n="tabConcepts">তাত্ত্বিক আলোচনা</span>
                         </button>
                         <button id="tab-problems" class="group-tab">
-                            <i data-lucide="edit-3" class="w-4 h-4 inline-block align-middle mr-1.5"></i>এইচএসসি সমস্যা সমাধান
+                            <i data-lucide="edit-3" class="w-4 h-4 inline-block align-middle mr-1.5"></i><span data-i18n="tabProblems">এইচএসসি সমস্যা সমাধান</span>
                         </button>
                     </div>
 
                     <!-- Tab Content: Concepts -->
                     <div id="content-concepts" class="space-y-3 text-sm text-gray-600 leading-relaxed animate-fadeIn">
-                        <p>
+                        <p data-i18n="conceptsIntro">
                             যখন কোনো ব্যক্তি বৃষ্টির মধ্যে গতিশীল থাকেন, তখন তিনি বৃষ্টির প্রকৃত বেগ অনুভব করেন না। গতিশীলতার কারণে বৃষ্টির আপেক্ষিক বেগ তার কাছে পরিবর্তিত হয়ে যায়। একেই <strong>আপেক্ষিক বেগ (Relative Velocity)</strong> বলে।
                         </p>
                         <ul class="list-disc pl-5 space-y-2 mt-2">
-                            <li><strong class="text-[#274FE3]">Earth Frame (ভূপৃষ্ঠের সাপেক্ষে):</strong> এখানে আমরা দেখতে পাই বৃষ্টি তার প্রকৃত বেগে পড়ছে (বাতাস থাকলে হেলানোভাবে) এবং মানুষটি চলমান। কিন্তু নিজেকে ভিজা থেকে বাঁচাতে মানুষটিকে ছাতাটি আপেক্ষিক বেগের দিকেই ধরতে হয়।</li>
-                            <li><strong class="text-[#1CAB55]">Runner Frame (লোকের সাপেক্ষে):</strong> এখানে মানুষটি স্থির থাকে। চারপাশের গাছপালা ও রাস্তা পেছনের দিকে সরে যায়। বৃষ্টি আপেক্ষিক কোণে মানুষের গায়ে এসে পড়ে, তাই সোজা আপেক্ষিক বেগের বিপরীতে ছাতা ধরলে মানুষটি পুরোপুরি সুরক্ষিত থাকে।</li>
+                            <li data-i18n="conceptsBulletEarth"><strong class="text-[#274FE3]">Earth Frame (ভূপৃষ্ঠের সাপেক্ষে):</strong> এখানে আমরা দেখতে পাই বৃষ্টি তার প্রকৃত বেগে পড়ছে (বাতাস থাকলে হেলানোভাবে) এবং মানুষটি চলমান। কিন্তু নিজেকে ভিজা থেকে বাঁচাতে মানুষটিকে ছাতাটি আপেক্ষিক বেগের দিকেই ধরতে হয়।</li>
+                            <li data-i18n="conceptsBulletRunner"><strong class="text-[#1CAB55]">Runner Frame (লোকের সাপেক্ষে):</strong> এখানে মানুষটি স্থির থাকে। চারপাশের গাছপালা ও রাস্তা পেছনের দিকে সরে যায়। বৃষ্টি আপেক্ষিক কোণে মানুষের গায়ে এসে পড়ে, তাই সোজা আপেক্ষিক বেগের বিপরীতে ছাতা ধরলে মানুষটি পুরোপুরি সুরক্ষিত থাকে।</li>
                         </ul>
                     </div>
 
                     <!-- Tab Content: Problem Solver -->
                     <div id="content-problems" class="hidden space-y-4 animate-fadeIn">
                         <div id="problem-buttons-group" class="flex flex-wrap gap-2 mb-2">
-                            <button id="btn-prob-1" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ১</button>
-                            <button id="btn-prob-2" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ২</button>
+                            <button id="btn-prob-1" data-i18n="prob1Btn" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ১</button>
+                            <button id="btn-prob-2" data-i18n="prob2Btn" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ২</button>
                         </div>
                         
                         <!-- Problem Solutions Container -->
@@ -611,7 +641,7 @@
 
         <!-- Footer -->
         <footer class="mt-12 text-center text-white/50 text-sm border-t border-white/10 pt-6 pb-6 bg-[#0A0004] rounded-t-2xl -mx-4 md:-mx-6 px-4">
-            <p>এইচএসসি পদার্থবিজ্ঞান শিক্ষার্থীদের জন্য ডিজাইনকৃত • ভেক্টর আপেক্ষিক বেগ ভিজ্যুয়ালাইজেশন টুল</p>
+            <p data-i18n="footerText">এইচএসসি পদার্থবিজ্ঞান শিক্ষার্থীদের জন্য ডিজাইনকৃত • ভেক্টর আপেক্ষিক বেগ ভিজ্যুয়ালাইজেশন টুল</p>
         </footer>
     </div>
 
@@ -627,9 +657,9 @@
             <p id="tour-desc" class="tour-desc"></p>
             <div id="tour-progress" class="tour-progress"></div>
             <div class="tour-actions">
-                <button id="tour-skip" type="button" class="tour-skip">এড়িয়ে যান</button>
+                <button id="tour-skip" type="button" data-i18n="tourSkip" class="tour-skip">এড়িয়ে যান</button>
                 <div class="flex gap-2">
-                    <button id="tour-back" type="button" class="tour-back">পেছনে</button>
+                    <button id="tour-back" type="button" data-i18n="tourBack" class="tour-back">পেছনে</button>
                     <button id="tour-next" type="button" class="tour-next">পরবর্তী</button>
                 </div>
             </div>
@@ -647,6 +677,122 @@
         const COLOR_VR_GLOW = '#34D399';
         const COLOR_VW_GLOW = '#F472B6';
         const COLOR_VRM_GLOW = '#FBBF24';
+
+        // ============================================
+        // LANGUAGE / TRANSLATION SYSTEM
+        // Every user-facing string (static markup + dynamically generated
+        // text) is looked up through t(key, ...args). Static elements are
+        // marked with data-i18n="key" (innerHTML swap) or
+        // data-i18n-title="key" (title attribute swap); dynamic strings call
+        // t() directly wherever they're generated.
+        // ============================================
+        let currentLang = localStorage.getItem('rainSimLang') === 'en' ? 'en' : 'bn';
+
+        const I18N = {
+            tutorialBtn:        { bn: 'টিউটোরিয়াল', en: 'Tutorial' },
+            headerBadge:        { bn: '১০ মিনিট স্কুল ইন্টারেক্টিভ ল্যাব', en: '10 Minute School Interactive Lab' },
+            pageTitle:          { bn: 'বৃষ্টি ও ছাতা সংক্রান্ত আপেক্ষিক বেগ', en: 'Relative Velocity of Rain & Umbrella' },
+            canvasTitle:        { bn: 'ইন্টারেক্টিভ ক্যানভাস', en: 'Interactive Canvas' },
+            frameEarthBtn:      { bn: 'ভূপৃষ্ঠের সাপেক্ষে', en: "Earth's Frame" },
+            frameManBtn:        { bn: 'চলন্ত লোকের সাপেক্ষে', en: "Runner's Frame" },
+            viewSimBtn:         { bn: 'সিমুলেশন', en: 'Simulation' },
+            viewVectorBtn:      { bn: 'ভেক্টর ল্যাব', en: 'Vector Lab' },
+            alertTitle:         { bn: 'মানুষটি ভিজছেন!', en: 'Getting wet!' },
+            safePanelText:      { bn: 'মানুষটি এখন সুরক্ষিত আছেন!', en: 'The person is safe now!' },
+            controlsPanelTitle: { bn: '<i data-lucide="sliders" class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-gray-500 mr-1.5 sm:mr-2"></i>নিয়ন্ত্রণ প্যানেল (Controls)', en: '<i data-lucide="sliders" class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-gray-500 mr-1.5 sm:mr-2"></i>Control Panel' },
+            controlsBadge:      { bn: 'চলকসমূহ', en: 'Variables' },
+            vmLabel:            { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#274FE3]"></span>চলন্ত লোকের বেগ (<i>v</i><sub>m</sub>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#274FE3]"></span>Man\'s velocity (<i>v</i><sub>m</sub>):' },
+            vrLabel:            { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#1CAB55]"></span>বৃষ্টির বেগ (<i>v</i><sub>r</sub>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#1CAB55]"></span>Rain\'s velocity (<i>v</i><sub>r</sub>):' },
+            vwLabel:            { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>বাতাসের বেগ (<i>v</i><sub>w</sub>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>Wind\'s velocity (<i>v</i><sub>w</sub>):' },
+            umbrellaLabel:      { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#E7B946]"></span>ছাতার কোণ (<i>&theta;</i><sub>ছাতা</sub>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#E7B946]"></span>Umbrella angle (<i>&theta;</i><sub>umb</sub>):' },
+            umbAngleInputTitle: { bn: 'ম্যানুয়ালি কোণ লিখুন (Degree)', en: 'Enter angle manually (Degree)' },
+            presetsHeader:      { bn: 'সিমুলেশন কেসসমূহ (Scenarios)', en: 'Simulation Cases (Scenarios)' },
+            presetClassic:      { bn: 'বাতাসহীন (স্বাভাবিক)', en: 'No Wind (Normal)' },
+            presetWindWith:     { bn: 'বাতাস ও লোক একই দিকে', en: 'Wind & Person Same Direction' },
+            presetWindAgainst:  { bn: 'বাতাস ও লোক বিপরীত দিকে', en: 'Wind & Person Opposite Direction' },
+            presetUpright:      { bn: 'ছাতা সোজা (উল্লম্ব)', en: 'Umbrella Upright (Vertical)' },
+            tabConcepts:        { bn: 'তাত্ত্বিক আলোচনা', en: 'Theory' },
+            tabProblems:        { bn: 'এইচএসসি সমস্যা সমাধান', en: 'HSC Problem Solving' },
+            conceptsIntro:      { bn: 'যখন কোনো ব্যক্তি বৃষ্টির মধ্যে গতিশীল থাকেন, তখন তিনি বৃষ্টির প্রকৃত বেগ অনুভব করেন না। গতিশীলতার কারণে বৃষ্টির আপেক্ষিক বেগ তার কাছে পরিবর্তিত হয়ে যায়। একেই <strong>আপেক্ষিক বেগ (Relative Velocity)</strong> বলে।', en: 'When a person moves through rain, they don\'t experience the rain\'s true velocity. Their own motion changes how the rain appears to fall relative to them. This is called <strong>Relative Velocity</strong>.' },
+            conceptsBulletEarth:  { bn: '<strong class="text-[#274FE3]">Earth Frame (ভূপৃষ্ঠের সাপেক্ষে):</strong> এখানে আমরা দেখতে পাই বৃষ্টি তার প্রকৃত বেগে পড়ছে (বাতাস থাকলে হেলানোভাবে) এবং মানুষটি চলমান। কিন্তু নিজেকে ভিজা থেকে বাঁচাতে মানুষটিকে ছাতাটি আপেক্ষিক বেগের দিকেই ধরতে হয়।', en: '<strong class="text-[#274FE3]">Earth Frame:</strong> Here we see the rain falling at its true velocity (tilted if there\'s wind) while the person is moving. But to stay dry, the person still has to hold the umbrella against the relative velocity, not the true velocity.' },
+            conceptsBulletRunner: { bn: '<strong class="text-[#1CAB55]">Runner Frame (লোকের সাপেক্ষে):</strong> এখানে মানুষটি স্থির থাকে। চারপাশের গাছপালা ও রাস্তা পেছনের দিকে সরে যায়। বৃষ্টি আপেক্ষিক কোণে মানুষের গায়ে এসে পড়ে, তাই সোজা আপেক্ষিক বেগের বিপরীতে ছাতা ধরলে মানুষটি পুরোপুরি সুরক্ষিত থাকে।', en: '<strong class="text-[#1CAB55]">Runner Frame:</strong> Here the person is stationary, and the surroundings — trees, road — move backward instead. The rain hits the person at the relative angle, so holding the umbrella straight against the relative velocity keeps them fully dry.' },
+            prob1Btn:           { bn: 'সমস্যা ১', en: 'Problem 1' },
+            prob2Btn:           { bn: 'সমস্যা ২', en: 'Problem 2' },
+            footerText:         { bn: 'এইচএসসি পদার্থবিজ্ঞান শিক্ষার্থীদের জন্য ডিজাইনকৃত • ভেক্টর আপেক্ষিক বেগ ভিজ্যুয়ালাইজেশন টুল', en: 'Designed for HSC Physics students • Vector relative velocity visualization tool' },
+            tourSkip:           { bn: 'এড়িয়ে যান', en: 'Skip' },
+            tourBack:           { bn: 'পেছনে', en: 'Back' },
+            tourNextLabel:      { bn: 'পরবর্তী', en: 'Next' },
+            tourDoneLabel:      { bn: 'সম্পন্ন', en: 'Done' },
+
+            // Dynamic / parameterized strings
+            autoLabel:          { bn: 'অটো', en: 'Auto' },
+            manualLabel:        { bn: 'ম্যানুয়াল', en: 'Manual' },
+            umbSafe:            { bn: '✅ সঠিক কোণ (সুরক্ষিত)', en: '✅ Correct angle (Safe)' },
+            umbWetWithDiff:     { bn: (d) => `🚨 মানুষটি ভিজছেন! (বিচ্যুতি: ${d}°)`, en: (d) => `🚨 Getting wet! (off by ${d}°)` },
+            umbWetPlain:        { bn: '🚨 মানুষটি ভিজছেন!', en: '🚨 Getting wet!' },
+            requiredAngle:      { bn: (v) => `প্রয়োজনীয়: ${v}°`, en: (v) => `Required: ${v}°` },
+            umbrellaAngleReason:{ bn: (a, r) => `ছাতা: ${a}° (প্রয়োজনীয়: ${r}°)`, en: (a, r) => `Umbrella: ${a}° (Required: ${r}°)` },
+            dirStraightUp:      { bn: 'উল্লম্বভাবে ধরতে হবে (সোজা উপরে)', en: 'Hold it vertically (straight up)' },
+            dirForward:         { bn: 'সামনের দিকে হেলে ধরতে হবে', en: 'Tilt it forward' },
+            dirBackward:        { bn: 'পেছনের দিকে হেলে ধরতে হবে', en: 'Tilt it backward' },
+
+            // Problem-solver dynamic template pieces
+            pdDirStraightUp:    { bn: 'সোজা উপরের দিকে (উল্লম্বভাবে 0°)', en: 'straight up (0° from vertical)' },
+            pdDirForward:       { bn: (t) => `চলার সামনের দিকে হেলে উল্লম্বের সাথে ${t}°`, en: (t) => `tilted forward, ${t}° from vertical` },
+            pdDirBackward:      { bn: (t) => `চলার পেছনের দিকে হেলে উল্লম্বের সাথে ${t}°`, en: (t) => `tilted backward, ${t}° from vertical` },
+            pdTitleGeneric:     { bn: 'নিয়ন্ত্রণ প্যানেল এর মান অনুযায়ী গণনাকৃত সমস্যা', en: 'Problem computed from Control Panel values' },
+            pdTitleNumbered:    { bn: (id) => `সমস্যা ${id}`, en: (id) => `Problem ${id}` },
+            pdQuestionGenerated:{
+                bn: (vm, vr, vw) => `একজন ব্যক্তি ${vm} m/s বেগে হাঁটছেন। বৃষ্টি উল্লম্বভাবে ${vr} m/s বেগে পড়ছে${Math.abs(vw) > 0.01 ? ` এবং বাতাস ${Math.abs(vw).toFixed(1)} m/s বেগে ${vw > 0 ? 'পূর্বদিকে' : 'পশ্চিমদিকে'} বইছে` : ''}। ব্যক্তি বৃষ্টির হাত থেকে বাঁচার জন্য উল্লম্বের সাথে কত কোণে ছাতা ধরবেন?`,
+                en: (vm, vr, vw) => `A person is walking at ${vm} m/s. Rain is falling vertically at ${vr} m/s${Math.abs(vw) > 0.01 ? ` and the wind is blowing at ${Math.abs(vw).toFixed(1)} m/s toward the ${vw > 0 ? 'east' : 'west'}` : ''}. At what angle from the vertical should the person hold the umbrella to stay dry?`
+            },
+            pdStep1Header:      { bn: 'ধাপ–১: প্রদত্ত মানসমূহ (GIVEN VALUES FROM CONTROL PANEL)', en: 'Step 1: Given Values (FROM CONTROL PANEL)' },
+            pdStep2Header:      { bn: 'ধাপ–২: ভেক্টর চিত্র অঙ্কন (VECTOR DIAGRAM)', en: 'Step 2: Vector Diagram' },
+            pdStep3Header:      { bn: 'ধাপ–৩: সূত্র ও গণনা (FORMULA & CALCULATION)', en: 'Step 3: Formula & Calculation' },
+            pdStep4Header:      { bn: 'ধাপ–৪: উত্তর লেখার সঠিক পদ্ধতি (FINAL ANSWER)', en: 'Step 4: How to Write the Final Answer' },
+            pdGivenManSpeed:    { bn: 'ব্যক্তির বেগ', en: "Person's speed" },
+            pdGivenRainSpeed:   { bn: 'বৃষ্টির বেগ', en: "Rain's speed" },
+            pdGivenRainVertical:{ bn: '(উল্লম্বভাবে নিচে)', en: '(vertically downward)' },
+            pdGivenWindSpeed:   { bn: 'বাতাসের বেগ', en: "Wind's speed" },
+            pdGivenHorizontalRel: { bn: 'অনুভূমিক আপেক্ষিক বেগ', en: 'Horizontal relative velocity' },
+            pdVectorDiagramText: {
+                bn: (vr, rx, vrm, theta) => `পরীক্ষার খাতায় একটি সমকোণী ত্রিভুজ আঁকবে যেখানে উল্লম্ব বাহুটি বৃষ্টির বেগ (<i>v</i><sub>r</sub> = ${vr} m/s) এবং অনুভূমিক বাহুটি অনুভূমিক আপেক্ষিক বেগ (|<i>v</i><sub>w</sub> - <i>v</i><sub>m</sub>| = ${rx} m/s) নির্দেশ করে। অতিভুজটি হবে আপেক্ষিক বেগ (<i>v</i><sub>rm</sub> = ${vrm} m/s)। উল্লম্বের সাথে কোণটি হবে <i>&theta;</i> = ${theta}°।`,
+                en: (vr, rx, vrm, theta) => `On paper, draw a right triangle where the vertical leg is the rain's velocity (<i>v</i><sub>r</sub> = ${vr} m/s) and the horizontal leg is the horizontal relative velocity (|<i>v</i><sub>w</sub> - <i>v</i><sub>m</sub>| = ${rx} m/s). The hypotenuse is the relative velocity (<i>v</i><sub>rm</sub> = ${vrm} m/s), and the angle from the vertical is <i>&theta;</i> = ${theta}°.`
+            },
+            pdFinalAnswer: {
+                bn: (dir, vrm) => `"ব্যক্তিকে ${dir} কোণে ছাতা ধরতে হবে। এই অবস্থায় লোকটির সাপেক্ষে বৃষ্টির আপেক্ষিক বেগের মান হবে ${vrm} m/s।"`,
+                en: (dir, vrm) => `"The person must hold the umbrella ${dir}. In this state, the rain's velocity relative to the person is ${vrm} m/s."`
+            },
+
+            // Canvas HUD (p5.js drawn text, not DOM)
+            hudTitle:        { bn: 'সিমুলেশন ভিউপোর্ট', en: 'SIMULATION VIEWPORT' },
+            hudFrameLabel:   { bn: 'প্রসঙ্গ কাঠামো: ', en: 'Reference frame: ' },
+            hudFrameEarth:   { bn: 'ভূপৃষ্ঠ', en: 'Earth' },
+            hudFrameRunner:  { bn: 'চলন্ত লোক', en: 'Runner' },
+            hudWindLabel:    { bn: 'অনুভূমিক বাতাস: ', en: 'Horizontal wind: ' },
+            hudWindNone:     { bn: 'নেই', en: 'None' },
+            vecAxisXPos:     { bn: '+x (ডানে)', en: '+x (right)' },
+            vecAxisXNeg:     { bn: '-x (বামে)', en: '-x (left)' },
+            vecAxisYPos:     { bn: '+y (নিচে)', en: '+y (down)' },
+            vecLabTitle:     { bn: 'ভেক্টর স্পেস ল্যাব', en: 'VECTOR SPACE LAB' }
+        };
+
+        function t(key, ...args) {
+            const entry = I18N[key];
+            if (!entry) return key;
+            const val = entry[currentLang] !== undefined ? entry[currentLang] : entry.bn;
+            return typeof val === 'function' ? val(...args) : val;
+        }
+
+        function applyStaticTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                el.innerHTML = t(el.getAttribute('data-i18n'));
+            });
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                el.title = t(el.getAttribute('data-i18n-title'));
+            });
+            if (window.lucide) lucide.createIcons();
+        }
 
         // DOM Elements
         const sliderVm = document.getElementById('slider-vm');
@@ -670,6 +816,34 @@
         
         const btnViewSim = document.getElementById('btn-view-sim');
         const btnViewVector = document.getElementById('btn-view-vector');
+
+        const langBtnBn = document.getElementById('lang-btn-bn');
+        const langBtnEn = document.getElementById('lang-btn-en');
+
+        function setLanguage(lang) {
+            if (lang !== 'bn' && lang !== 'en') return;
+            currentLang = lang;
+            localStorage.setItem('rainSimLang', lang);
+            document.documentElement.lang = lang;
+
+            if (langBtnBn) langBtnBn.classList.toggle('active', lang === 'bn');
+            if (langBtnEn) langBtnEn.classList.toggle('active', lang === 'en');
+
+            applyStaticTranslations();
+
+            if (btnToggleAutoUmb) btnToggleAutoUmb.innerText = isAutoUmbrella ? t('autoLabel') : t('manualLabel');
+
+            // Re-run everything that generates text dynamically so it re-renders in the new language
+            if (typeof updatePhysicsValues === 'function') updatePhysicsValues();
+
+            // If the guided tour is open, refresh its current step in the new language too
+            if (typeof tourOverlay !== 'undefined' && tourOverlay && !tourOverlay.classList.contains('hidden')) {
+                renderTourStep();
+            }
+        }
+
+        if (langBtnBn) langBtnBn.addEventListener('click', () => setLanguage('bn'));
+        if (langBtnEn) langBtnEn.addEventListener('click', () => setLanguage('en'));
 
         // Problem Solver DOM Elements
         const tabConcepts = document.getElementById('tab-concepts');
@@ -762,7 +936,7 @@
             if (inputUmbVal && document.activeElement !== inputUmbVal) {
                 inputUmbVal.value = actualUmbDeg.toFixed(1);
             }
-            if (reqAngleHint) reqAngleHint.innerText = `প্রয়োজনীয়: ${reqThetaDeg.toFixed(1)}°`;
+            if (reqAngleHint) reqAngleHint.innerText = t('requiredAngle', reqThetaDeg.toFixed(1));
 
             let angleDiff = Math.abs(actualUmbDeg - reqThetaDeg);
             let isPersonWet = (typeof personWetThisFrame !== 'undefined' && personWetThisFrame) || (typeof bodyDroplets !== 'undefined' && bodyDroplets.length > 0);
@@ -770,23 +944,23 @@
             if (umbStatusBadge) {
                 if (isPersonWet) {
                     umbStatusBadge.className = "text-[#E8001D] font-bold";
-                    umbStatusBadge.innerText = `🚨 মানুষটি ভিজছেন! (বিচ্যুতি: ${angleDiff.toFixed(1)}°)`;
+                    umbStatusBadge.innerText = t('umbWetWithDiff', angleDiff.toFixed(1));
                 } else {
                     umbStatusBadge.className = "text-[#1CAB55] font-bold";
-                    umbStatusBadge.innerText = "✅ সঠিক কোণ (সুরক্ষিত)";
+                    umbStatusBadge.innerText = t('umbSafe');
                 }
             }
 
             // Determine relative direction text and assign proper theme colors
             if (outDirectionText) {
                 if (Math.abs(rx) < 0.01) {
-                    outDirectionText.innerText = "উল্লম্বভাবে ধরতে হবে (সোজা উপরে)";
+                    outDirectionText.innerText = t('dirStraightUp');
                     outDirectionText.className = "text-[11px] text-[#1CAB55] mt-1 font-bold";
                 } else if (rx < 0) {
-                    outDirectionText.innerText = "সামনের দিকে হেলে ধরতে হবে";
+                    outDirectionText.innerText = t('dirForward');
                     outDirectionText.className = "text-[11px] text-[#274FE3] mt-1 font-bold";
                 } else {
-                    outDirectionText.innerText = "পেছনের দিকে হেলে ধরতে হবে";
+                    outDirectionText.innerText = t('dirBackward');
                     outDirectionText.className = "text-[11px] text-[#EA580C] mt-1 font-bold";
                 }
             }
@@ -862,6 +1036,7 @@
             if (!isAutoUmbrella) params.set('auto', 'false');
             if (!isEarthFrame) params.set('frame', 'man');
             if (viewMode === 'vector') params.set('view', 'vector');
+            if (currentLang === 'en') params.set('lang', 'en');
 
             const newUrl = `${window.location.pathname}?${params.toString()}${window.location.hash}`;
             window.history.replaceState(null, '', newUrl);
@@ -895,7 +1070,7 @@
             isAutoUmbrella = true;
             if (btnToggleAutoUmb) {
                 btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-[#1CAB55] text-white border border-[#0E7B4F] cursor-pointer shadow-xs";
-                btnToggleAutoUmb.innerText = "অটো";
+                btnToggleAutoUmb.innerText = t('autoLabel');
             }
             updatePhysicsValues();
         });
@@ -924,7 +1099,7 @@
             isAutoUmbrella = false;
             if (btnToggleAutoUmb) {
                 btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer shadow-xs";
-                btnToggleAutoUmb.innerText = "ম্যানুয়াল";
+                btnToggleAutoUmb.innerText = t('manualLabel');
             }
             if (sliderUmb) sliderUmb.value = 0;
             updatePhysicsValues();
@@ -940,7 +1115,7 @@
                 isAutoUmbrella = false;
                 if (btnToggleAutoUmb) {
                     btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer shadow-xs";
-                    btnToggleAutoUmb.innerText = "ম্যানুয়াল";
+                    btnToggleAutoUmb.innerText = t('manualLabel');
                 }
                 updatePhysicsValues();
             });
@@ -950,7 +1125,7 @@
             btnToggleAutoUmb.addEventListener('click', () => {
                 isAutoUmbrella = true;
                 btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-[#1CAB55] text-white border border-[#0E7B4F] cursor-pointer shadow-xs";
-                btnToggleAutoUmb.innerText = "অটো";
+                btnToggleAutoUmb.innerText = t('autoLabel');
                 updatePhysicsValues();
             });
         }
@@ -964,7 +1139,7 @@
                     isAutoUmbrella = false;
                     if (btnToggleAutoUmb) {
                         btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer shadow-xs";
-                        btnToggleAutoUmb.innerText = "ম্যানুয়াল";
+                        btnToggleAutoUmb.innerText = t('manualLabel');
                     }
                     updatePhysicsValues();
                 }
@@ -1012,16 +1187,20 @@
                 vm: 5.0,
                 vr: 10.0,
                 vw: 0.0,
-                direction: "পূর্বদিক",
-                qText: "একজন ব্যক্তি পূর্বদিকে 5.0 m/s বেগে হাঁটছেন। বৃষ্টি উল্লম্বভাবে নিচের দিকে 10.0 m/s বেগে পড়ছে। ব্যক্তি বৃষ্টির হাত থেকে বাঁচার জন্য উল্লম্বের সাথে কত কোণে ছাতা ধরবেন?"
+                qText: {
+                    bn: "একজন ব্যক্তি পূর্বদিকে 5.0 m/s বেগে হাঁটছেন। বৃষ্টি উল্লম্বভাবে নিচের দিকে 10.0 m/s বেগে পড়ছে। ব্যক্তি বৃষ্টির হাত থেকে বাঁচার জন্য উল্লম্বের সাথে কত কোণে ছাতা ধরবেন?",
+                    en: "A person is walking east at 5.0 m/s. Rain is falling vertically downward at 10.0 m/s. At what angle from the vertical should the person hold the umbrella to stay dry?"
+                }
             },
             {
                 id: 2,
                 vm: 6.0,
                 vr: 8.0,
                 vw: 0.0,
-                direction: "উত্তরদিক",
-                qText: "একজন ছাত্র উত্তরদিকে 6.0 m/s বেগে দৌড়াচ্ছে। বৃষ্টি উল্লম্বভাবে 8.0 m/s বেগে পড়ছে। তাকে উল্লম্বের সাথে কত কোণে ছাতা ধরতে হবে?"
+                qText: {
+                    bn: "একজন ছাত্র উত্তরদিকে 6.0 m/s বেগে দৌড়াচ্ছে। বৃষ্টি উল্লম্বভাবে 8.0 m/s বেগে পড়ছে। তাকে উল্লম্বের সাথে কত কোণে ছাতা ধরতে হবে?",
+                    en: "A student is running north at 6.0 m/s. Rain is falling vertically at 8.0 m/s. At what angle from the vertical should they hold the umbrella?"
+                }
             }
         ];
 
@@ -1055,42 +1234,42 @@
 
             let directionText = "";
             if (Math.abs(rx) < 0.01) {
-                directionText = "সোজা উপরের দিকে (উল্লম্বভাবে 0°)";
+                directionText = t('pdDirStraightUp');
             } else if (rx < 0) {
-                directionText = `চলার সামনের দিকে হেলে উল্লম্বের সাথে ${thetaDeg.toFixed(2)}°`;
+                directionText = t('pdDirForward', thetaDeg.toFixed(2));
             } else {
-                directionText = `চলার পেছনের দিকে হেলে উল্লম্বের সাথে ${thetaDeg.toFixed(2)}°`;
+                directionText = t('pdDirBackward', thetaDeg.toFixed(2));
             }
 
-            let probTitleHeader = probId ? `সমস্যা ${probId}` : "নিয়ন্ত্রণ প্যানেল এর মান অনুযায়ী গণনাকৃত সমস্যা";
-            
-            let problemQuestionText = probId ? hscProblems[probId - 1].qText : `একজন ব্যক্তি ${vmVal.toFixed(1)} m/s বেগে হাঁটছেন। বৃষ্টি উল্লম্বভাবে ${vrVal.toFixed(1)} m/s বেগে পড়ছে${Math.abs(vwVal) > 0.01 ? ` এবং বাতাস ${Math.abs(vwVal).toFixed(1)} m/s বেগে ${vwVal > 0 ? 'পূর্বদিকে' : 'পশ্চিমদিকে'} বইছে` : ''}। ব্যক্তি বৃষ্টির হাত থেকে বাঁচার জন্য উল্লম্বের সাথে কত কোণে ছাতা ধরবেন?`;
+            let probTitleHeader = probId ? t('pdTitleNumbered', probId) : t('pdTitleGeneric');
+
+            let problemQuestionText = probId ? hscProblems[probId - 1].qText[currentLang] : t('pdQuestionGenerated', vmVal.toFixed(1), vrVal.toFixed(1), vwVal);
 
             problemDisplay.innerHTML = `
                 <div class="space-y-4">
                     <div class="text-[#931212] font-bold border-b border-gray-200 pb-2 text-sm leading-relaxed">
                         ${probTitleHeader}: ${problemQuestionText}
                     </div>
-                    
+
                     <div class="space-y-2">
-                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–১: প্রদত্ত মানসমূহ (GIVEN VALUES FROM CONTROL PANEL)</h4>
+                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">${t('pdStep1Header')}</h4>
                         <div class="pl-3 border-l-2 border-[#274FE3] text-gray-600 space-y-1 text-xs">
-                            <div>• ব্যক্তির বেগ (<i>v</i><sub>m</sub>) = <span class="text-[#274FE3] font-semibold">${vmVal.toFixed(1)} m/s</span></div>
-                            <div>• বৃষ্টির বেগ (<i>v</i><sub>r</sub>) = <span class="text-[#1CAB55] font-semibold">${vrVal.toFixed(1)} m/s</span> (উল্লম্বভাবে নিচে)</div>
-                            <div>• বাতাসের বেগ (<i>v</i><sub>w</sub>) = <span class="text-[#EA580C] font-semibold">${vwVal.toFixed(1)} m/s</span></div>
-                            <div>• অনুভূমিক আপেক্ষিক বেগ (|<i>v</i><sub>w</sub> - <i>v</i><sub>m</sub>|) = <span class="text-[#274FE3] font-semibold">${Math.abs(rx).toFixed(1)} m/s</span></div>
+                            <div>• ${t('pdGivenManSpeed')} (<i>v</i><sub>m</sub>) = <span class="text-[#274FE3] font-semibold">${vmVal.toFixed(1)} m/s</span></div>
+                            <div>• ${t('pdGivenRainSpeed')} (<i>v</i><sub>r</sub>) = <span class="text-[#1CAB55] font-semibold">${vrVal.toFixed(1)} m/s</span> ${t('pdGivenRainVertical')}</div>
+                            <div>• ${t('pdGivenWindSpeed')} (<i>v</i><sub>w</sub>) = <span class="text-[#EA580C] font-semibold">${vwVal.toFixed(1)} m/s</span></div>
+                            <div>• ${t('pdGivenHorizontalRel')} (|<i>v</i><sub>w</sub> - <i>v</i><sub>m</sub>|) = <span class="text-[#274FE3] font-semibold">${Math.abs(rx).toFixed(1)} m/s</span></div>
                         </div>
                     </div>
 
                     <div class="space-y-2">
-                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–২: ভেক্টর চিত্র অঙ্কন (VECTOR DIAGRAM)</h4>
+                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">${t('pdStep2Header')}</h4>
                         <p class="text-xs text-gray-500 leading-relaxed">
-                            পরীক্ষার খাতায় একটি সমকোণী ত্রিভুজ আঁকবে যেখানে উল্লম্ব বাহুটি বৃষ্টির বেগ (<i>v</i><sub>r</sub> = ${vrVal.toFixed(1)} m/s) এবং অনুভূমিক বাহুটি অনুভূমিক আপেক্ষিক বেগ (|<i>v</i><sub>w</sub> - <i>v</i><sub>m</sub>| = ${Math.abs(rx).toFixed(1)} m/s) নির্দেশ করে। অতিভুজটি হবে আপেক্ষিক বেগ (<i>v</i><sub>rm</sub> = ${vrmVal.toFixed(2)} m/s)। উল্লম্বের সাথে কোণটি হবে <i>&theta;</i> = ${thetaDeg.toFixed(2)}°।
+                            ${t('pdVectorDiagramText', vrVal.toFixed(1), Math.abs(rx).toFixed(1), vrmVal.toFixed(2), thetaDeg.toFixed(2))}
                         </p>
                     </div>
 
                     <div class="space-y-2">
-                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–৩: সূত্র ও গণনা (FORMULA & CALCULATION)</h4>
+                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">${t('pdStep3Header')}</h4>
                         <div class="bg-white p-3 rounded-xl border border-gray-200 font-mono text-center text-xs space-y-2">
                             <div id="prob-math-formula" class="py-1 text-gray-800 font-semibold"></div>
                             <div id="prob-math-calc" class="py-1 text-gray-800"></div>
@@ -1100,9 +1279,9 @@
                     </div>
 
                     <div class="space-y-2">
-                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">ধাপ–৪: উত্তর লেখার সঠিক পদ্ধতি (FINAL ANSWER)</h4>
+                        <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">${t('pdStep4Header')}</h4>
                         <div class="bg-[#FFF5D6] text-[#A23F00] p-2.5 rounded-lg border border-[#FFEAB4] text-xs font-semibold leading-relaxed">
-                            "ব্যক্তিকে ${directionText} কোণে ছাতা ধরতে হবে। এই অবস্থায় লোকটির সাপেক্ষে বৃষ্টির আপেক্ষিক বেগের মান হবে ${vrmVal.toFixed(2)} m/s।"
+                            ${t('pdFinalAnswer', directionText, vrmVal.toFixed(2))}
                         </div>
                     </div>
                 </div>
@@ -1111,14 +1290,14 @@
             // Render equations using KaTeX
             if (window.katex) {
                 katex.render(`\\tan \\theta = \\frac{|v_w - v_m|}{v_r} = \\frac{|${vwVal.toFixed(1)} - ${vmVal.toFixed(1)}|}{${vrVal.toFixed(1)}}`, document.getElementById('prob-math-formula'), { throwOnError: false });
-                
+
                 katex.render(`\\tan \\theta = \\frac{${Math.abs(rx).toFixed(1)}}{${vrVal.toFixed(1)}} = ${valRatio.toFixed(3)} \\implies \\theta = \\tan^{-1}(${valRatio.toFixed(3)}) = ${thetaDeg.toFixed(2)}^\\circ`, document.getElementById('prob-math-calc'), { throwOnError: false });
-                
+
                 katex.render(`v_{rm} = \\sqrt{(${rx.toFixed(1)})^2 + (${vrVal.toFixed(1)})^2} = ${vrmVal.toFixed(2)} \\text{ m/s}`, document.getElementById('prob-math-mag'), { throwOnError: false });
 
                 katex.render(`\\theta = ${thetaDeg.toFixed(2)}^\\circ`, document.getElementById('prob-math-ans'), { throwOnError: false, displayMode: true });
             }
-            
+
             if (window.lucide) {
                 lucide.createIcons();
             }
@@ -1164,59 +1343,59 @@
         const tourStepDefs = [
             {
                 target: '#frame-toggle-group',
-                title: 'প্রসঙ্গ কাঠামো পরিবর্তন করুন',
-                desc: '"ভূপৃষ্ঠের সাপেক্ষে" ক্লিক করলে আপনি স্থির দর্শক হিসেবে দৃশ্য দেখবেন। "চলন্ত লোকের সাপেক্ষে" ক্লিক করলে দৌড়ানো মানুষটি স্থির থাকবে ও চারপাশ সরে যাবে — শুধু দেখার কোণ বদলায়, পদার্থবিজ্ঞান একই থাকে।'
+                title: { bn: 'প্রসঙ্গ কাঠামো পরিবর্তন করুন', en: 'Switch the Reference Frame' },
+                desc: { bn: '"ভূপৃষ্ঠের সাপেক্ষে" ক্লিক করলে আপনি স্থির দর্শক হিসেবে দৃশ্য দেখবেন। "চলন্ত লোকের সাপেক্ষে" ক্লিক করলে দৌড়ানো মানুষটি স্থির থাকবে ও চারপাশ সরে যাবে — শুধু দেখার কোণ বদলায়, পদার্থবিজ্ঞান একই থাকে।', en: 'Click "Earth\'s Frame" to watch as a stationary observer. Click "Runner\'s Frame" and the running person stays still while the surroundings move instead — only the viewing angle changes, the physics stays the same.' }
             },
             {
                 target: '#canvas-container',
-                title: 'সিমুলেশন ক্যানভাস',
-                desc: 'বৃষ্টি, বাতাস, দৌড়ানো মানুষ ও ছাতা এখানে লাইভ অ্যানিমেশনে দেখা যায়। ডানপাশের যেকোনো নিয়ন্ত্রণ বদলালে এই দৃশ্য সাথে সাথে আপডেট হয়ে যাবে।'
+                title: { bn: 'সিমুলেশন ক্যানভাস', en: 'The Simulation Canvas' },
+                desc: { bn: 'বৃষ্টি, বাতাস, দৌড়ানো মানুষ ও ছাতা এখানে লাইভ অ্যানিমেশনে দেখা যায়। ডানপাশের যেকোনো নিয়ন্ত্রণ বদলালে এই দৃশ্য সাথে সাথে আপডেট হয়ে যাবে।', en: "Rain, wind, the running person, and the umbrella all animate live here. Change any control on the right and this view updates instantly." }
             },
             {
                 target: '#mobile-view-switcher',
-                title: 'ভিউ পরিবর্তন (মোবাইল)',
-                desc: '"সিমুলেশন" ক্লিক করলে অ্যানিমেশন দেখা যাবে, "ভেক্টর ল্যাব" ক্লিক করলে ভেক্টর হিসাব-নিকাশ দেখা যাবে — ছোট স্ক্রিনে দুটো একসাথে ধরে না বলে এই সুইচার দেওয়া হয়েছে।'
+                title: { bn: 'ভিউ পরিবর্তন (মোবাইল)', en: 'Switch View (Mobile)' },
+                desc: { bn: '"সিমুলেশন" ক্লিক করলে অ্যানিমেশন দেখা যাবে, "ভেক্টর ল্যাব" ক্লিক করলে ভেক্টর হিসাব-নিকাশ দেখা যাবে — ছোট স্ক্রিনে দুটো একসাথে ধরে না বলে এই সুইচার দেওয়া হয়েছে।', en: 'Tap "Simulation" to see the animation, or "Vector Lab" to see the vector math — on small screens both can\'t fit at once, so this switcher toggles between them.' }
             },
             {
                 target: '#control-vm-group',
-                title: 'চলন্ত লোকের বেগ (vm)',
-                desc: 'স্লাইডার টেনে মানুষটির হাঁটা/দৌড়ানোর গতি (0–20 m/s) বদলান। এটি বদলালে ছাতা ধরার প্রয়োজনীয় কোণও সাথে সাথে বদলে যাবে।'
+                title: { bn: 'চলন্ত লোকের বেগ (vm)', en: "Man's Velocity (vm)" },
+                desc: { bn: 'স্লাইডার টেনে মানুষটির হাঁটা/দৌড়ানোর গতি (0–20 m/s) বদলান। এটি বদলালে ছাতা ধরার প্রয়োজনীয় কোণও সাথে সাথে বদলে যাবে।', en: "Drag the slider to change how fast the person is walking or running (0–20 m/s). Changing it also changes the angle needed to hold the umbrella." }
             },
             {
                 target: '#control-vr-group',
-                title: 'বৃষ্টির বেগ (vr)',
-                desc: 'বৃষ্টি কত দ্রুত সোজা নিচের দিকে পড়ছে (1–20 m/s) তা এখান থেকে ঠিক করুন।'
+                title: { bn: 'বৃষ্টির বেগ (vr)', en: "Rain's Velocity (vr)" },
+                desc: { bn: 'বৃষ্টি কত দ্রুত সোজা নিচের দিকে পড়ছে (1–20 m/s) তা এখান থেকে ঠিক করুন।', en: "Set how fast the rain is falling straight down (1–20 m/s) here." }
             },
             {
                 target: '#control-vw-group',
-                title: 'বাতাসের বেগ (vw)',
-                desc: 'ডানে টানলে বাতাস মানুষের চলার দিকে বইবে, বামে টানলে বিপরীত দিকে। মান 0 রাখলে বাতাসহীন অবস্থা বোঝাবে।'
+                title: { bn: 'বাতাসের বেগ (vw)', en: "Wind's Velocity (vw)" },
+                desc: { bn: 'ডানে টানলে বাতাস মানুষের চলার দিকে বইবে, বামে টানলে বিপরীত দিকে। মান 0 রাখলে বাতাসহীন অবস্থা বোঝাবে।', en: "Drag right and the wind blows in the person's direction of travel; drag left for the opposite direction. A value of 0 means no wind." }
             },
             {
                 target: '#control-umbrella-group',
-                title: 'ছাতার কোণ নিয়ন্ত্রণ',
-                desc: '"অটো" চালু থাকলে ছাতা নিজে থেকেই সঠিক কোণে সেট হয়ে যায়। "ম্যানুয়াল"-এ পাল্টে স্লাইডার বা সংখ্যা বক্সে নিজের ইচ্ছেমতো কোণ দিন — ভুল কোণে ধরলে মানুষটি ভিজে যাবে ও লাল সতর্কতা দেখা যাবে।'
+                title: { bn: 'ছাতার কোণ নিয়ন্ত্রণ', en: 'Umbrella Angle Control' },
+                desc: { bn: '"অটো" চালু থাকলে ছাতা নিজে থেকেই সঠিক কোণে সেট হয়ে যায়। "ম্যানুয়াল"-এ পাল্টে স্লাইডার বা সংখ্যা বক্সে নিজের ইচ্ছেমতো কোণ দিন — ভুল কোণে ধরলে মানুষটি ভিজে যাবে ও লাল সতর্কতা দেখা যাবে।', en: 'With "Auto" on, the umbrella angle sets itself correctly. Switch to "Manual" to pick your own angle via the slider or number box — hold it at the wrong angle and the person gets wet, shown by a red alert.' }
             },
             {
                 target: '#control-presets-group',
-                title: 'প্রস্তুত সিমুলেশন কেসসমূহ',
-                desc: 'এই চারটি বাটনের যেকোনো একটিতে ক্লিক করলে vm, vr, vw এবং ছাতার কোণ — সবকিছু একসাথে একটি নির্দিষ্ট বাস্তব উদাহরণে সেট হয়ে যাবে।'
+                title: { bn: 'প্রস্তুত সিমুলেশন কেসসমূহ', en: 'Ready-Made Simulation Cases' },
+                desc: { bn: 'এই চারটি বাটনের যেকোনো একটিতে ক্লিক করলে vm, vr, vw এবং ছাতার কোণ — সবকিছু একসাথে একটি নির্দিষ্ট বাস্তব উদাহরণে সেট হয়ে যাবে।', en: "Clicking any of these four buttons sets vm, vr, vw, and the umbrella angle all at once to a specific real-world example." }
             },
             {
                 target: '#explanation-tabs-group',
-                title: 'তত্ত্ব বনাম সমস্যা সমাধান',
-                desc: '"তাত্ত্বিক আলোচনা" ট্যাবে ধারণাগত ব্যাখ্যা পাবেন। "এইচএসসি সমস্যা সমাধান" ট্যাবে ক্লিক করলে ধাপে ধাপে সমাধান করা বোর্ড পরীক্ষার প্রশ্ন দেখা যাবে।'
+                title: { bn: 'তত্ত্ব বনাম সমস্যা সমাধান', en: 'Theory vs. Problem Solving' },
+                desc: { bn: '"তাত্ত্বিক আলোচনা" ট্যাবে ধারণাগত ব্যাখ্যা পাবেন। "এইচএসসি সমস্যা সমাধান" ট্যাবে ক্লিক করলে ধাপে ধাপে সমাধান করা বোর্ড পরীক্ষার প্রশ্ন দেখা যাবে।', en: 'The "Theory" tab has the conceptual explanation. Click "HSC Problem Solving" for step-by-step worked board-exam questions.' }
             },
             {
                 target: '#problem-buttons-group',
-                title: 'নির্দিষ্ট সমস্যা লোড করুন',
+                title: { bn: 'নির্দিষ্ট সমস্যা লোড করুন', en: 'Load a Specific Problem' },
                 beforeShow: () => switchTab('problems'),
-                desc: '"সমস্যা ১" বা "সমস্যা ২" ক্লিক করলে সেই প্রশ্নের হুবহু মান নিয়ন্ত্রণ প্যানেলে বসে যাবে এবং নিচে সম্পূর্ণ ধাপে ধাপে গাণিতিক সমাধান দেখাবে।'
+                desc: { bn: '"সমস্যা ১" বা "সমস্যা ২" ক্লিক করলে সেই প্রশ্নের হুবহু মান নিয়ন্ত্রণ প্যানেলে বসে যাবে এবং নিচে সম্পূর্ণ ধাপে ধাপে গাণিতিক সমাধান দেখাবে।', en: 'Clicking "Problem 1" or "Problem 2" sets that exact question\'s values in the Control Panel and shows the full step-by-step solution below.' }
             },
             {
                 target: null,
-                title: 'লিংক শেয়ার করুন',
-                desc: 'আপনি যা যা বদলান, ঠিকানা বার (URL) সাথে সাথে সেই অনুযায়ী আপডেট হয়ে যায়। তাই এই মুহূর্তের ঠিকানাটি কপি করে বন্ধু বা শিক্ষকের সাথে শেয়ার করলে তিনি ঠিক একই সেটআপ দেখতে পাবেন। টিউটোরিয়াল আবার দেখতে উপরে ডানে "টিউটোরিয়াল" বাটনে ক্লিক করুন।'
+                title: { bn: 'লিংক শেয়ার করুন', en: 'Share the Link' },
+                desc: { bn: 'আপনি যা যা বদলান, ঠিকানা বার (URL) সাথে সাথে সেই অনুযায়ী আপডেট হয়ে যায়। তাই এই মুহূর্তের ঠিকানাটি কপি করে বন্ধু বা শিক্ষকের সাথে শেয়ার করলে তিনি ঠিক একই সেটআপ দেখতে পাবেন। টিউটোরিয়াল আবার দেখতে উপরে ডানে "টিউটোরিয়াল" বাটনে ক্লিক করুন।', en: 'Whatever you change, the address bar (URL) updates to match instantly. Copy it to share this exact setup with a friend or teacher. Click the "Tutorial" button at the top right to see this walkthrough again.' }
             }
         ];
 
@@ -1283,15 +1462,15 @@
             if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             tourStepBadge.innerText = `${tourIndex + 1}/${tourSteps.length}`;
-            tourTitleEl.innerText = step.title;
-            tourDescEl.innerText = step.desc;
+            tourTitleEl.innerText = step.title[currentLang];
+            tourDescEl.innerText = step.desc[currentLang];
 
             tourProgressEl.innerHTML = tourSteps.map((_, i) =>
                 `<span class="${i <= tourIndex ? 'done' : ''}"></span>`
             ).join('');
 
             tourBackBtn.disabled = (tourIndex === 0);
-            tourNextBtn.innerText = (tourIndex === tourSteps.length - 1) ? 'সম্পন্ন' : 'পরবর্তী';
+            tourNextBtn.innerText = (tourIndex === tourSteps.length - 1) ? t('tourDoneLabel') : t('tourNextLabel');
 
             // Small delay lets scrollIntoView / tab switches settle before measuring positions
             setTimeout(() => {
@@ -1362,6 +1541,7 @@
         //   scenario — "classic" | "windWith" | "windAgainst" | "upright" (built-in preset)
         //   problem  — 1 or 2 (loads the matching HSC problem, also sets vm/vr/vw)
         //   view     — "sim" or "vector" (mobile canvas view switcher)
+        //   lang     — "bn" or "en" (page language)
         // Precedence: scenario/problem presets apply first, then individual vm/vr/vw/angle/auto
         // overrides apply on top, so a link can start from a preset and tweak one value.
         // ============================================
@@ -1375,6 +1555,12 @@
 
             const q = {};
             for (const [key, value] of params.entries()) q[key.toLowerCase()] = value;
+
+            // 0. Language (apply first so everything else renders in the right language)
+            const langParam = (q.lang || '').toLowerCase();
+            if (langParam === 'bn' || langParam === 'en') {
+                setLanguage(langParam);
+            }
 
             const scenarioDefs = {
                 classic: btnPresetClassic,
@@ -1419,10 +1605,10 @@
             if (btnToggleAutoUmb) {
                 if (isAutoUmbrella) {
                     btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-[#1CAB55] text-white border border-[#0E7B4F] cursor-pointer shadow-xs";
-                    btnToggleAutoUmb.innerText = "অটো";
+                    btnToggleAutoUmb.innerText = t('autoLabel');
                 } else {
                     btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer shadow-xs";
-                    btnToggleAutoUmb.innerText = "ম্যানুয়াল";
+                    btnToggleAutoUmb.innerText = t('manualLabel');
                 }
             }
 
@@ -1442,6 +1628,12 @@
 
         // --- p5.js Animation Visual Engine ---
         function setup() {
+            // Reflect a saved language preference before the first render
+            if (langBtnBn) langBtnBn.classList.toggle('active', currentLang === 'bn');
+            if (langBtnEn) langBtnEn.classList.toggle('active', currentLang === 'en');
+            document.documentElement.lang = currentLang;
+            applyStaticTranslations();
+
             const container = document.getElementById('canvas-container');
             let canvas = createCanvas(container.offsetWidth, getResponsiveCanvasHeight());
             canvas.parent('canvas-container');
@@ -1896,28 +2088,28 @@
             textSize(tSizeTitle);
             textStyle(BOLD);
             textAlign(LEFT, TOP);
-            text("সিমুলেশন ভিউপোর্ট", padX, titleY);
+            text(t('hudTitle'), padX, titleY);
 
             textSize(tSizeSub);
             textStyle(NORMAL);
             fill(148, 163, 184);
-            let labelFrame = "প্রসঙ্গ কাঠামো: ";
+            let labelFrame = t('hudFrameLabel');
             text(labelFrame, padX, line1Y);
             
             if (isEarthFrame) {
                 fill(COLOR_VM_GLOW); // sky blue
-                text("ভূপৃষ্ঠ", padX + textWidth(labelFrame), line1Y);
+                text(t('hudFrameEarth'), padX + textWidth(labelFrame), line1Y);
             } else {
                 fill(COLOR_VR_GLOW); // mint green
-                text("চলন্ত লোক", padX + textWidth(labelFrame), line1Y);
+                text(t('hudFrameRunner'), padX + textWidth(labelFrame), line1Y);
             }
 
             fill(148, 163, 184);
-            let labelWind = "অনুভূমিক বাতাস: ";
+            let labelWind = t('hudWindLabel');
             text(labelWind, padX, line2Y);
             if (Math.abs(v_w) < 0.1) {
                 fill(148, 163, 184);
-                text("নেই", padX + textWidth(labelWind), line2Y);
+                text(t('hudWindNone'), padX + textWidth(labelWind), line2Y);
             } else {
                 fill(COLOR_VW_GLOW); // pink/fuchsia wind text
                 text(`${v_w > 0 ? '→' : '←'} ${Math.abs(v_w).toFixed(1)} m/s`, padX + textWidth(labelWind), line2Y);
@@ -1956,10 +2148,10 @@
             noStroke();
             textSize(10);
             textAlign(CENTER, TOP);
-            text("+x (ডানে)", ox + 125, oy + 6);
-            text("-x (বামে)", ox - 125, oy + 6);
+            text(t('vecAxisXPos'), ox + 125, oy + 6);
+            text(t('vecAxisXNeg'), ox - 125, oy + 6);
             textAlign(LEFT, CENTER);
-            text("+y (নিচে)", ox + 8, oy + 145);
+            text(t('vecAxisYPos'), ox + 8, oy + 145);
             
             // Draw Interactive Draggable Nodes (Handles)
             let nodeVmX = ox + v_m * scaleS;
@@ -2065,7 +2257,7 @@
             textSize(10);
             textStyle(BOLD);
             textAlign(CENTER, CENTER);
-            text("ভেক্টর স্পেস ল্যাব", ox - 85, oy - 138);
+            text(t('vecLabTitle'), ox - 85, oy - 138);
             textStyle(NORMAL);
         }
 
@@ -2347,7 +2539,7 @@
                 let rx = v_w - v_m;
                 let reqThetaDeg = Math.atan2(rx, v_r) * (180 / Math.PI);
                 let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : reqThetaDeg;
-                let shortReason = `ছাতা: ${actualUmbDeg.toFixed(1)}° (প্রয়োজনীয়: ${reqThetaDeg.toFixed(1)}°)`;
+                let shortReason = t('umbrellaAngleReason', actualUmbDeg.toFixed(1), reqThetaDeg.toFixed(1));
 
                 if (!alertActive && !alertDismissed && ++wetFrames >= 2) {
                     showRedAlert(shortReason);
@@ -2356,14 +2548,14 @@
                 }
                 if (umbStatusBadge) {
                     umbStatusBadge.className = "text-[#E8001D] font-bold";
-                    umbStatusBadge.innerText = `🚨 মানুষটি ভিজছেন!`;
+                    umbStatusBadge.innerText = t('umbWetPlain');
                 }
             } else {
                 wetFrames = 0;
                 if (++dryFrames >= 3 && alertActive) hideRedAlert();
                 if (umbStatusBadge) {
                     umbStatusBadge.className = "text-[#1CAB55] font-bold";
-                    umbStatusBadge.innerText = "✅ সঠিক কোণ (সুরক্ষিত)";
+                    umbStatusBadge.innerText = t('umbSafe');
                 }
             }
         }
