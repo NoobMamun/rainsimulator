@@ -442,7 +442,11 @@
                                 ছাতার কোণ (<i>&theta;</i><sub>ছাতা</sub>):
                             </label>
                             <div class="flex items-center gap-1.5">
-                                <span id="umb-angle-val" class="text-xs font-extrabold text-amber-800 bg-white px-2 py-0.5 rounded-md border border-amber-300">53.1°</span>
+                                <div class="relative flex items-center">
+                                    <input type="number" id="umb-angle-input" min="-89" max="89" step="0.1" value="53.1"
+                                           class="w-16 text-center text-xs font-extrabold text-amber-800 bg-white px-1 py-0.5 rounded-md border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 shadow-xs" title="ম্যানুয়ালি কোণ লিখুন (Degree)">
+                                    <span class="text-xs font-extrabold text-amber-800 ml-0.5">°</span>
+                                </div>
                                 <button id="btn-toggle-auto-umb" class="px-2 py-0.5 text-[10px] font-bold rounded-md bg-[#1CAB55] text-white border border-[#0E7B4F] cursor-pointer shadow-xs">অটো</button>
                             </div>
                         </div>
@@ -578,6 +582,7 @@
         // Umbrella Angle Control DOM Elements
         const sliderUmb = document.getElementById('slider-umb');
         const txtUmbVal = document.getElementById('umb-angle-val');
+        const inputUmbVal = document.getElementById('umb-angle-input');
         const btnToggleAutoUmb = document.getElementById('btn-toggle-auto-umb');
         const umbStatusBadge = document.getElementById('umb-status-badge');
         const reqAngleHint = document.getElementById('req-angle-hint');
@@ -641,6 +646,9 @@
 
             let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : reqThetaDeg;
             if (txtUmbVal) txtUmbVal.innerText = `${actualUmbDeg.toFixed(1)}°`;
+            if (inputUmbVal && document.activeElement !== inputUmbVal) {
+                inputUmbVal.value = actualUmbDeg.toFixed(1);
+            }
             if (reqAngleHint) reqAngleHint.innerText = `প্রয়োজনীয়: ${reqThetaDeg.toFixed(1)}°`;
 
             let angleDiff = Math.abs(actualUmbDeg - reqThetaDeg);
@@ -780,6 +788,25 @@
                 btnToggleAutoUmb.innerText = "অটো";
                 updatePhysicsValues();
             });
+        }
+
+        if (inputUmbVal) {
+            const syncInputToAngle = () => {
+                let val = parseFloat(inputUmbVal.value);
+                if (!isNaN(val)) {
+                    val = Math.max(-89, Math.min(89, val));
+                    if (sliderUmb) sliderUmb.value = val;
+                    isAutoUmbrella = false;
+                    if (btnToggleAutoUmb) {
+                        btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer shadow-xs";
+                        btnToggleAutoUmb.innerText = "ম্যানুয়াল";
+                    }
+                    updatePhysicsValues();
+                }
+            };
+
+            inputUmbVal.addEventListener('input', syncInputToAngle);
+            inputUmbVal.addEventListener('change', syncInputToAngle);
         }
 
         // Frame selection buttons toggling aligned to success color CTA
