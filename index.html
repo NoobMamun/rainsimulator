@@ -908,7 +908,7 @@
         // Visual Engine Variables
         let urlSyncEnabled = false; // stays false until initial query-param load finishes, so it can't clobber the incoming URL
         let isEarthFrame = true;
-        let viewMode = 'split'; // 'split', 'simulation', 'vector'
+        let viewMode = 'simulation'; // 'simulation' or 'vector' — Vector Lab is a mobile-only toggle, see draw()
         let raindrops = [];
         let windStreaks = [];
         let bodyDroplets = [];      // Persistent water droplets remaining visible on body
@@ -1755,33 +1755,21 @@
 
             background(11, 17, 23); // 10MS Unified Inverse Background (#0B1117)
 
-            // Determine if split screen is active
-            if (width > 800) {
-                viewMode = 'split';
-            } else {
-                if (viewMode === 'split') viewMode = 'simulation';
+            // Vector Lab is a mobile-only feature, switched via the সিমুলেশন/ভেক্টর ল্যাব
+            // buttons (which are themselves only visible below Tailwind's lg breakpoint).
+            // Desktop and "minimised" desktop windows always show the simulation.
+            if (window.innerWidth >= 1024 && viewMode === 'vector') {
+                viewMode = 'simulation';
             }
 
-            let simWidth = viewMode === 'split' ? width - 340 : width;
+            let simWidth = width;
 
-            // DRAW GRID LINES ON VECTOR PORTION / BACKGROUND
             drawBackgroundStars();
 
-            if (viewMode === 'split' || viewMode === 'simulation') {
-                // 1. SIMULATION MODE RENDER
-                drawSimulationView(simWidth);
-            }
-
-            if (viewMode === 'split' || viewMode === 'vector') {
-                // 2. VECTOR LAB LABELS & AXES
+            if (viewMode === 'vector') {
                 drawVectorLabView(simWidth);
-            }
-
-            // Draw splitting barrier for split view
-            if (viewMode === 'split') {
-                stroke(51, 65, 85, 180);
-                strokeWeight(2);
-                line(simWidth, 0, simWidth, height);
+            } else {
+                drawSimulationView(simWidth);
             }
         }
 
@@ -2322,16 +2310,11 @@
             }
         }
 
-        // Draw Interactive Vector Lab on Right Part of Canvas
+        // Draw Interactive Vector Lab (mobile-only full-canvas view, see draw())
         function drawVectorLabView(simWidth) {
             // Position coordinate center
-            if (viewMode === 'split') {
-                ox = simWidth + 170;
-                oy = height * 0.45;
-            } else {
-                ox = width / 2;
-                oy = height * 0.45;
-            }
+            ox = width / 2;
+            oy = height * 0.45;
 
             // Draw Cartesian Grid
             stroke(30, 41, 59, 120);
