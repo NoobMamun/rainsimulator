@@ -435,18 +435,21 @@
 
     <div class="max-w-[1216px] mx-auto px-4 md:px-6 py-2 sm:py-6 bn flex flex-col gap-3 sm:gap-6">
         <!-- Header -->
-        <header class="mb-1 sm:mb-4 text-center relative">
-            <div class="absolute top-0 right-0 flex items-center gap-1.5 sm:gap-2">
-                <div id="lang-toggle" class="flex items-center bg-gray-100 border border-gray-200 rounded-full p-0.5 gap-0.5">
-                    <button id="lang-btn-bn" type="button" data-lang="bn" class="lang-btn active">বাং</button>
-                    <button id="lang-btn-en" type="button" data-lang="en" class="lang-btn">EN</button>
+        <header class="mb-1 sm:mb-4 text-center">
+            <div class="flex items-center justify-between gap-2 mb-2 sm:mb-3">
+                <img src="https://cdn.10minuteschool.com/images/svg/Origin%20Labs%20Black.svg" alt="Origin Labs" class="h-4 sm:h-6 w-auto flex-shrink-0">
+                <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                    <div id="lang-toggle" class="flex items-center bg-gray-100 border border-gray-200 rounded-full p-0.5 gap-0.5">
+                        <button id="lang-btn-bn" type="button" data-lang="bn" class="lang-btn active">বাং</button>
+                        <button id="lang-btn-en" type="button" data-lang="en" class="lang-btn">EN</button>
+                    </div>
+                    <button id="btn-tutorial" type="button" class="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[#931212] hover:bg-[#7a0f0f] text-white text-[10px] sm:text-xs font-bold shadow-sm transition cursor-pointer">
+                        <i data-lucide="compass" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                        <span data-i18n="tutorialBtn">টিউটোরিয়াল</span>
+                    </button>
                 </div>
-                <button id="btn-tutorial" type="button" class="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-[#931212] hover:bg-[#7a0f0f] text-white text-[10px] sm:text-xs font-bold shadow-sm transition cursor-pointer">
-                    <i data-lucide="compass" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-                    <span data-i18n="tutorialBtn">টিউটোরিয়াল</span>
-                </button>
             </div>
-            <div class="mt-1 sm:mt-2 mb-1.5 sm:mb-3 flex justify-center">
+            <div class="mb-1.5 sm:mb-3 flex justify-center">
                 <span data-i18n="headerBadge" class="px-2.5 py-1 text-[11px] font-bold tracking-wider bg-[#E8001D]/10 text-[#E8001D] rounded-full border border-[#E8001D]/30 uppercase">১০ মিনিট স্কুল ইন্টারেক্টিভ ল্যাব</span>
             </div>
             <h1 data-i18n="pageTitle" class="text-sm sm:text-base md:text-4xl font-extrabold text-[#931212] mb-0 sm:mb-1 tracking-tight bn">
@@ -645,6 +648,23 @@
         </footer>
     </div>
 
+    <!-- Feedback CTA (floating, collapses to icon-only on mobile) -->
+    <button id="btn-feedback-cta" type="button" data-i18n-aria="feedbackCta"
+            class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-center justify-center gap-2 w-11 h-11 sm:w-auto sm:h-auto sm:pl-4 sm:pr-5 sm:py-3 rounded-full bg-white border border-gray-200 shadow-lg hover:shadow-xl hover:border-gray-300 text-gray-700 text-sm font-semibold transition-all cursor-pointer"
+            aria-label="তোমার মতামত জানাও">
+        <i data-lucide="message-circle" class="w-[18px] h-[18px] text-gray-500 flex-shrink-0"></i>
+        <span class="hidden sm:inline" data-i18n="feedbackCta">তোমার মতামত জানাও</span>
+    </button>
+
+    <!-- Feedback Form Modal -->
+    <div id="feedback-modal-overlay" class="hidden fixed inset-0 z-[9990] bg-black/60 p-4 items-center justify-center">
+        <div id="feedback-modal-card" class="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg h-[85vh] sm:h-[80vh] overflow-hidden">
+            <button id="feedback-modal-close" type="button" aria-label="Close"
+                    class="absolute top-2 right-2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 hover:bg-gray-100 border border-gray-200 text-gray-500 hover:text-gray-800 shadow-sm cursor-pointer">✕</button>
+            <iframe id="feedback-modal-iframe" src="" title="Feedback Form" class="w-full h-full border-0" loading="lazy"></iframe>
+        </div>
+    </div>
+
     <!-- Guided Tutorial Overlay -->
     <div id="tour-overlay" class="hidden fixed inset-0 z-[9999]">
         <div id="tour-spotlight"></div>
@@ -723,6 +743,7 @@
             tourBack:           { bn: 'পেছনে', en: 'Back' },
             tourNextLabel:      { bn: 'পরবর্তী', en: 'Next' },
             tourDoneLabel:      { bn: 'সম্পন্ন', en: 'Done' },
+            feedbackCta:        { bn: 'তোমার মতামত জানাও', en: 'Share Your Feedback' },
 
             // Dynamic / parameterized strings
             autoLabel:          { bn: 'অটো', en: 'Auto' },
@@ -790,6 +811,9 @@
             });
             document.querySelectorAll('[data-i18n-title]').forEach(el => {
                 el.title = t(el.getAttribute('data-i18n-title'));
+            });
+            document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+                el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
             });
             if (window.lucide) lucide.createIcons();
         }
@@ -1519,6 +1543,44 @@
         });
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && !tourOverlay.classList.contains('hidden')) endTour();
+        });
+
+        // ============================================
+        // FEEDBACK CTA — opens the Tally feedback form in an in-page modal
+        // (never a new tab / redirect), tagging the submission with which
+        // simulation it came from via the simulation_name query param.
+        // ============================================
+        const FEEDBACK_FORM_BASE_URL = 'https://tally.so/r/RG87VJ';
+        const FEEDBACK_SIMULATION_NAME = 'Rain_Umbrella';
+
+        const btnFeedbackCta = document.getElementById('btn-feedback-cta');
+        const feedbackModalOverlay = document.getElementById('feedback-modal-overlay');
+        const feedbackModalClose = document.getElementById('feedback-modal-close');
+        const feedbackModalIframe = document.getElementById('feedback-modal-iframe');
+
+        function openFeedbackModal() {
+            feedbackModalIframe.src = `${FEEDBACK_FORM_BASE_URL}?simulation_name=${encodeURIComponent(FEEDBACK_SIMULATION_NAME)}`;
+            feedbackModalOverlay.classList.remove('hidden');
+            feedbackModalOverlay.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFeedbackModal() {
+            feedbackModalOverlay.classList.add('hidden');
+            feedbackModalOverlay.classList.remove('flex');
+            document.body.style.overflow = '';
+            feedbackModalIframe.src = 'about:blank'; // reset so the form restarts fresh next time it's opened (src="" would reload the parent page)
+        }
+
+        if (btnFeedbackCta) btnFeedbackCta.addEventListener('click', openFeedbackModal);
+        if (feedbackModalClose) feedbackModalClose.addEventListener('click', closeFeedbackModal);
+        if (feedbackModalOverlay) {
+            feedbackModalOverlay.addEventListener('click', (e) => {
+                if (e.target === feedbackModalOverlay) closeFeedbackModal();
+            });
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && feedbackModalOverlay && !feedbackModalOverlay.classList.contains('hidden')) closeFeedbackModal();
         });
 
         function getResponsiveCanvasHeight() {
