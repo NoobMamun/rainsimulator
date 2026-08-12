@@ -328,18 +328,17 @@
             <div class="mt-2 mb-3 flex justify-center">
                 <span class="px-2.5 py-1 text-[11px] font-bold tracking-wider bg-[#E8001D]/10 text-[#E8001D] rounded-full border border-[#E8001D]/30 uppercase">১০ মিনিট স্কুল ইন্টারেক্টিভ ল্যাব</span>
             </div>
-            <h1 class="text-3xl md:text-4xl font-extrabold text-[#931212] mb-1 tracking-tight bn">
+            <h1 class="text-sm sm:text-base md:text-4xl font-extrabold text-[#931212] mb-1 tracking-tight bn">
                 বৃষ্টি ও ছাতা সংক্রান্ত আপেক্ষিক বেগ
             </h1>
 
         </header>
 
         <!-- Main Layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
             
-            <!-- Left Side: Visualizer Canvas -->
-            <div class="lg:col-span-7 flex flex-col gap-6">
-                <!-- Visualizer Container -->
+            <!-- Visualizer Canvas Card: 1st on mobile, left column top on desktop -->
+            <div class="lg:col-span-7 lg:col-start-1 lg:row-start-1">
                 <div class="card bg-white border border-gray-200 shadow-sm">
                     <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
                         <div class="flex items-center gap-2">
@@ -366,8 +365,6 @@
                             <button id="btn-view-vector" class="px-3 py-1 text-xs font-bold rounded-lg text-gray-600">ভেক্টর ল্যাব</button>
                         </div>
 
-                        <!-- Canvas Guide Tooltip removed to place Red Alert here -->
-
                         <!-- 🚨 RED ALERT — compact overlay inside canvas (top-right) -->
                         <div id="red-alert-panel" role="alert" aria-live="assertive">
                             <span class="alert-icon">🚨</span>
@@ -388,48 +385,10 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Explanation & Problem Solver Tabs -->
-                <div class="card bg-white border border-gray-200 shadow-sm flex flex-col gap-4">
-                    <div class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1.5 w-full mb-2">
-                        <button id="tab-concepts" class="group-tab active">
-                            <i data-lucide="book-open" class="w-4 h-4 inline-block align-middle mr-1.5"></i>তাত্ত্বিক আলোচনা
-                        </button>
-                        <button id="tab-problems" class="group-tab">
-                            <i data-lucide="edit-3" class="w-4 h-4 inline-block align-middle mr-1.5"></i>এইচএসসি সমস্যা সমাধান
-                        </button>
-                    </div>
-
-                    <!-- Tab Content: Concepts -->
-                    <div id="content-concepts" class="space-y-3 text-sm text-gray-600 leading-relaxed animate-fadeIn">
-                        <p>
-                            যখন কোনো ব্যক্তি বৃষ্টির মধ্যে গতিশীল থাকেন, তখন তিনি বৃষ্টির প্রকৃত বেগ অনুভব করেন না। গতিশীলতার কারণে বৃষ্টির আপেক্ষিক বেগ তার কাছে পরিবর্তিত হয়ে যায়। একেই <strong>আপেক্ষিক বেগ (Relative Velocity)</strong> বলে।
-                        </p>
-                        <ul class="list-disc pl-5 space-y-2 mt-2">
-                            <li><strong class="text-[#274FE3]">Earth Frame (ভূপৃষ্ঠের সাপেক্ষে):</strong> এখানে আমরা দেখতে পাই বৃষ্টি তার প্রকৃত বেগে পড়ছে (বাতাস থাকলে হেলানোভাবে) এবং মানুষটি চলমান। কিন্তু নিজেকে ভিজা থেকে বাঁচাতে মানুষটিকে ছাতাটি আপেক্ষিক বেগের দিকেই ধরতে হয়।</li>
-                            <li><strong class="text-[#1CAB55]">Runner Frame (লোকের সাপেক্ষে):</strong> এখানে মানুষটি স্থির থাকে। চারপাশের গাছপালা ও রাস্তা পেছনের দিকে সরে যায়। বৃষ্টি আপেক্ষিক কোণে মানুষের গায়ে এসে পড়ে, তাই সোজা আপেক্ষিক বেগের বিপরীতে ছাতা ধরলে মানুষটি পুরোপুরি সুরক্ষিত থাকে।</li>
-                        </ul>
-                    </div>
-
-                    <!-- Tab Content: Problem Solver -->
-                    <div id="content-problems" class="hidden space-y-4 animate-fadeIn">
-                        <div class="flex flex-wrap gap-2 mb-2">
-                            <button id="btn-prob-1" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ১</button>
-                            <button id="btn-prob-2" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ২</button>
-                        </div>
-                        
-                        <!-- Problem Solutions Container -->
-                        <div id="problem-display" class="bg-gray-50 p-4 rounded-xl border border-gray-200 text-sm space-y-4">
-                            <!-- Question and standard steps will be inserted here dynamically -->
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <!-- Right Side: Controls, Calculations & Formulas -->
-            <div class="lg:col-span-5 flex flex-col gap-6">
-                
-                <!-- Controls Panel -->
+            <!-- Controls Panel: 2nd on mobile (immediately under Canvas!), right column on desktop -->
+            <div class="lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:row-span-2">
                 <div class="card bg-white border border-gray-200 shadow-sm">
                     <h2 class="text-lg font-bold text-gray-900 mb-6 border-b border-gray-200 pb-3 flex justify-between items-center">
                         <span class="flex items-center"><i data-lucide="sliders" class="w-5 h-5 text-gray-500 mr-2"></i>নিয়ন্ত্রণ প্যানেল (Controls)</span>
@@ -513,10 +472,46 @@
                     </div>
 
                 </div>
-
-
-
             </div>
+
+            <!-- Explanation & Problem Solver Tabs: 3rd on mobile, left column bottom on desktop -->
+            <div class="lg:col-span-7 lg:col-start-1 lg:row-start-2">
+                <div class="card bg-white border border-gray-200 shadow-sm flex flex-col gap-4">
+                    <div class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1.5 w-full mb-2">
+                        <button id="tab-concepts" class="group-tab active">
+                            <i data-lucide="book-open" class="w-4 h-4 inline-block align-middle mr-1.5"></i>তাত্ত্বিক আলোচনা
+                        </button>
+                        <button id="tab-problems" class="group-tab">
+                            <i data-lucide="edit-3" class="w-4 h-4 inline-block align-middle mr-1.5"></i>এইচএসসি সমস্যা সমাধান
+                        </button>
+                    </div>
+
+                    <!-- Tab Content: Concepts -->
+                    <div id="content-concepts" class="space-y-3 text-sm text-gray-600 leading-relaxed animate-fadeIn">
+                        <p>
+                            যখন কোনো ব্যক্তি বৃষ্টির মধ্যে গতিশীল থাকেন, তখন তিনি বৃষ্টির প্রকৃত বেগ অনুভব করেন না। গতিশীলতার কারণে বৃষ্টির আপেক্ষিক বেগ তার কাছে পরিবর্তিত হয়ে যায়। একেই <strong>আপেক্ষিক বেগ (Relative Velocity)</strong> বলে।
+                        </p>
+                        <ul class="list-disc pl-5 space-y-2 mt-2">
+                            <li><strong class="text-[#274FE3]">Earth Frame (ভূপৃষ্ঠের সাপেক্ষে):</strong> এখানে আমরা দেখতে পাই বৃষ্টি তার প্রকৃত বেগে পড়ছে (বাতাস থাকলে হেলানোভাবে) এবং মানুষটি চলমান। কিন্তু নিজেকে ভিজা থেকে বাঁচাতে মানুষটিকে ছাতাটি আপেক্ষিক বেগের দিকেই ধরতে হয়।</li>
+                            <li><strong class="text-[#1CAB55]">Runner Frame (লোকের সাপেক্ষে):</strong> এখানে মানুষটি স্থির থাকে। চারপাশের গাছপালা ও রাস্তা পেছনের দিকে সরে যায়। বৃষ্টি আপেক্ষিক কোণে মানুষের গায়ে এসে পড়ে, তাই সোজা আপেক্ষিক বেগের বিপরীতে ছাতা ধরলে মানুষটি পুরোপুরি সুরক্ষিত থাকে।</li>
+                        </ul>
+                    </div>
+
+                    <!-- Tab Content: Problem Solver -->
+                    <div id="content-problems" class="hidden space-y-4 animate-fadeIn">
+                        <div class="flex flex-wrap gap-2 mb-2">
+                            <button id="btn-prob-1" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ১</button>
+                            <button id="btn-prob-2" class="px-3.5 py-1.5 text-xs font-bold rounded-lg bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 transition cursor-pointer shadow-sm">সমস্যা ২</button>
+                        </div>
+                        
+                        <!-- Problem Solutions Container -->
+                        <div id="problem-display" class="bg-gray-50 p-4 rounded-xl border border-gray-200 text-sm space-y-4">
+                            <!-- Question and standard steps will be inserted here dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- Footer -->
@@ -953,10 +948,14 @@
             if (btn) btn.addEventListener('click', () => selectProblem(i));
         }
 
+        function getResponsiveCanvasHeight() {
+            return window.innerWidth < 640 ? 340 : 480;
+        }
+
         // --- p5.js Animation Visual Engine ---
         function setup() {
             const container = document.getElementById('canvas-container');
-            let canvas = createCanvas(container.offsetWidth, 480);
+            let canvas = createCanvas(container.offsetWidth, getResponsiveCanvasHeight());
             canvas.parent('canvas-container');
             textFont('Hind Siliguri');
 
@@ -1673,7 +1672,9 @@
         // Window Resized callback to keep p5 canvas responsive
         function windowResized() {
             const container = document.getElementById('canvas-container');
-            resizeCanvas(container.offsetWidth, 480);
+            if (container) {
+                resizeCanvas(container.offsetWidth, getResponsiveCanvasHeight());
+            }
         }
 
         // ============================================================
