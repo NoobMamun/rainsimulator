@@ -2273,21 +2273,21 @@
         function drawSimulationIndicators(simWidth) {
             let isMobile = window.innerWidth < 640;
             
-            let boxX = isMobile ? 8 : 10;
-            let boxY = isMobile ? 8 : 10;
-            let boxW = isMobile ? 145 : 210;
-            let boxH = isMobile ? 46 : 66;
-            let padX = isMobile ? 12 : 18;
-            let titleY = isMobile ? 9 : 12;
-            let line1Y = isMobile ? 21 : 28;
-            let line2Y = isMobile ? 32 : 43;
-            let tSizeTitle = isMobile ? 9.5 : 12;
-            let tSizeSub = isMobile ? 8.5 : 11;
+            let boxX = isMobile ? 6 : 8;
+            let boxY = isMobile ? 6 : 8;
+            let boxW = isMobile ? 106 : 150;
+            let boxH = isMobile ? 32 : 46;
+            let padX = isMobile ? 7 : 10;
+            let titleY = isMobile ? 5 : 7;
+            let line1Y = isMobile ? 14 : 19;
+            let line2Y = isMobile ? 22 : 30;
+            let tSizeTitle = isMobile ? 7 : 9;
+            let tSizeSub = isMobile ? 6.2 : 8;
 
             noStroke();
             fill(11, 17, 23, 190);
-            rect(boxX, boxY, boxW, boxH, 8);
-            borderRect(boxX, boxY, boxW, boxH, color(71, 85, 105, 150));
+            rect(boxX, boxY, boxW, boxH, 4);
+            borderRect(boxX, boxY, boxW, boxH, color(71, 85, 105, 150), 4);
 
             // Text labels
             fill(255);
@@ -2567,12 +2567,12 @@
         }
 
         // Border rectangle outline
-        function borderRect(x, y, w, h, col) {
+        function borderRect(x, y, w, h, col, radius = 8) {
             push();
             noFill();
             stroke(col);
             strokeWeight(1);
-            rect(x, y, w, h, 8);
+            rect(x, y, w, h, radius);
             pop();
         }
 
