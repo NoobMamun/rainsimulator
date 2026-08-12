@@ -396,46 +396,46 @@
                     </h2>
                     
                     <!-- Slider: Man's velocity -->
-                    <div class="mb-5">
+                    <div class="mb-3.5 sm:mb-5">
                         <div class="flex justify-between mb-1.5">
-                            <label class="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                            <label class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#274FE3]"></span>
                                 চলন্ত লোকের বেগ (<i>v</i><sub>m</sub>):
                             </label>
-                            <span id="vm-val" class="text-sm font-extrabold text-[#274FE3]">8.0 m/s</span>
+                            <span id="vm-val" class="text-xs sm:text-sm font-extrabold text-[#274FE3]">8.0 m/s</span>
                         </div>
                         <input type="range" id="slider-vm" min="0" max="20" step="0.2" value="8" 
                                class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#274FE3]">
                     </div>
 
                     <!-- Slider: Rain's velocity -->
-                    <div class="mb-5">
+                    <div class="mb-3.5 sm:mb-5">
                         <div class="flex justify-between mb-1.5">
-                            <label class="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                            <label class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#1CAB55]"></span>
                                 বৃষ্টির বেগ (<i>v</i><sub>r</sub>):
                             </label>
-                            <span id="vr-val" class="text-sm font-extrabold text-[#1CAB55]">6.0 m/s</span>
+                            <span id="vr-val" class="text-xs sm:text-sm font-extrabold text-[#1CAB55]">6.0 m/s</span>
                         </div>
                         <input type="range" id="slider-vr" min="1" max="20" step="0.2" value="6" 
                                class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#1CAB55]">
                     </div>
 
                     <!-- Slider: Wind's velocity -->
-                    <div class="mb-5">
+                    <div class="mb-3.5 sm:mb-5">
                         <div class="flex justify-between mb-1.5">
-                            <label class="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+                            <label class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
                                 বাতাসের বেগ (<i>v</i><sub>w</sub>):
                             </label>
-                            <span id="vw-val" class="text-sm font-extrabold text-[#EA580C]">0.0 m/s</span>
+                            <span id="vw-val" class="text-xs sm:text-sm font-extrabold text-[#EA580C]">0.0 m/s</span>
                         </div>
                         <input type="range" id="slider-vw" min="-15" max="15" step="0.2" value="0" 
                                class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#EA580C]">
                     </div>
 
                     <!-- Slider: Umbrella Angle -->
-                    <div class="mb-6 p-3 bg-amber-50/70 rounded-xl border border-amber-200/90 shadow-xs">
+                    <div class="mb-4 sm:mb-6 p-2.5 sm:p-3 bg-amber-50/70 rounded-xl border border-amber-200/90 shadow-xs">
                         <div class="flex justify-between items-center mb-1.5">
                             <label class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#E7B946]"></span>
@@ -448,7 +448,7 @@
                         </div>
                         <input type="range" id="slider-umb" min="-89" max="89" step="0.1" value="53.1" 
                                class="w-full h-1.5 bg-amber-200 rounded-lg appearance-none cursor-pointer accent-[#E7B946]">
-                        <div id="umb-status-hint" class="text-[11px] font-bold mt-1.5 flex items-center justify-between">
+                        <div id="umb-status-hint" class="text-[10px] sm:text-[11px] font-bold mt-1.5 flex items-center justify-between">
                             <span id="umb-status-badge" class="text-[#1CAB55]">✅ সঠিক কোণ (সুরক্ষিত)</span>
                             <span id="req-angle-hint" class="text-gray-500 font-semibold">প্রয়োজনীয়: 53.1°</span>
                         </div>
@@ -517,7 +517,6 @@
         <!-- Footer -->
         <footer class="mt-12 text-center text-white/50 text-sm border-t border-white/10 pt-6 pb-6 bg-[#0A0004] rounded-t-2xl -mx-4 md:-mx-6 px-4">
             <p>এইচএসসি পদার্থবিজ্ঞান শিক্ষার্থীদের জন্য ডিজাইনকৃত • ভেক্টর আপেক্ষিক বেগ ভিজ্যুয়ালাইজেশন টুল</p>
-            <p class="mt-1 text-xs text-white/40">পাওয়ার্ড বাই: p5.js, Tailwind CSS v4, এবং KaTeX ম্যাথ রেন্ডারিং।</p>
         </footer>
     </div>
 
