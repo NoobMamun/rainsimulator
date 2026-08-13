@@ -129,12 +129,12 @@
         /* 10MS Unified Group Tabs */
         .group-tab {
             flex: 1;
-            padding: 10px 14px;
+            padding: 6px 8px;
             border: 1px solid var(--border);
             background: #fff;
             border-radius: 10px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 11px;
             color: var(--gray-600);
             cursor: pointer;
             transition: all var(--dur-base);
@@ -142,6 +142,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        @media (min-width: 640px) {
+            .group-tab {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
         }
         .group-tab:hover {
             border-color: var(--gray-400);
@@ -621,10 +627,10 @@
                 <div class="card bg-white border border-gray-200 shadow-sm flex flex-col gap-4">
                     <div id="explanation-tabs-group" class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1.5 w-full mb-2">
                         <button id="tab-concepts" class="group-tab active">
-                            <i data-lucide="book-open" class="w-4 h-4 inline-block align-middle mr-1.5"></i><span data-i18n="tabConcepts">তাত্ত্বিক আলোচনা</span>
+                            <i data-lucide="book-open" class="w-3.5 h-3.5 sm:w-4 sm:h-4 inline-block align-middle mr-1 sm:mr-1.5"></i><span data-i18n="tabConcepts">তাত্ত্বিক আলোচনা</span>
                         </button>
                         <button id="tab-problems" class="group-tab">
-                            <i data-lucide="edit-3" class="w-4 h-4 inline-block align-middle mr-1.5"></i><span data-i18n="tabProblems">এইচএসসি সমস্যা সমাধান</span>
+                            <i data-lucide="edit-3" class="w-3.5 h-3.5 sm:w-4 sm:h-4 inline-block align-middle mr-1 sm:mr-1.5"></i><span data-i18n="tabProblems">এইচএসসি সমস্যা সমাধান</span>
                         </button>
                     </div>
 
