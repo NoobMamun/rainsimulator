@@ -160,6 +160,20 @@
             box-shadow: 0 0 0 3px rgba(232, 0, 29, 0.12);
         }
 
+        /* Fix Tailwind preflight resetting sub and sup alignment */
+        sub, sup {
+            font-size: 75% !important;
+            line-height: 0 !important;
+            position: relative !important;
+            vertical-align: baseline !important;
+        }
+        sub {
+            bottom: -0.25em !important;
+        }
+        sup {
+            top: -0.5em !important;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
@@ -483,8 +497,8 @@
 
                     <!-- Canvas parent container -->
                     <div id="canvas-container" class="w-full flex justify-center bg-[#0B1117] rounded-2xl overflow-hidden shadow-inner border border-gray-800 relative">
-                        <!-- Canvas View Mode Switcher overlay (Mobile/Tablet helper) -->
-                        <div id="mobile-view-switcher" class="lg:hidden absolute bottom-4 left-4 z-10 flex bg-white/90 backdrop-blur-sm p-1 rounded-xl border border-gray-200 shadow-lg gap-1">
+                        <!-- Canvas View Mode Switcher overlay -->
+                        <div id="mobile-view-switcher" class="absolute bottom-4 left-4 z-10 flex bg-white/90 backdrop-blur-sm p-1 rounded-xl border border-gray-200 shadow-lg gap-1">
                             <button id="btn-view-sim" data-i18n="viewSimBtn" class="px-3 py-1 text-xs font-bold rounded-lg text-white bg-[#1CAB55] border border-[#0E7B4F]">সিমুলেশন</button>
                             <button id="btn-view-vector" data-i18n="viewVectorBtn" class="px-3 py-1 text-xs font-bold rounded-lg text-gray-600">ভেক্টর ল্যাব</button>
                         </div>
@@ -512,7 +526,7 @@
             </div>
 
             <!-- Controls Panel: 2nd on mobile (immediately under Canvas!), right column on desktop -->
-            <div class="lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:row-span-2">
+            <div class="lg:col-span-5 lg:col-start-8 lg:row-start-1">
                 <div class="card bg-white border border-gray-200 shadow-sm">
                     <h2 class="text-xs sm:text-lg font-bold text-gray-900 mb-3 sm:mb-6 border-b border-gray-200 pb-2 sm:pb-3 flex justify-between items-center">
                         <span data-i18n="controlsPanelTitle" class="flex items-center"><i data-lucide="sliders" class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-gray-500 mr-1.5 sm:mr-2"></i>নিয়ন্ত্রণ প্যানেল (Controls)</span>
@@ -524,7 +538,7 @@
                         <div class="flex justify-between mb-1.5">
                             <label data-i18n="vmLabel" class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#274FE3]"></span>
-                                চলন্ত লোকের বেগ (<i>v</i><sub>m</sub>):
+                                চলন্ত লোকের বেগ (<span class="math-inline" data-formula="v_m"></span>):
                             </label>
                             <span id="vm-val" class="text-xs sm:text-sm font-extrabold text-[#274FE3]">8.0 m/s</span>
                         </div>
@@ -537,7 +551,7 @@
                         <div class="flex justify-between mb-1.5">
                             <label data-i18n="vrLabel" class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#1CAB55]"></span>
-                                বৃষ্টির বেগ (<i>v</i><sub>r</sub>):
+                                বৃষ্টির বেগ (<span class="math-inline" data-formula="v_r"></span>):
                             </label>
                             <span id="vr-val" class="text-xs sm:text-sm font-extrabold text-[#1CAB55]">6.0 m/s</span>
                         </div>
@@ -550,7 +564,7 @@
                         <div class="flex justify-between mb-1.5">
                             <label data-i18n="vwLabel" class="text-xs sm:text-sm font-semibold text-gray-700 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>
-                                বাতাসের বেগ (<i>v</i><sub>w</sub>):
+                                বাতাসের বেগ (<span class="math-inline" data-formula="v_w"></span>):
                             </label>
                             <span id="vw-val" class="text-xs sm:text-sm font-extrabold text-[#EA580C]">0.0 m/s</span>
                         </div>
@@ -563,7 +577,7 @@
                         <div class="flex justify-between items-center mb-1.5">
                             <label data-i18n="umbrellaLabel" class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-full bg-[#E7B946]"></span>
-                                ছাতার কোণ (<i>&theta;</i><sub>ছাতা</sub>):
+                                ছাতার কোণ (<span class="math-inline" data-formula="\theta_{\text{ছাতা}}"></span>):
                             </label>
                             <div class="flex items-center gap-1.5">
                                 <div class="relative flex items-center">
@@ -603,7 +617,7 @@
             </div>
 
             <!-- Explanation & Problem Solver Tabs: 3rd on mobile, left column bottom on desktop -->
-            <div class="lg:col-span-7 lg:col-start-1 lg:row-start-2">
+            <div class="lg:col-span-12 lg:col-start-1 lg:row-start-2">
                 <div class="card bg-white border border-gray-200 shadow-sm flex flex-col gap-4">
                     <div id="explanation-tabs-group" class="flex bg-gray-100 p-1 rounded-xl border border-gray-200 gap-1.5 w-full mb-2">
                         <button id="tab-concepts" class="group-tab active">
@@ -721,10 +735,10 @@
             safePanelText:      { bn: 'মানুষটি এখন সুরক্ষিত আছেন!', en: 'The person is safe now!' },
             controlsPanelTitle: { bn: '<i data-lucide="sliders" class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-gray-500 mr-1.5 sm:mr-2"></i>নিয়ন্ত্রণ প্যানেল (Controls)', en: '<i data-lucide="sliders" class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-gray-500 mr-1.5 sm:mr-2"></i>Control Panel' },
             controlsBadge:      { bn: 'চলকসমূহ', en: 'Variables' },
-            vmLabel:            { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#274FE3]"></span>চলন্ত লোকের বেগ (<i>v</i><sub>m</sub>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#274FE3]"></span>Man\'s velocity (<i>v</i><sub>m</sub>):' },
-            vrLabel:            { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#1CAB55]"></span>বৃষ্টির বেগ (<i>v</i><sub>r</sub>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#1CAB55]"></span>Rain\'s velocity (<i>v</i><sub>r</sub>):' },
-            vwLabel:            { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>বাতাসের বেগ (<i>v</i><sub>w</sub>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>Wind\'s velocity (<i>v</i><sub>w</sub>):' },
-            umbrellaLabel:      { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#E7B946]"></span>ছাতার কোণ (<i>&theta;</i><sub>ছাতা</sub>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#E7B946]"></span>Umbrella angle (<i>&theta;</i><sub>umb</sub>):' },
+            vmLabel:            { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#274FE3]"></span>চলন্ত লোকের বেগ (<span class="math-inline" data-formula="v_m"></span>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#274FE3]"></span>Man\'s velocity (<span class="math-inline" data-formula="v_m"></span>):' },
+            vrLabel:            { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#1CAB55]"></span>বৃষ্টির বেগ (<span class="math-inline" data-formula="v_r"></span>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#1CAB55]"></span>Rain\'s velocity (<span class="math-inline" data-formula="v_r"></span>):' },
+            vwLabel:            { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>বাতাসের বেগ (<span class="math-inline" data-formula="v_w"></span>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#EA580C]"></span>Wind\'s velocity (<span class="math-inline" data-formula="v_w"></span>):' },
+            umbrellaLabel:      { bn: '<span class="w-2.5 h-2.5 rounded-full bg-[#E7B946]"></span>ছাতার কোণ (<span class="math-inline" data-formula="\\theta_{\\text{ছাতা}}"></span>):', en: '<span class="w-2.5 h-2.5 rounded-full bg-[#E7B946]"></span>Umbrella angle (<span class="math-inline" data-formula="\\theta_{\\text{umb}}"></span>):' },
             umbAngleInputTitle: { bn: 'ম্যানুয়ালি কোণ লিখুন (Degree)', en: 'Enter angle manually (Degree)' },
             presetsHeader:      { bn: 'সিমুলেশন কেসসমূহ (Scenarios)', en: 'Simulation Cases (Scenarios)' },
             presetClassic:      { bn: 'বাতাসহীন (স্বাভাবিক)', en: 'No Wind (Normal)' },
@@ -777,8 +791,8 @@
             pdGivenWindSpeed:   { bn: 'বাতাসের বেগ', en: "Wind's speed" },
             pdGivenHorizontalRel: { bn: 'অনুভূমিক আপেক্ষিক বেগ', en: 'Horizontal relative velocity' },
             pdVectorDiagramText: {
-                bn: (vr, rx, vrm, theta) => `পরীক্ষার খাতায় একটি সমকোণী ত্রিভুজ আঁকবে যেখানে উল্লম্ব বাহুটি বৃষ্টির বেগ (<i>v</i><sub>r</sub> = ${vr} m/s) এবং অনুভূমিক বাহুটি অনুভূমিক আপেক্ষিক বেগ (|<i>v</i><sub>w</sub> - <i>v</i><sub>m</sub>| = ${rx} m/s) নির্দেশ করে। অতিভুজটি হবে আপেক্ষিক বেগ (<i>v</i><sub>rm</sub> = ${vrm} m/s)। উল্লম্বের সাথে কোণটি হবে <i>&theta;</i> = ${theta}°।`,
-                en: (vr, rx, vrm, theta) => `On paper, draw a right triangle where the vertical leg is the rain's velocity (<i>v</i><sub>r</sub> = ${vr} m/s) and the horizontal leg is the horizontal relative velocity (|<i>v</i><sub>w</sub> - <i>v</i><sub>m</sub>| = ${rx} m/s). The hypotenuse is the relative velocity (<i>v</i><sub>rm</sub> = ${vrm} m/s), and the angle from the vertical is <i>&theta;</i> = ${theta}°.`
+                bn: (vr, rx, vrm, theta) => `পরীক্ষার খাতায় একটি সমকোণী ত্রিভুজ আঁকবে যেখানে উল্লম্ব বাহুটি বৃষ্টির বেগ (<span class="math-inline" data-formula="v_r"></span> = ${vr} m/s) এবং অনুভূমিক বাহুটি অনুভূমিক আপেক্ষিক বেগ (|<span class="math-inline" data-formula="v_w - v_m"></span>| = ${rx} m/s) নির্দেশ করে। অতিভুজটি হবে আপেক্ষিক বেগ (<span class="math-inline" data-formula="v_{rm}"></span> = ${vrm} m/s)। উল্লম্বের সাথে কোণটি হবে <span class="math-inline" data-formula="\\theta"></span> = ${theta}°।`,
+                en: (vr, rx, vrm, theta) => `On paper, draw a right triangle where the vertical leg is the rain's velocity (<span class="math-inline" data-formula="v_r"></span> = ${vr} m/s) and the horizontal leg is the horizontal relative velocity (|<span class="math-inline" data-formula="v_w - v_m"></span>| = ${rx} m/s). The hypotenuse is the relative velocity (<span class="math-inline" data-formula="v_{rm}"></span> = ${vrm} m/s), and the angle from the vertical is <span class="math-inline" data-formula="\\theta"></span> = ${theta}°.`
             },
             pdFinalAnswer: {
                 bn: (dir, vrm) => `"ব্যক্তিকে ${dir} কোণে ছাতা ধরতে হবে। এই অবস্থায় লোকটির সাপেক্ষে বৃষ্টির আপেক্ষিক বেগের মান হবে ${vrm} m/s।"`,
@@ -815,6 +829,15 @@
             document.querySelectorAll('[data-i18n-aria]').forEach(el => {
                 el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
             });
+
+            // Render math-inline elements using KaTeX
+            document.querySelectorAll('.math-inline').forEach(el => {
+                const formula = el.getAttribute('data-formula');
+                if (window.katex && formula) {
+                    katex.render(formula, el, { throwOnError: false });
+                }
+            });
+
             if (window.lucide) lucide.createIcons();
         }
 
@@ -1286,10 +1309,10 @@
                     <div class="space-y-2">
                         <h4 class="text-gray-700 font-semibold text-[11px] uppercase tracking-wider">${t('pdStep1Header')}</h4>
                         <div class="pl-3 border-l-2 border-[#274FE3] text-gray-600 space-y-1 text-xs">
-                            <div>• ${t('pdGivenManSpeed')} (<i>v</i><sub>m</sub>) = <span class="text-[#274FE3] font-semibold">${vmVal.toFixed(1)} m/s</span></div>
-                            <div>• ${t('pdGivenRainSpeed')} (<i>v</i><sub>r</sub>) = <span class="text-[#1CAB55] font-semibold">${vrVal.toFixed(1)} m/s</span> ${t('pdGivenRainVertical')}</div>
-                            <div>• ${t('pdGivenWindSpeed')} (<i>v</i><sub>w</sub>) = <span class="text-[#EA580C] font-semibold">${vwVal.toFixed(1)} m/s</span></div>
-                            <div>• ${t('pdGivenHorizontalRel')} (|<i>v</i><sub>w</sub> - <i>v</i><sub>m</sub>|) = <span class="text-[#274FE3] font-semibold">${Math.abs(rx).toFixed(1)} m/s</span></div>
+                            <div>• ${t('pdGivenManSpeed')} (<span class="math-inline" data-formula="v_m"></span>) = <span class="text-[#274FE3] font-semibold">${vmVal.toFixed(1)} m/s</span></div>
+                            <div>• ${t('pdGivenRainSpeed')} (<span class="math-inline" data-formula="v_r"></span>) = <span class="text-[#1CAB55] font-semibold">${vrVal.toFixed(1)} m/s</span> ${t('pdGivenRainVertical')}</div>
+                            <div>• ${t('pdGivenWindSpeed')} (<span class="math-inline" data-formula="v_w"></span>) = <span class="text-[#EA580C] font-semibold">${vwVal.toFixed(1)} m/s</span></div>
+                            <div>• ${t('pdGivenHorizontalRel')} (|<span class="math-inline" data-formula="v_w - v_m"></span>|) = <span class="text-[#274FE3] font-semibold">${Math.abs(rx).toFixed(1)} m/s</span></div>
                         </div>
                     </div>
 
@@ -1319,13 +1342,21 @@
                 </div>
             `;
 
+            // Render math-inline elements inside problemDisplay
+            problemDisplay.querySelectorAll('.math-inline').forEach(el => {
+                const formula = el.getAttribute('data-formula');
+                if (window.katex && formula) {
+                    katex.render(formula, el, { throwOnError: false });
+                }
+            });
+
             // Render equations using KaTeX
             if (window.katex) {
-                katex.render(`\\tan \\theta = \\frac{|v_w - v_m|}{v_r} = \\frac{|${vwVal.toFixed(1)} - ${vmVal.toFixed(1)}|}{${vrVal.toFixed(1)}}`, document.getElementById('prob-math-formula'), { throwOnError: false });
+                katex.render(`\\tan \\theta = \\frac{|v_w - v_m|}{v_r} = \\frac{|v_w - v_m|}{v_r}`, document.getElementById('prob-math-formula'), { throwOnError: false });
 
                 katex.render(`\\tan \\theta = \\frac{${Math.abs(rx).toFixed(1)}}{${vrVal.toFixed(1)}} = ${valRatio.toFixed(3)} \\implies \\theta = \\tan^{-1}(${valRatio.toFixed(3)}) = ${thetaDeg.toFixed(2)}^\\circ`, document.getElementById('prob-math-calc'), { throwOnError: false });
 
-                katex.render(`v_{rm} = \\sqrt{(${rx.toFixed(1)})^2 + (${vrVal.toFixed(1)})^2} = ${vrmVal.toFixed(2)} \\text{ m/s}`, document.getElementById('prob-math-mag'), { throwOnError: false });
+                katex.render(`v_{rm} = \\sqrt{(v_w - v_m)^2 + v_r^2} = \\sqrt{(${rx.toFixed(1)})^2 + (${vrVal.toFixed(1)})^2} = ${vrmVal.toFixed(2)} \\text{ m/s}`, document.getElementById('prob-math-mag'), { throwOnError: false });
 
                 katex.render(`\\theta = ${thetaDeg.toFixed(2)}^\\circ`, document.getElementById('prob-math-ans'), { throwOnError: false, displayMode: true });
             }
@@ -1773,12 +1804,7 @@
 
             background(11, 17, 23); // 10MS Unified Inverse Background (#0B1117)
 
-            // Vector Lab is a mobile-only feature, switched via the সিমুলেশন/ভেক্টর ল্যাব
-            // buttons (which are themselves only visible below Tailwind's lg breakpoint).
-            // Desktop and "minimised" desktop windows always show the simulation.
-            if (window.innerWidth >= 1024 && viewMode === 'vector') {
-                viewMode = 'simulation';
-            }
+            // Vector Lab switcher is visible and functional on both mobile and desktop.
 
             let simWidth = width;
 
