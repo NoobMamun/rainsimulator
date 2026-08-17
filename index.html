@@ -982,9 +982,14 @@
             let rx = v_w - v_m;
             let ry = v_r;
             v_rm = Math.sqrt(rx * rx + ry * ry);
-            
-            // Calculate signed angle with the vertical (y-axis): negative for forward, positive for backward
-            let reqThetaRad = Math.atan2(rx, ry);
+
+            // Signed angle from vertical that makes the umbrella canopy exactly
+            // perpendicular to the relative rain vector (rx, ry) — the sign is
+            // flipped (-rx, not rx) because atan2(rx, ry) alone gives the direction
+            // *reflected* across the rain vector, not rotated 90° from it, which left
+            // the canopy oriented almost parallel to the rain instead of perpendicular
+            // to it (near-zero shadow width) for many rx/ry ratios.
+            let reqThetaRad = Math.atan2(-rx, ry);
             let reqThetaDeg = reqThetaRad * (180 / Math.PI);
 
             // If Auto-align is ON, auto-sync umbrella slider to exact required angle
@@ -2076,7 +2081,8 @@
             let handY = groundY - 48;
             let rx = v_w - v_m;
             let ry = v_r;
-            let reqThetaRad = Math.atan2(rx, ry);
+            // See updatePhysicsValues() for why this is atan2(-rx, ry) and not atan2(rx, ry)
+            let reqThetaRad = Math.atan2(-rx, ry);
             let reqThetaDeg = reqThetaRad * (180 / Math.PI);
 
             let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : reqThetaDeg;
@@ -2090,6 +2096,19 @@
             let P1y = handY + (-47.5)*sinT + (-65)*cosT;
             let P2x = handX + ( 47.5)*cosT - (-65)*sinT;
             let P2y = handY + ( 47.5)*sinT + (-65)*cosT;
+
+            // Wider chord used only for the protection/shadow test, not for rendering or the
+            // deflection-splash effect. The canopy is modeled as a flat chord, but a real
+            // umbrella's dome casts a shadow a bit wider than that chord, and the body sits
+            // offset from the chord's own rotation pivot (handX = runnerPos + 12) — at some
+            // angles that left the flat 95px chord with too little margin, letting a few
+            // raindrops graze past a "correctly" angled umbrella. This margin is deliberately
+            // generous since under-protecting is the wrong failure mode here.
+            const SHADOW_HALF_WIDTH = 55;
+            let P1sx = handX + (-SHADOW_HALF_WIDTH)*cosT - (-65)*sinT;
+            let P1sy = handY + (-SHADOW_HALF_WIDTH)*sinT + (-65)*cosT;
+            let P2sx = handX + ( SHADOW_HALF_WIDTH)*cosT - (-65)*sinT;
+            let P2sy = handY + ( SHADOW_HALF_WIDTH)*sinT + (-65)*cosT;
 
             let angleDiff = Math.abs(actualUmbDeg - reqThetaDeg);
             let isAngleCorrect = (angleDiff <= 3.5);
@@ -2134,10 +2153,14 @@
                     continue;
                 }
 
-                // 2. Check if raindrop is blocked by umbrella canopy (rain shadow cast)
-                let dropRdx = horizontalShift * 0.5 * drop.speedMod;
-                let dropRdy = rainYSpeed * drop.speedMod;
-                let blocked = _canopyBlocks(drop.x, drop.y, dropRdx, dropRdy, P1x, P1y, P2x, P2y);
+                // 2. Check if raindrop is blocked by umbrella canopy (rain shadow cast).
+                // Must use the TRUE relative velocity of rain w.r.t. the person (rx, ry —
+                // the same values the required umbrella angle is computed from above), not
+                // the animation's visual fall speed (relativeWindX/rainYSpeed, scaled by
+                // cosmetic factors chosen only for a pleasing on-screen slant). Those two
+                // velocities point in different directions, so using the visual one here
+                // made the umbrella's shadow miss the body even at the exact required angle.
+                let blocked = _canopyBlocks(drop.x, drop.y, rx, ry, P1sx, P1sy, P2sx, P2sy);
 
                 if (blocked) {
                     if (drop.y >= bodyTop - 15) {
@@ -2152,7 +2175,7 @@
                 // 3. Check if raindrop hits person's body (unshielded by canopy)
                 if (!blocked && drop.x >= bodyLeft && drop.x <= bodyRight &&
                     drop.y >= bodyTop  && drop.y <= bodyBottom) {
-                    
+
                     personWetThisFrame = true;
 
                     // 💧 WATER DROPLET ACCUMULATION: Add persistent droplet onto person's body!
@@ -2359,10 +2382,10 @@
             push();
             translate(handX, handY); // Move origin to hand location
             
-            // Rain relative angle calculations
+            // Rain relative angle calculations (see updatePhysicsValues() for the -rx sign)
             let rx = v_w - v_m;
             let ry = v_r;
-            let reqThetaRad = Math.atan2(rx, ry);
+            let reqThetaRad = Math.atan2(-rx, ry);
             let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : (reqThetaRad * 180 / Math.PI);
             let actualUmbRad = actualUmbDeg * (Math.PI / 180);
 
@@ -2876,7 +2899,8 @@
             if (isPersonWet) {
                 dryFrames = 0;
                 let rx = v_w - v_m;
-                let reqThetaDeg = Math.atan2(rx, v_r) * (180 / Math.PI);
+                // See updatePhysicsValues() for why this is atan2(-rx, ...) and not atan2(rx, ...)
+                let reqThetaDeg = Math.atan2(-rx, v_r) * (180 / Math.PI);
                 let actualUmbDeg = sliderUmb ? parseFloat(sliderUmb.value) : reqThetaDeg;
                 let shortReason = t('umbrellaAngleReason', actualUmbDeg.toFixed(1), reqThetaDeg.toFixed(1));
 
