@@ -427,6 +427,72 @@
         .tour-next:hover { background: #17994B; }
 
         /* ============================================
+           CONCEPT ONBOARDING
+        ============================================ */
+        #onb-mobile-panel { max-height: 48vh; overflow-y: auto; }
+        .onb-badge { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; margin-bottom:12px; }
+        .onb-question { font-size:16px; font-weight:800; color:var(--fg-1); line-height:1.5; margin-bottom:16px; }
+        .onb-options { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+        .onb-option-btn { display:flex; align-items:center; gap:10px; text-align:left; width:100%; padding:12px 14px; border-radius:12px; border:1.5px solid var(--gray-200); background:#fff; font-size:13.5px; font-weight:600; color:var(--fg-1); cursor:pointer; transition:all .15s; }
+        .onb-option-btn:hover { border-color: var(--gray-300); background: var(--gray-50); }
+        .onb-option-btn.selected { border-color:#1CAB55; background:rgba(28,171,85,0.08); }
+        .onb-option-letter { flex-shrink:0; width:22px; height:22px; border-radius:999px; background:var(--gray-100); color:var(--fg-2); font-size:11px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+        .onb-option-btn.selected .onb-option-letter { background:#1CAB55; color:#fff; }
+        .onb-check-btn { width:100%; padding:12px; border-radius:12px; background:#1CAB55; border:1px solid #0E7B4F; color:#fff; font-weight:800; font-size:13.5px; cursor:pointer; transition:background .15s; }
+        .onb-check-btn:hover { background:#17994B; }
+        .onb-check-btn:disabled { opacity:.4; cursor:not-allowed; }
+        .onb-feedback { font-size:13px; font-weight:800; padding:8px 12px; border-radius:10px; margin-bottom:12px; display:inline-block; }
+        .onb-feedback.correct { background:rgba(28,171,85,.12); color:#0E7B4F; }
+        .onb-feedback.wrong { background:rgba(232,0,29,.1); color:#931212; }
+        .onb-compare-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+        .onb-compare-item { flex:1; padding:10px; border-radius:12px; border:1.5px solid var(--gray-200); text-align:center; }
+        .onb-compare-item.wrong-item { border-color:rgba(232,0,29,.35); background:rgba(232,0,29,.04); }
+        .onb-compare-item.correct-item { border-color:rgba(28,171,85,.35); background:rgba(28,171,85,.05); }
+        .onb-compare-label { font-size:10px; color:var(--fg-3); font-weight:700; margin-bottom:4px; }
+        .onb-compare-name { font-size:12px; font-weight:800; color:var(--fg-1); }
+        .onb-explain { font-size:13px; color:var(--fg-2); line-height:1.6; margin-bottom:16px; }
+        .onb-instruction { font-size:14.5px; font-weight:700; color:var(--fg-1); line-height:1.5; margin-bottom:14px; }
+        .onb-readout { font-size:12.5px; font-weight:700; color:var(--fg-2); background:var(--gray-50); border:1px solid var(--gray-200); border-radius:10px; padding:10px 12px; margin-bottom:14px; }
+        .onb-readout-bar { height:6px; border-radius:99px; background:var(--gray-200); overflow:hidden; margin-top:8px; }
+        .onb-readout-bar-fill { height:100%; background:#1CAB55; transition:width .2s; border-radius:99px; }
+        .onb-next-btn { width:100%; padding:12px; border-radius:12px; background:#1CAB55; border:1px solid #0E7B4F; color:#fff; font-weight:800; font-size:13.5px; cursor:pointer; }
+        .onb-step-badge-num { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:800; color:var(--fg-3); margin-bottom:10px; }
+
+        /* Mobile floating card: condensed typography/spacing so a full step fits ~360x580 */
+        #onb-mobile-panel .onb-badge { font-size:9.5px; margin-bottom:8px; }
+        #onb-mobile-panel .onb-question { font-size:13px; margin-bottom:10px; }
+        #onb-mobile-panel .onb-options { gap:6px; margin-bottom:10px; }
+        #onb-mobile-panel .onb-option-btn { padding:8px 10px; font-size:12px; }
+        #onb-mobile-panel .onb-option-letter { width:18px; height:18px; font-size:10px; }
+        #onb-mobile-panel .onb-check-btn, #onb-mobile-panel .onb-next-btn { padding:9px; font-size:12px; }
+        #onb-mobile-panel .onb-explain { font-size:11.5px; margin-bottom:10px; }
+        #onb-mobile-panel .onb-instruction { font-size:12.5px; margin-bottom:8px; }
+        #onb-mobile-panel .onb-readout { font-size:11px; padding:8px 10px; margin-bottom:10px; }
+        #onb-mobile-panel .onb-compare-name { font-size:11px; }
+        #onb-mobile-panel .onb-compare-label { font-size:9px; }
+        #onb-mobile-panel .onb-step-badge-num { font-size:10px; margin-bottom:6px; }
+
+        /* Intro gallery */
+        .onb-gallery-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
+        .onb-gallery-card { border:1.5px solid var(--gray-200); border-radius:16px; padding:12px; background:#fff; opacity:0; transform:translateY(10px) scale(.96); animation:onbCardIn .4s var(--ease-out) forwards; transition:transform .18s, box-shadow .18s; }
+        .onb-gallery-card:hover { transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,.08); }
+        @keyframes onbCardIn { to { opacity:1; transform:translateY(0) scale(1); } }
+        .onb-gallery-diagram { width:100%; height:88px; display:flex; align-items:center; justify-content:center; margin-bottom:8px; }
+        .onb-gallery-name { font-size:12px; font-weight:800; color:var(--fg-1); margin-bottom:2px; }
+        .onb-gallery-desc { font-size:10.5px; color:var(--fg-3); line-height:1.45; }
+        #onb-mobile-panel .onb-gallery-grid { gap:6px; margin-bottom:10px; }
+        #onb-mobile-panel .onb-gallery-card { padding:6px; border-radius:10px; }
+        #onb-mobile-panel .onb-gallery-diagram { height:50px; margin-bottom:4px; }
+        #onb-mobile-panel .onb-gallery-name { font-size:10px; }
+        #onb-mobile-panel .onb-gallery-desc { display:none; }
+
+        .onb-glow-pulse { animation: onbGlowPulse 1.8s ease-in-out infinite; }
+        @keyframes onbGlowPulse {
+            0%, 100% { filter: drop-shadow(0 0 1px currentColor); opacity:.85; }
+            50% { filter: drop-shadow(0 0 5px currentColor); opacity:1; }
+        }
+
+        /* ============================================
            LANGUAGE TOGGLE
         ============================================ */
         .lang-btn {
@@ -453,9 +519,9 @@
 </head>
 <body class="text-slate-900 bg-gray-50 min-h-screen">
 
-    <div class="max-w-[1216px] mx-auto px-4 md:px-6 py-2 sm:py-6 bn flex flex-col gap-3 sm:gap-6">
+    <div id="main-app-shell" class="max-w-[1216px] mx-auto px-4 md:px-6 py-2 sm:py-6 bn flex flex-col gap-3 sm:gap-6">
         <!-- Header -->
-        <header class="mb-1 sm:mb-4 text-center">
+        <header id="app-header" class="mb-1 sm:mb-4 text-center">
             <div class="flex items-center justify-between gap-2 mb-2 sm:mb-3">
                 <img src="https://cdn.10minuteschool.com/images/svg/Origin%20Labs%20Black.svg" alt="Origin Labs" class="h-4 sm:h-6 w-auto flex-shrink-0">
                 <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
@@ -484,7 +550,7 @@
             <!-- Visualizer Canvas Card: 1st on mobile, left column top on desktop -->
             <div class="lg:col-span-7 lg:col-start-1 lg:row-start-1">
                 <div class="card bg-white border border-gray-200 shadow-sm p-3 sm:p-4">
-                    <div class="flex flex-wrap justify-between sm:justify-between items-center mb-2 sm:mb-4 gap-2 sm:gap-4">
+                    <div id="canvas-card-topbar" class="flex flex-wrap justify-between sm:justify-between items-center mb-2 sm:mb-4 gap-2 sm:gap-4">
                         <div class="hidden sm:flex items-center gap-2">
                             <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
                             <h2 data-i18n="canvasTitle" class="text-lg font-bold text-gray-900">ইন্টারেক্টিভ ক্যানভাস</h2>
@@ -532,7 +598,7 @@
             </div>
 
             <!-- Controls Panel: 2nd on mobile (immediately under Canvas!), right column on desktop -->
-            <div class="lg:col-span-5 lg:col-start-8 lg:row-start-1">
+            <div id="control-panel-column" class="lg:col-span-5 lg:col-start-8 lg:row-start-1">
                 <div class="card bg-white border border-gray-200 shadow-sm">
                     <h2 class="text-xs sm:text-lg font-bold text-gray-900 mb-3 sm:mb-6 border-b border-gray-200 pb-2 sm:pb-3 flex justify-between items-center">
                         <span data-i18n="controlsPanelTitle" class="flex items-center"><i data-lucide="sliders" class="w-3.5 h-3.5 sm:w-5 sm:h-5 text-gray-500 mr-1.5 sm:mr-2"></i>নিয়ন্ত্রণ প্যানেল (Controls)</span>
@@ -663,7 +729,7 @@
         </div>
 
         <!-- Footer -->
-        <footer class="mt-12 text-center text-white/50 text-sm border-t border-white/10 pt-6 pb-6 bg-[#0A0004] rounded-t-2xl -mx-4 md:-mx-6 px-4">
+        <footer id="app-footer" class="mt-12 text-center text-white/50 text-sm border-t border-white/10 pt-6 pb-6 bg-[#0A0004] rounded-t-2xl -mx-4 md:-mx-6 px-4">
             <p data-i18n="footerText">এইচএসসি পদার্থবিজ্ঞান শিক্ষার্থীদের জন্য ডিজাইনকৃত • ভেক্টর আপেক্ষিক বেগ ভিজ্যুয়ালাইজেশন টুল</p>
         </footer>
     </div>
@@ -682,6 +748,79 @@
             <button id="feedback-modal-close" type="button" aria-label="Close"
                     class="absolute top-2 right-2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 hover:bg-gray-100 border border-gray-200 text-gray-500 hover:text-gray-800 shadow-sm cursor-pointer">✕</button>
             <iframe id="feedback-modal-iframe" src="" title="Feedback Form" class="w-full h-full border-0" loading="lazy"></iframe>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         CONCEPT ONBOARDING — a self-driving, in-simulator walkthrough for
+         first-time visitors (see the "CONCEPT ONBOARDING" script section
+         near the bottom of the file for the full state machine). Runs
+         once (localStorage-gated), can be skipped at any point via the
+         X button, and reveals the normal simulator on finish. The whole
+         journey (gate, gallery, MCQ steps, placement tasks) renders inside
+         ONE bounded popup on desktop; on mobile it's a floating card over
+         the (unmoved) canvas.
+    ============================================================ -->
+
+    <!-- Desktop (>=900px): bounded centered popup — canvas pane + panel pane -->
+    <div id="onb-desktop-overlay" class="hidden fixed inset-0 z-[9995] items-center justify-center p-3 sm:p-6">
+        <div id="onb-desktop-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div id="onb-desktop-card" class="relative bg-white rounded-3xl shadow-2xl w-[96vw] h-[95vh] max-w-[1600px] overflow-hidden flex flex-row">
+            <button id="onb-desktop-close" type="button" aria-label="Close" class="absolute top-4 right-4 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-black/10 hover:bg-black/20 text-gray-700 shadow-sm cursor-pointer">✕</button>
+            <div id="onb-desktop-canvas-pane" class="w-[60%] h-full bg-[#0B1117] flex items-stretch justify-center overflow-hidden flex-shrink-0"></div>
+            <div id="onb-desktop-panel-pane" class="w-[40%] h-full flex items-center overflow-y-auto p-6 sm:p-8">
+                <div id="onb-desktop-panel" class="w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile (<900px): the canvas stays put at full size; a floating card sits over the bottom -->
+    <div id="onb-mobile-card" class="hidden fixed left-2 right-2 bottom-2 z-[9995] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+        <div id="onb-mobile-header" class="flex items-center justify-between px-3 py-1.5 border-b border-gray-100 bg-gray-50">
+            <span id="onb-mobile-step-label" class="text-[10px] font-bold text-gray-500 uppercase tracking-wide"></span>
+            <div class="flex items-center gap-1">
+                <button id="onb-mobile-minimize" type="button" aria-label="Minimize" class="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-500 cursor-pointer">
+                    <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                </button>
+                <button id="onb-mobile-close" type="button" aria-label="Close" class="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-500 cursor-pointer text-xs">✕</button>
+            </div>
+        </div>
+        <div id="onb-mobile-panel" class="onb-mobile-panel-scroll p-3"></div>
+    </div>
+
+    <!-- Mobile: minimized pill shown instead of the card -->
+    <button id="onb-mobile-pill" type="button" class="hidden fixed left-1/2 -translate-x-1/2 bottom-3 z-[9995] items-center gap-2 px-4 py-2 rounded-full bg-[#931212] text-white text-xs font-bold shadow-lg cursor-pointer">
+        <i data-lucide="chevron-up" class="w-3.5 h-3.5"></i>
+        <span id="onb-mobile-pill-label"></span>
+    </button>
+
+    <!-- Real-world-use modal — shown after every placement task, content differs per task -->
+    <div id="onb-usecase-modal" class="hidden fixed inset-0 z-[9997] bg-black/60 p-4 items-center justify-center">
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
+            <button id="onb-usecase-close" type="button" data-i18n-aria="onbSkipAria" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 cursor-pointer text-xs">✕</button>
+            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#274FE3] uppercase tracking-wide mb-3">
+                <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i>
+                <span data-i18n="onbUsecaseBadge">বাস্তব উদাহরণ</span>
+            </span>
+            <p id="onb-usecase-text" class="text-gray-800 text-sm leading-relaxed mb-5"></p>
+            <button id="onb-usecase-continue" type="button" class="w-full py-2.5 rounded-xl bg-[#1CAB55] hover:bg-[#17994B] border border-[#0E7B4F] text-white font-bold text-sm shadow-sm transition cursor-pointer">
+                <span data-i18n="onbContinueBtn">চালিয়ে যাও</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Learning-outcome modal — shown once, only after the last placement task -->
+    <div id="onb-outcome-modal" class="hidden fixed inset-0 z-[9997] bg-black/60 p-4 items-center justify-center">
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
+            <button id="onb-outcome-close" type="button" data-i18n-aria="onbSkipAria" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-400 hover:text-gray-700 cursor-pointer text-xs">✕</button>
+            <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#E7B946] uppercase tracking-wide mb-3">
+                <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                <span data-i18n="onbOutcomeBadge">তুমি যা শিখলে</span>
+            </span>
+            <p id="onb-outcome-text" class="text-gray-800 text-sm leading-relaxed mb-5"></p>
+            <button id="onb-outcome-finish" type="button" class="w-full py-2.5 rounded-xl bg-[#1CAB55] hover:bg-[#17994B] border border-[#0E7B4F] text-white font-bold text-sm shadow-sm transition cursor-pointer">
+                <span data-i18n="onbFinishBtn">সিমুলেটরে যাও →</span>
+            </button>
         </div>
     </div>
 
@@ -764,6 +903,15 @@
             tourNextLabel:      { bn: 'পরবর্তী', en: 'Next' },
             tourDoneLabel:      { bn: 'সম্পন্ন', en: 'Done' },
             feedbackCta:        { bn: 'তোমার মতামত জানাও', en: 'Share Your Feedback' },
+
+            // Concept Onboarding — real-world-use / learning-outcome modals
+            // (the gate/gallery/identify/predict/task screens use inline
+            // {bn,en} pairs via L(), matching this file's tourStepDefs style)
+            onbUsecaseBadge:    { bn: 'বাস্তব উদাহরণ', en: 'Real-World Use' },
+            onbContinueBtn:     { bn: 'চালিয়ে যাও', en: 'Continue' },
+            onbOutcomeBadge:    { bn: 'তুমি যা শিখলে', en: 'What You Learned' },
+            onbFinishBtn:       { bn: 'সিমুলেটরে যাও →', en: 'Go to the Simulator →' },
+            onbSkipAria:        { bn: 'অনবোর্ডিং এড়িয়ে যাও', en: 'Skip onboarding' },
 
             // Dynamic / parameterized strings
             autoLabel:          { bn: 'অটো', en: 'Auto' },
@@ -1596,6 +1744,713 @@
         });
 
         // ============================================
+        // CONCEPT ONBOARDING — a self-driving, in-simulator walkthrough for
+        // first-time visitors. Runs once (localStorage-gated), can be
+        // skipped at any point, and reveals the normal simulator on finish.
+        // Desktop (>=900px) renders a bounded centered popup with the real
+        // canvas moved in; mobile keeps the canvas in its normal spot and
+        // floats a small collapsible quiz card over the bottom instead.
+        // ============================================
+        const ONB_DONE_KEY = 'rainSimOnboardingDone';
+        function onbGetDone() {
+            try { return localStorage.getItem(ONB_DONE_KEY) === '1'; } catch (e) { return false; }
+        }
+        function onbSetDone() {
+            try { localStorage.setItem(ONB_DONE_KEY, '1'); } catch (e) {}
+        }
+        function L(pair) {
+            if (!pair) return '';
+            return pair[currentLang] !== undefined ? pair[currentLang] : pair.bn;
+        }
+        function onbRequiredUmbAngle() {
+            return Math.atan2(-(v_w - v_m), v_r) * (180 / Math.PI);
+        }
+
+        // ---- Small static icon (comparison rows) + animated gallery diagram ----
+        function onbStaticIcon(modeId) {
+            const u = '#E7B946', r = '#38BDF8';
+            const svgs = {
+                classic: `<path d="M14 18 A10 10 0 0 1 26 18" stroke="${u}" stroke-width="2.5" fill="none" stroke-linecap="round"/><line x1="20" y1="18" x2="20" y2="32" stroke="${u}" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="4" x2="8" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/><line x1="32" y1="4" x2="32" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/>`,
+                windWith: `<g transform="rotate(15 20 18)"><path d="M14 18 A10 10 0 0 1 26 18" stroke="${u}" stroke-width="2.5" fill="none" stroke-linecap="round"/></g><line x1="20" y1="18" x2="26" y2="32" stroke="${u}" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="4" x2="14" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/><line x1="30" y1="4" x2="36" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/>`,
+                windAgainst: `<g transform="rotate(-15 20 18)"><path d="M14 18 A10 10 0 0 1 26 18" stroke="${u}" stroke-width="2.5" fill="none" stroke-linecap="round"/></g><line x1="20" y1="18" x2="14" y2="32" stroke="${u}" stroke-width="2.5" stroke-linecap="round"/><line x1="12" y1="4" x2="6" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/><line x1="34" y1="4" x2="28" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/>`,
+                upright: `<path d="M14 18 A10 10 0 0 1 26 18" stroke="${u}" stroke-width="2.5" fill="none" stroke-linecap="round"/><line x1="20" y1="18" x2="20" y2="32" stroke="${u}" stroke-width="2.5" stroke-linecap="round"/><line x1="10" y1="4" x2="16" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/><line x1="30" y1="4" x2="36" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="34" r="2" fill="#274FE3"/>`
+            };
+            return `<svg viewBox="0 0 40 40" width="32" height="32" fill="none">${svgs[modeId] || ''}</svg>`;
+        }
+
+        function onbAnimatedDiagram(modeId) {
+            const rainColor = '#38BDF8', windColor = '#EA580C', umbColor = '#E7B946';
+            const rainDrops = (paths) => paths.map((p, i) =>
+                `<circle r="2.4" fill="${rainColor}"><animateMotion dur="${(1.0 + i * 0.15).toFixed(2)}s" begin="${(i * 0.3).toFixed(2)}s" repeatCount="indefinite" path="${p}"/></circle>`
+            ).join('');
+            const arrowDefs = `<defs><marker id="onbArrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="${windColor}"/></marker></defs>`;
+            const windArrow = (dir) => {
+                const x1 = dir === 1 ? 6 : 42, x2 = dir === 1 ? 42 : 6;
+                return `<g class="onb-glow-pulse" style="color:${windColor}"><line x1="${x1}" y1="14" x2="${x2}" y2="14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" marker-end="url(#onbArrow)"/></g>`;
+            };
+            if (modeId === 'classic') {
+                return `<svg viewBox="0 0 120 88" width="100%" height="100%" fill="none">
+                    <g class="onb-glow-pulse" style="color:${umbColor}">
+                        <path d="M58 38 A22 22 0 0 1 82 38" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <line x1="70" y1="38" x2="70" y2="72" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                    </g>
+                    ${rainDrops(['M25 6 L25 78', 'M45 6 L45 78', 'M100 6 L100 78'])}
+                </svg>`;
+            }
+            if (modeId === 'windWith' || modeId === 'windAgainst') {
+                const dir = modeId === 'windWith' ? 1 : -1;
+                const dx = dir * 22;
+                return `<svg viewBox="0 0 120 88" width="100%" height="100%" fill="none">
+                    ${arrowDefs}
+                    ${windArrow(dir)}
+                    <g class="onb-glow-pulse" style="color:${umbColor}" transform="rotate(${dir * 16} 70 38)">
+                        <path d="M58 38 A22 22 0 0 1 82 38" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <line x1="70" y1="38" x2="${70 + dx * 0.35}" y2="72" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                    </g>
+                    ${rainDrops([`M25 6 L${25 + dx} 78`, `M50 6 L${50 + dx} 78`, `M100 6 L${100 + dx} 78`])}
+                </svg>`;
+            }
+            if (modeId === 'upright') {
+                return `<svg viewBox="0 0 120 88" width="100%" height="100%" fill="none">
+                    <g class="onb-glow-pulse" style="color:${umbColor}">
+                        <path d="M58 38 A22 22 0 0 1 82 38" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <line x1="70" y1="38" x2="70" y2="72" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                    </g>
+                    ${rainDrops(['M20 6 L36 78', 'M42 6 L58 78', 'M95 6 L111 78'])}
+                    <circle class="onb-glow-pulse" style="color:#274FE3" cx="70" cy="76" r="3" fill="#274FE3"/>
+                </svg>`;
+            }
+            return '';
+        }
+
+        // ---- Content data (bn/en pairs accessed via L(), matching this file's
+        //      existing tourStepDefs convention for large data-driven text) ----
+        const ONB_MODES = [
+            {
+                id: 'classic',
+                preset: () => btnPresetClassic,
+                name: { bn: 'বাতাসহীন (স্বাভাবিক)', en: 'No Wind (Normal)' },
+                desc: { bn: 'বাতাস নেই, বৃষ্টি সোজা নিচে পড়ছে — ছাতা সামান্য সামনে হেলিয়ে ধরলেই হয়।', en: "No wind, rain falls straight down — tilt the umbrella slightly forward and you're dry." }
+            },
+            {
+                id: 'windWith',
+                preset: () => btnPresetWindWith,
+                name: { bn: 'বাতাস ও লোক একই দিকে', en: 'Wind & Person Same Direction' },
+                desc: { bn: 'বাতাস লোকটির চলার দিকেই বইছে, তাই আপেক্ষিক বেগ কমে যায় — ছাতা প্রায় সোজা রাখলেই চলে।', en: 'Wind blows the same way the person walks, lowering the relative velocity — the umbrella stays close to vertical.' }
+            },
+            {
+                id: 'windAgainst',
+                preset: () => btnPresetWindAgainst,
+                name: { bn: 'বাতাস ও লোক বিপরীত দিকে', en: 'Wind & Person Opposite Direction' },
+                desc: { bn: 'বাতাস লোকটির উল্টো দিকে বইছে, তাই আপেক্ষিক বেগ বেড়ে যায় — ছাতা অনেক বেশি হেলিয়ে ধরতে হয়।', en: 'Wind blows against the person, raising the relative velocity — the umbrella needs a much steeper tilt.' }
+            },
+            {
+                id: 'upright',
+                preset: () => btnPresetUpright,
+                name: { bn: 'ছাতা সবসময় সোজা রাখা', en: 'Umbrella Always Held Upright' },
+                desc: { bn: 'ছাতা সবসময় উল্লম্ব রাখলে আপেক্ষিক বেগের কোণের সাথে না মেলায় লোকটি ভিজে যায়।', en: 'Holding the umbrella straight up regardless of motion never matches the relative angle, so the person gets wet.' }
+            }
+        ];
+
+        const ONB_PREDICT_BANK = {
+            classic: [{
+                q: { bn: 'বাতাসের বেগ অনেকটা বাড়ালে ছাতার প্রয়োজনীয় কোণের কী হবে?', en: "If wind speed increases a lot, what happens to the umbrella's required angle?" },
+                options: [
+                    { bn: 'বেড়ে যাবে (আরও বেশি হেলাতে হবে)', en: 'It increases (more tilt needed)' },
+                    { bn: 'কমে যাবে', en: 'It decreases' },
+                    { bn: 'একই থাকবে', en: 'It stays the same' }
+                ],
+                correctIdx: 0,
+                apply: () => { sliderVw.value = clampNum(parseFloat(sliderVw.value) + 8, parseFloat(sliderVw.min), parseFloat(sliderVw.max)); },
+                explanation: { bn: 'সঠিক উত্তর: "বেড়ে যাবে"। বাতাস বাড়লে বৃষ্টির অনুভূমিক আপেক্ষিক বেগ বাড়ে, তাই ছাতা হাঁটার দিকে (সামনের দিকে) আরও বেশি হেলাতে হয়।', en: 'Correct answer: "It increases." More wind raises the rain\'s horizontal relative velocity, so the umbrella must tilt further toward the walking direction (forward).' }
+            }, {
+                q: { bn: 'মানুষটি আরও দ্রুত হাঁটলে ছাতার প্রয়োজনীয় কোণের কী হবে?', en: 'If the person walks much faster, what happens to the required umbrella angle?' },
+                options: [
+                    { bn: 'বেড়ে যাবে', en: 'It increases' },
+                    { bn: 'কমে যাবে', en: 'It decreases' },
+                    { bn: 'একই থাকবে', en: 'It stays the same' }
+                ],
+                correctIdx: 0,
+                apply: () => { sliderVm.value = Math.min(parseFloat(sliderVm.max), parseFloat(sliderVm.value) + 8); },
+                explanation: { bn: 'সঠিক উত্তর: "বেড়ে যাবে"। দ্রুত হাঁটলে মানুষটির নিজের বেগ বাড়ে, তাই বৃষ্টি তার কাছে আরও বেশি সামনে থেকে আসছে মনে হয় — ছাতা সামনের দিকে আরও বেশি হেলাতে হয়।', en: 'Correct answer: "It increases." Walking faster raises the person\'s own speed, so the rain seems to come more from the front — the umbrella needs more forward tilt.' }
+            }],
+            windWith: [{
+                q: { bn: 'বাতাসের বেগ মানুষের বেগের সমান করে দিলে ছাতার কোণ কী হবে?', en: "If wind speed is made equal to the person's speed, what happens to the umbrella angle?" },
+                options: [
+                    { bn: 'প্রায় শূন্যের কাছাকাছি হবে (প্রায় সোজা)', en: 'Close to zero (nearly upright)' },
+                    { bn: 'অনেক বেড়ে যাবে', en: 'It grows very large' },
+                    { bn: 'একই থাকবে', en: 'It stays the same' }
+                ],
+                correctIdx: 0,
+                apply: () => { sliderVw.value = clampNum(parseFloat(sliderVm.value), parseFloat(sliderVw.min), parseFloat(sliderVw.max)); },
+                explanation: { bn: 'সঠিক উত্তর: "প্রায় শূন্যের কাছাকাছি"। বাতাস মানুষের বেগের সমান হলে অনুভূমিক আপেক্ষিক বেগ প্রায় শূন্য হয়ে যায়, তাই ছাতা প্রায় সোজা (উল্লম্ব) রাখলেই চলে।', en: 'Correct answer: "Close to zero." When wind speed matches the person\'s speed, the horizontal relative velocity nearly cancels out, so the umbrella can stay close to vertical.' }
+            }, {
+                q: { bn: 'বাতাস আরও জোরে একই দিকে বইলে আপেক্ষিক বেগ কী করবে?', en: 'If the wind blows even harder in the same direction, what happens to the relative velocity?' },
+                options: [
+                    { bn: 'কমতে থাকবে', en: 'It keeps decreasing' },
+                    { bn: 'বাড়তে থাকবে', en: 'It keeps increasing' },
+                    { bn: 'একই থাকবে', en: 'It stays the same' }
+                ],
+                correctIdx: 0,
+                apply: () => { sliderVw.value = clampNum(parseFloat(sliderVw.value) + 6, parseFloat(sliderVw.min), parseFloat(sliderVw.max)); },
+                explanation: { bn: 'সঠিক উত্তর: "কমতে থাকবে"। বাতাস মানুষের চলার দিকেই আরও জোরে বইলে, বাতাস ও মানুষের বেগের পার্থক্য কমে যায় — ফলে সামনের দিকে হেলানোর পরিমাণ কমতে থাকে।', en: "Correct answer: \"It keeps decreasing.\" As the wind blows harder in the person's own direction, the gap between wind speed and the person's speed shrinks — so less forward tilt is needed." }
+            }],
+            windAgainst: [{
+                q: { bn: 'বিপরীতমুখী বাতাস আরও জোরে বইলে ছাতার কোণের কী হবে?', en: 'If the opposing wind blows even harder, what happens to the umbrella angle?' },
+                options: [
+                    { bn: 'আরও বেশি হেলাতে হবে', en: 'It needs even more tilt' },
+                    { bn: 'সোজা হয়ে যাবে', en: 'It becomes upright' },
+                    { bn: 'একই থাকবে', en: 'It stays the same' }
+                ],
+                correctIdx: 0,
+                apply: () => { sliderVw.value = clampNum(parseFloat(sliderVw.value) - 6, parseFloat(sliderVw.min), parseFloat(sliderVw.max)); },
+                explanation: { bn: 'সঠিক উত্তর: "আরও বেশি হেলাতে হবে"। বিপরীত বাতাস জোরে বইলে অনুভূমিক আপেক্ষিক বেগ বাড়ে, তাই ছাতা হাঁটার দিকে (সামনের দিকে) আগের চেয়ে আরও বেশি হেলাতে হয়।', en: 'Correct answer: "It needs even more tilt." A stronger opposing wind increases the horizontal relative velocity, so the umbrella must tilt even further toward the walking direction (forward).' }
+            }, {
+                q: { bn: 'মানুষটি থেমে গেলে (বেগ ০) কিন্তু বিপরীত বাতাস থাকলে কী হবে?', en: 'If the person stops (speed 0) but the opposing wind stays, what happens?' },
+                options: [
+                    { bn: 'তবুও ছাতা হেলিয়ে ধরতে হবে (বাতাসের কারণে)', en: 'The umbrella still needs a tilt (because of the wind)' },
+                    { bn: 'ছাতা পুরোপুরি সোজা রাখা যাবে', en: 'The umbrella can be kept fully upright' },
+                    { bn: 'ছাতার আর দরকার নেই', en: 'No umbrella is needed at all' }
+                ],
+                correctIdx: 0,
+                apply: () => { sliderVm.value = 0; },
+                explanation: { bn: 'সঠিক উত্তর: "তবুও হেলিয়ে ধরতে হবে"। মানুষটি না নড়লেও বাতাস একাই বৃষ্টিকে অনুভূমিকভাবে সরিয়ে দেয়, তাই ছাতা বাতাসের দিকেই হেলিয়ে ধরতে হয়।', en: 'Correct answer: "It still needs a tilt." Even if the person is still, the wind alone pushes the rain sideways, so the umbrella must tilt toward the wind\'s direction.' }
+            }],
+            upright: [{
+                q: { bn: 'ছাতা সবসময় সোজা রাখলে, বাতাস ও বেগ বাড়ালে লোকটি কী অনুভব করবে?', en: 'If the umbrella always stays upright, what happens as wind and speed increase?' },
+                options: [
+                    { bn: 'আরও বেশি ভিজবে', en: 'They get wetter' },
+                    { bn: 'শুকনো থাকবে', en: 'They stay dry' },
+                    { bn: 'কোনো পরিবর্তন হবে না', en: 'Nothing changes' }
+                ],
+                correctIdx: 0,
+                apply: () => { sliderVw.value = clampNum(parseFloat(sliderVw.value) + 8, parseFloat(sliderVw.min), parseFloat(sliderVw.max)); },
+                explanation: { bn: 'সঠিক উত্তর: "আরও বেশি ভিজবে"। সোজা ছাতা প্রয়োজনীয় সামনের দিকের হেলানো কোণ দিতে পারে না, তাই বাতাস বা বেগ যত বাড়ে, ততই ফাঁক দিয়ে বৃষ্টি গায়ে লাগে।', en: 'Correct answer: "They get wetter." An upright umbrella can\'t provide the forward tilt that\'s needed, so as wind or speed grows, more rain slips in through the gap.' }
+            }, {
+                q: { bn: 'অটো মোডে ছাতা কী করে?', en: 'What does the umbrella do in Auto mode?' },
+                options: [
+                    { bn: 'প্রতি মুহূর্তে সঠিক আপেক্ষিক কোণে নিজে থেকে ঘুরে যায়', en: 'It rotates itself to the correct relative angle at every instant' },
+                    { bn: 'সবসময় উল্লম্ব থাকে', en: 'It always stays vertical' },
+                    { bn: 'এলোমেলোভাবে নড়ে', en: 'It moves randomly' }
+                ],
+                correctIdx: 0,
+                apply: () => {},
+                explanation: { bn: 'সঠিক উত্তর: "নিজে থেকে সঠিক কোণে ঘুরে যায়"। অটো মোড প্রতি মুহূর্তে বর্তমান বেগ ও বাতাস থেকে প্রয়োজনীয় হেলানোর দিক (সামনে/পেছনে) ও কোণ হিসাব করে ছাতাকে সেভাবে ঘুরিয়ে দেয়।', en: 'Correct answer: "It rotates itself to the correct angle." Auto mode continuously computes the required tilt direction (forward/backward) and angle from the current speed and wind, and turns the umbrella to match.' }
+            }]
+        };
+
+        // Tasks 3 & 4 are MCQs too (matching steps 1-2's format), computed from
+        // whatever v_m/v_r/v_w the simulator is currently at (after identify +
+        // predict may have already changed it), so the correct option always
+        // matches what the canvas is actually showing.
+        function onbMakeTaskMCQs() {
+            const req = onbRequiredUmbAngle();
+            const dirIdx = req > 3 ? 0 : (req < -3 ? 1 : 2); // 0=forward, 1=backward, 2=straight
+            const dirLabel = dirIdx === 0
+                ? { bn: 'সামনের দিকে (হাঁটার দিকে)', en: 'forward (toward the walking direction)' }
+                : dirIdx === 1
+                    ? { bn: 'পেছনের দিকে (হাঁটার উল্টো দিকে)', en: 'backward (against the walking direction)' }
+                    : { bn: 'সোজা উল্লম্বভাবে', en: 'straight up' };
+            const magIdx = Math.abs(req) < 20 ? 0 : (Math.abs(req) < 50 ? 1 : 2);
+            return [
+                {
+                    id: 'tilt-direction',
+                    q: { bn: 'এই মুহূর্তের অবস্থায় ছাতাটি কোন দিকে হেলিয়ে ধরতে হবে?', en: 'In the current state, which way should the umbrella be tilted?' },
+                    options: [
+                        { bn: 'হাঁটার দিকে (সামনের দিকে)', en: 'Toward the walking direction (forward)' },
+                        { bn: 'হাঁটার উল্টো দিকে (পেছনের দিকে)', en: 'Against the walking direction (backward)' },
+                        { bn: 'সোজা উল্লম্বভাবে, কোনো হেলানো ছাড়াই', en: 'Straight up, with no tilt' }
+                    ],
+                    correctIdx: dirIdx,
+                    explanation: { bn: `সঠিক উত্তর: "${L(dirLabel)}"। এই মুহূর্তে প্রয়োজনীয় কোণ ${req.toFixed(0)}° — অর্থাৎ ছাতাটি ${L(dirLabel)} হেলিয়ে ধরতে হবে।`, en: `Correct answer: "${L(dirLabel)}." The required angle right now is ${req.toFixed(0)}° — meaning the umbrella must tilt ${L(dirLabel)}.` },
+                    onCheck: () => { isAutoUmbrella = true; onbSyncAutoUmbBtn(); updatePhysicsValues(); },
+                    realWorldUse: { bn: 'বাস্তবে দৌড়ানোর সময় মানুষ সহজাতভাবেই ছাতা হাঁটার দিকে একটু হেলিয়ে ধরে — এটাই আপেক্ষিক বেগের নীতি, যদিও কেউ সমীকরণ কষে না!', en: "In real life, people instinctively tilt an umbrella toward their walking direction while moving — that's the relative-velocity principle at work, even though nobody does the maths!" }
+                },
+                {
+                    id: 'tilt-magnitude',
+                    q: { bn: 'ছাতার প্রয়োজনীয় কোণ (উল্লম্ব থেকে) আনুমানিক কত হতে পারে?', en: "About how large is the umbrella's required tilt from vertical?" },
+                    options: [
+                        { bn: '০°–২০° (সামান্য হেলানো)', en: '0°–20° (slight tilt)' },
+                        { bn: '২০°–৫০° (মাঝারি হেলানো)', en: '20°–50° (moderate tilt)' },
+                        { bn: '৫০°–৮৯° (অনেক বেশি হেলানো)', en: '50°–89° (very steep tilt)' }
+                    ],
+                    correctIdx: magIdx,
+                    explanation: (() => {
+                        const bracket = ['০°–২০° (সামান্য হেলানো)', '২০°–৫০° (মাঝারি হেলানো)', '৫০°–৮৯° (অনেক বেশি হেলানো)'][magIdx];
+                        const bracketEn = ['0°–20° (slight tilt)', '20°–50° (moderate tilt)', '50°–89° (very steep tilt)'][magIdx];
+                        return { bn: `সঠিক উত্তর: "${bracket}"। প্রকৃত প্রয়োজনীয় কোণ হলো ${Math.abs(req).toFixed(0)}°, আর হেলানোর দিক ${L(dirLabel)}।`, en: `Correct answer: "${bracketEn}." The actual required angle is ${Math.abs(req).toFixed(0)}°, tilted ${L(dirLabel)}.` };
+                    })(),
+                    onCheck: () => { isAutoUmbrella = true; onbSyncAutoUmbBtn(); updatePhysicsValues(); },
+                    realWorldUse: { bn: 'বাতাস বা বেগ যত বাড়ে, প্রয়োজনীয় কোণও তত বাড়ে — ঝড়ের সময় তাই ছাতা প্রায় শুইয়ে ধরতে হয়।', en: 'The stronger the wind or speed, the larger the required angle grows — which is why in a storm you almost have to hold the umbrella sideways.' }
+                }
+            ];
+        }
+
+        const ONB_OUTCOME = {
+            classic: { bn: 'তুমি শিখলে: বৃষ্টির মধ্যে হাঁটলে বৃষ্টির "আপেক্ষিক বেগ" পরিবর্তিত হয়ে যায় — তাই ছাতা সবসময় হাঁটার দিকে (সামনের দিকে) কিছুটা হেলিয়ে ধরতে হয়, শুধু উল্লম্বভাবে নয়।', en: 'You learned: walking through rain changes its "relative velocity" as you feel it — so the umbrella must always tilt somewhat toward the walking direction (forward), not just stay vertical.' },
+            windWith: { bn: 'তুমি শিখলে: বাতাস তোমার চলার দিকে বইলে আপেক্ষিক বেগ কমে যায়, ফলে ছাতা সামনের দিকে আগের চেয়ে কম হেলালেই যথেষ্ট হয়।', en: 'You learned: when wind blows in your direction of motion, the relative velocity shrinks, so the umbrella needs less forward tilt than before.' },
+            windAgainst: { bn: 'তুমি শিখলে: বাতাস তোমার চলার উল্টো দিকে বইলে আপেক্ষিক বেগ বেড়ে যায়, ফলে ছাতা হাঁটার দিকে (সামনের দিকে) আরও বেশি হেলাতে হয়।', en: 'You learned: when wind blows against your direction of motion, the relative velocity grows, so the umbrella needs an even steeper tilt toward the walking direction (forward).' },
+            upright: { bn: 'তুমি শিখলে: ছাতা সবসময় খাড়া/সোজা রাখলে তা প্রয়োজনীয় সামনের দিকের হেলানো কোণের সাথে মেলে না, তাই বাতাস বা বেগ বদলালেই মানুষটি সহজে ভিজে যায়।', en: 'You learned: keeping the umbrella permanently upright never matches the forward tilt that\'s actually needed, so any change in wind or speed easily gets the person wet.' }
+        };
+
+        // ---- State ----
+        let onbState = null;
+        let onbBreakpointMql = null;
+        let onbCanvasHomeParent = null;
+        let onbCanvasHomeNextSibling = null;
+        let onbMobileMinimized = false;
+
+        const mainAppShell = document.getElementById('main-app-shell');
+        const appHeaderEl = document.getElementById('app-header');
+        const appFooterEl = document.getElementById('app-footer');
+        const controlPanelColumnEl = document.getElementById('control-panel-column');
+        const canvasCardTopbarEl = document.getElementById('canvas-card-topbar');
+        const mobileViewSwitcherEl = document.getElementById('mobile-view-switcher');
+        const btnFeedbackCtaEl = document.getElementById('btn-feedback-cta');
+
+        const onbDesktopOverlay = document.getElementById('onb-desktop-overlay');
+        const onbDesktopClose = document.getElementById('onb-desktop-close');
+        const onbDesktopCanvasPane = document.getElementById('onb-desktop-canvas-pane');
+        const onbDesktopPanel = document.getElementById('onb-desktop-panel');
+        const onbMobileCard = document.getElementById('onb-mobile-card');
+        const onbMobileHeader = document.getElementById('onb-mobile-header');
+        const onbMobileStepLabel = document.getElementById('onb-mobile-step-label');
+        const onbMobileMinimizeBtn = document.getElementById('onb-mobile-minimize');
+        const onbMobileCloseBtn = document.getElementById('onb-mobile-close');
+        const onbMobilePanel = document.getElementById('onb-mobile-panel');
+        const onbMobilePill = document.getElementById('onb-mobile-pill');
+        const onbMobilePillLabel = document.getElementById('onb-mobile-pill-label');
+        const onbUsecaseModal = document.getElementById('onb-usecase-modal');
+        const onbUsecaseText = document.getElementById('onb-usecase-text');
+        const onbUsecaseContinueBtn = document.getElementById('onb-usecase-continue');
+        const onbUsecaseCloseBtn = document.getElementById('onb-usecase-close');
+        const onbOutcomeModal = document.getElementById('onb-outcome-modal');
+        const onbOutcomeText = document.getElementById('onb-outcome-text');
+        const onbOutcomeFinishBtn = document.getElementById('onb-outcome-finish');
+        const onbOutcomeCloseBtn = document.getElementById('onb-outcome-close');
+
+        function onbSyncAutoUmbBtn() {
+            if (!btnToggleAutoUmb) return;
+            if (isAutoUmbrella) {
+                btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-[#1CAB55] text-white border border-[#0E7B4F] cursor-pointer shadow-xs";
+                btnToggleAutoUmb.innerText = t('autoLabel');
+            } else {
+                btnToggleAutoUmb.className = "px-2 py-0.5 text-[10px] font-bold rounded-md bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer shadow-xs";
+                btnToggleAutoUmb.innerText = t('manualLabel');
+            }
+        }
+
+        function onbIsDesktop() {
+            return window.matchMedia('(min-width: 900px)').matches;
+        }
+
+        // In the desktop popup the canvas pane has a real, independent height
+        // (h-full of the ~95vh card), so the canvas should fill THAT height —
+        // not the fixed breakpoint-based height windowResized() normally uses.
+        // Mobile keeps the canvas in its normal spot, where the usual sizing is right.
+        function onbResizeCanvas() {
+            if (onbState && onbIsDesktop() && typeof resizeCanvas === 'function') {
+                const w = onbDesktopCanvasPane.clientWidth;
+                const h = onbDesktopCanvasPane.clientHeight;
+                if (w > 0 && h > 0) { resizeCanvas(w, h); return; }
+            }
+            if (typeof windowResized === 'function') windowResized();
+        }
+
+        function onbHideChrome() {
+            appHeaderEl.style.display = 'none';
+            appFooterEl.style.display = 'none';
+            btnFeedbackCtaEl.style.display = 'none';
+            controlPanelColumnEl.style.display = 'none';
+            canvasCardTopbarEl.style.display = 'none';
+            mobileViewSwitcherEl.style.display = 'none';
+        }
+
+        function onbRevealChrome() {
+            appHeaderEl.style.display = '';
+            appFooterEl.style.display = '';
+            btnFeedbackCtaEl.style.display = '';
+            controlPanelColumnEl.style.display = '';
+            canvasCardTopbarEl.style.display = '';
+            mobileViewSwitcherEl.style.display = '';
+        }
+
+        // Moves the real canvas between the main grid and the desktop popup / keeps
+        // it put on mobile, and shows whichever layout matches the current breakpoint.
+        function onbMountForBreakpoint() {
+            if (!onbState) return;
+            const desktop = onbIsDesktop();
+            if (desktop) {
+                if (canvasContainer.parentNode !== onbDesktopCanvasPane) {
+                    if (!onbCanvasHomeParent) {
+                        onbCanvasHomeParent = canvasContainer.parentNode;
+                        onbCanvasHomeNextSibling = canvasContainer.nextSibling;
+                    }
+                    onbDesktopCanvasPane.appendChild(canvasContainer);
+                }
+                mainAppShell.style.display = 'none';
+                onbMobileCard.classList.add('hidden');
+                onbMobilePill.classList.add('hidden');
+                onbMobilePill.classList.remove('flex');
+                onbDesktopOverlay.classList.remove('hidden');
+                onbDesktopOverlay.classList.add('flex');
+            } else {
+                if (onbCanvasHomeParent && canvasContainer.parentNode !== onbCanvasHomeParent) {
+                    onbCanvasHomeParent.insertBefore(canvasContainer, onbCanvasHomeNextSibling);
+                }
+                mainAppShell.style.display = '';
+                onbDesktopOverlay.classList.add('hidden');
+                onbDesktopOverlay.classList.remove('flex');
+                if (onbMobileMinimized) {
+                    onbMobileCard.classList.add('hidden');
+                    onbMobilePill.classList.remove('hidden');
+                    onbMobilePill.classList.add('flex');
+                } else {
+                    onbMobileCard.classList.remove('hidden');
+                    onbMobilePill.classList.add('hidden');
+                }
+            }
+            setTimeout(onbResizeCanvas, 60);
+        }
+
+        function onbHandleBreakpointChange() {
+            if (!onbState) return;
+            onbMountForBreakpoint();
+            onbRenderStep();
+        }
+
+        function onbStepNumber() {
+            if (!onbState) return 0;
+            if (onbState.phase === 'identify') return 1;
+            if (onbState.phase === 'predict') return 2;
+            if (onbState.phase === 'task') return 3 + onbState.taskIndex;
+            return 0;
+        }
+
+        function onbStepLabelText() {
+            const n = onbStepNumber();
+            if (!n) return '';
+            return `${L({ bn: 'ধাপ', en: 'Step' })} ${n}/${onbState.totalSteps}`;
+        }
+
+        // ---- Step content builders ----
+        function onbBuildGateHTML() {
+            return `
+                <div class="onb-badge" style="color:#1CAB55"><i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>${L({ bn: 'শুরু করার আগে', en: 'Before we start' })}</div>
+                <div class="onb-question">${L({ bn: 'আপেক্ষিক বেগ (Relative Velocity) কী — এটা কি তুমি আগে থেকেই জানো?', en: 'Do you already know what Relative Velocity is?' })}</div>
+                <div style="display:flex; gap:10px;">
+                    <button class="onb-check-btn" data-action="gate-yes">${L({ bn: 'হ্যাঁ, জানি', en: 'Yes, I know' })}</button>
+                    <button class="onb-check-btn" data-action="gate-no" style="background:#fff; color:#374151; border-color:#D1D5DB;">${L({ bn: 'না, জানি না', en: "No, I don't" })}</button>
+                </div>`;
+        }
+
+        function onbBuildGalleryHTML() {
+            const cards = ONB_MODES.map((m, i) => `
+                <div class="onb-gallery-card" style="animation-delay:${i * 90}ms">
+                    <div class="onb-gallery-diagram">${onbAnimatedDiagram(m.id)}</div>
+                    <div class="onb-gallery-name">${L(m.name)}</div>
+                    <div class="onb-gallery-desc">${L(m.desc)}</div>
+                </div>`).join('');
+            return `
+                <div class="onb-badge" style="color:#1CAB55"><i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>${L({ bn: 'পরিচিতি', en: 'Introduction' })}</div>
+                <div class="onb-question">${L({ bn: 'চলো দেখে নিই — বৃষ্টি ও ছাতার ৪টি পরিস্থিতি:', en: "Let's take a look — 4 rain & umbrella scenarios:" })}</div>
+                <div class="onb-gallery-grid">${cards}</div>
+                <button class="onb-next-btn" data-action="gallery-continue">${L({ bn: 'বুঝেছি, শুরু করি →', en: "Got it, let's start →" })}</button>`;
+        }
+
+        function onbBuildIdentifyHTML() {
+            const s = onbState;
+            const badge = `<div class="onb-step-badge-num"><i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>${onbStepLabelText()}</div>`;
+            if (!s.identifyChecked) {
+                const options = ONB_MODES.map((m, i) => `
+                    <button class="onb-option-btn${s.identifySelected === i ? ' selected' : ''}" data-action="identify-select" data-idx="${i}">
+                        <span class="onb-option-letter">${String.fromCharCode(65 + i)}</span>${L(m.name)}
+                    </button>`).join('');
+                return `${badge}
+                    <div class="onb-question">${L({ bn: 'তুমি এখন ক্যানভাসে কোন পরিস্থিতিটি দেখছো?', en: 'Which scenario are you currently looking at in the canvas?' })}</div>
+                    <div class="onb-options">${options}</div>
+                    <button class="onb-check-btn" data-action="identify-check" ${s.identifySelected === null ? 'disabled' : ''}>${L({ bn: 'চেক করো', en: 'Check' })}</button>`;
+            }
+            const correct = s.identifySelected === s.identifyModeIdx;
+            const selectedMode = ONB_MODES[s.identifySelected];
+            const correctMode = ONB_MODES[s.identifyModeIdx];
+            const compareRow = correct ? '' : `
+                <div class="onb-compare-row">
+                    <div class="onb-compare-item wrong-item">
+                        <div class="onb-compare-label">${L({ bn: 'তুমি বলেছো', en: 'You said' })}</div>
+                        ${onbStaticIcon(selectedMode.id)}
+                        <div class="onb-compare-name">${L(selectedMode.name)}</div>
+                    </div>
+                    <div class="onb-compare-item correct-item">
+                        <div class="onb-compare-label">${L({ bn: 'আসলে এটা', en: "It's actually" })}</div>
+                        ${onbStaticIcon(correctMode.id)}
+                        <div class="onb-compare-name">${L(correctMode.name)}</div>
+                    </div>
+                </div>`;
+            return `${badge}
+                <div class="onb-feedback ${correct ? 'correct' : 'wrong'}">${correct ? L({ bn: 'সঠিক!', en: 'Correct!' }) : L({ bn: 'ভুল উত্তর', en: 'Wrong answer' })}</div>
+                ${compareRow}
+                <div class="onb-explain">${L(correctMode.desc)}</div>
+                <button class="onb-next-btn" data-action="go-predict">${L({ bn: 'পরবর্তী ধাপ →', en: 'Next step →' })}</button>`;
+        }
+
+        function onbBuildPredictHTML() {
+            const s = onbState;
+            const badge = `<div class="onb-step-badge-num"><i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>${onbStepLabelText()}</div>`;
+            const pq = s.predictQ;
+            if (!s.predictChecked) {
+                const options = pq.options.map((opt, i) => `
+                    <button class="onb-option-btn${s.predictSelected === i ? ' selected' : ''}" data-action="predict-select" data-idx="${i}">
+                        <span class="onb-option-letter">${String.fromCharCode(65 + i)}</span>${L(opt)}
+                    </button>`).join('');
+                return `${badge}
+                    <div class="onb-question">${L(pq.q)}</div>
+                    <div class="onb-options">${options}</div>
+                    <button class="onb-check-btn" data-action="predict-check" ${s.predictSelected === null ? 'disabled' : ''}>${L({ bn: 'চেক করো', en: 'Check' })}</button>`;
+            }
+            const correct = s.predictSelected === pq.correctIdx;
+            return `${badge}
+                <div class="onb-feedback ${correct ? 'correct' : 'wrong'}">${correct ? L({ bn: 'সঠিক!', en: 'Correct!' }) : L({ bn: 'ভুল উত্তর', en: 'Wrong answer' })}</div>
+                <div class="onb-explain">${L(pq.explanation)}</div>
+                <button class="onb-next-btn" data-action="go-task">${L({ bn: 'পরবর্তী ধাপ →', en: 'Next step →' })}</button>`;
+        }
+
+        function onbBuildTaskHTML() {
+            const s = onbState;
+            const task = s.tasks[s.taskIndex];
+            const badge = `<div class="onb-step-badge-num"><i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>${onbStepLabelText()}</div>`;
+            if (!s.taskChecked) {
+                const options = task.options.map((opt, i) => `
+                    <button class="onb-option-btn${s.taskSelected === i ? ' selected' : ''}" data-action="task-select" data-idx="${i}">
+                        <span class="onb-option-letter">${String.fromCharCode(65 + i)}</span>${L(opt)}
+                    </button>`).join('');
+                return `${badge}
+                    <div class="onb-question">${L(task.q)}</div>
+                    <div class="onb-options">${options}</div>
+                    <button class="onb-check-btn" data-action="task-check" ${s.taskSelected === null ? 'disabled' : ''}>${L({ bn: 'চেক করো', en: 'Check' })}</button>`;
+            }
+            const correct = s.taskSelected === task.correctIdx;
+            return `${badge}
+                <div class="onb-feedback ${correct ? 'correct' : 'wrong'}">${correct ? L({ bn: 'সঠিক!', en: 'Correct!' }) : L({ bn: 'ভুল উত্তর', en: 'Wrong answer' })}</div>
+                <div class="onb-explain">${L(task.explanation)}</div>
+                <button class="onb-next-btn" data-action="task-continue">${L({ bn: 'পরবর্তী →', en: 'Next →' })}</button>`;
+        }
+
+        function onbBuildStepHTML() {
+            const s = onbState;
+            if (!s) return '';
+            if (s.phase === 'gate') return onbBuildGateHTML();
+            if (s.phase === 'gallery') return onbBuildGalleryHTML();
+            if (s.phase === 'identify') return onbBuildIdentifyHTML();
+            if (s.phase === 'predict') return onbBuildPredictHTML();
+            if (s.phase === 'task') return onbBuildTaskHTML();
+            return '';
+        }
+
+        function onbRenderStep() {
+            if (!onbState) return;
+            const html = onbBuildStepHTML();
+            const desktop = onbIsDesktop();
+            const target = desktop ? onbDesktopPanel : onbMobilePanel;
+            target.innerHTML = html;
+            onbBindStepEvents(target);
+            if (!desktop) {
+                const label = onbStepLabelText();
+                onbMobileStepLabel.textContent = label;
+                onbMobilePillLabel.textContent = label;
+            }
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function onbBindStepEvents(root) {
+            root.querySelectorAll('[data-action]').forEach(el => {
+                el.addEventListener('click', () => onbHandleAction(el.getAttribute('data-action'), el));
+            });
+        }
+
+        function onbHandleAction(action, el) {
+            const s = onbState;
+            if (!s) return;
+            if (action === 'gate-yes') { onbGoToIdentify(); return; }
+            if (action === 'gate-no') { s.phase = 'gallery'; onbRenderStep(); return; }
+            if (action === 'gallery-continue') { onbGoToIdentify(); return; }
+            if (action === 'identify-select') { s.identifySelected = parseInt(el.getAttribute('data-idx'), 10); onbRenderStep(); return; }
+            if (action === 'identify-check') { s.identifyChecked = true; onbRenderStep(); return; }
+            if (action === 'go-predict') { onbGoToPredict(); return; }
+            if (action === 'predict-select') { s.predictSelected = parseInt(el.getAttribute('data-idx'), 10); onbRenderStep(); return; }
+            if (action === 'predict-check') { onbCheckPredict(); return; }
+            if (action === 'go-task') { onbGoToTask(0); return; }
+            if (action === 'task-select') { s.taskSelected = parseInt(el.getAttribute('data-idx'), 10); onbRenderStep(); return; }
+            if (action === 'task-check') { onbCheckTask(); return; }
+            if (action === 'task-continue') { onbShowUsecase(); return; }
+        }
+
+        function onbGoToIdentify() {
+            const s = onbState;
+            s.phase = 'identify';
+            s.identifySelected = null;
+            s.identifyChecked = false;
+            onbRenderStep();
+        }
+
+        function onbGoToPredict() {
+            const s = onbState;
+            s.phase = 'predict';
+            s.predictSelected = null;
+            s.predictChecked = false;
+            onbRenderStep();
+        }
+
+        function onbCheckPredict() {
+            const s = onbState;
+            s.predictChecked = true;
+            // Drive the simulator live to the state that answers the question, and
+            // turn on Auto mode so the umbrella immediately shows the correct result.
+            if (typeof s.predictQ.apply === 'function') s.predictQ.apply();
+            isAutoUmbrella = true;
+            onbSyncAutoUmbBtn();
+            updatePhysicsValues();
+            onbRenderStep();
+        }
+
+        function onbGoToTask(index) {
+            const s = onbState;
+            if (index === 0) s.tasks = onbMakeTaskMCQs();
+            s.phase = 'task';
+            s.taskIndex = index;
+            s.taskSelected = null;
+            s.taskChecked = false;
+            onbRenderStep();
+        }
+
+        function onbCheckTask() {
+            const s = onbState;
+            s.taskChecked = true;
+            const task = s.tasks[s.taskIndex];
+            if (typeof task.onCheck === 'function') task.onCheck();
+            onbRenderStep();
+        }
+
+        function onbShowUsecase() {
+            const s = onbState;
+            const task = s.tasks[s.taskIndex];
+            onbUsecaseText.textContent = L(task.realWorldUse);
+            onbUsecaseModal.classList.remove('hidden');
+            onbUsecaseModal.classList.add('flex');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function onbUsecaseContinue() {
+            onbUsecaseModal.classList.add('hidden');
+            onbUsecaseModal.classList.remove('flex');
+            const s = onbState;
+            if (s.taskIndex < s.tasks.length - 1) {
+                onbGoToTask(s.taskIndex + 1);
+            } else {
+                onbShowOutcome();
+            }
+        }
+
+        function onbShowOutcome() {
+            const s = onbState;
+            onbOutcomeText.textContent = L(ONB_OUTCOME[s.identifyMode.id]);
+            onbOutcomeModal.classList.remove('hidden');
+            onbOutcomeModal.classList.add('flex');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function initConceptOnboarding(wasDeepLinked) {
+            if (onbGetDone()) return;
+            // wasDeepLinked reflects the URL as it was WHEN THE PAGE LOADED (from
+            // applyQueryParams()'s return value) — window.location.search itself
+            // can't be used here because syncUrlFromState() rewrites the URL with
+            // the current vm/vr/vw/etc. via replaceState() moments before this
+            // runs, which would make every visit look like a deep link.
+            if (wasDeepLinked) return; // don't interrupt a shared/deep-linked setup; try again on a plain visit
+
+            const identifyModeIdx = Math.floor(Math.random() * ONB_MODES.length);
+            const identifyMode = ONB_MODES[identifyModeIdx];
+            const predictBank = ONB_PREDICT_BANK[identifyMode.id];
+            const predictQ = predictBank[Math.floor(Math.random() * predictBank.length)];
+
+            onbState = {
+                phase: 'gate',
+                identifyModeIdx,
+                identifyMode,
+                identifySelected: null,
+                identifyChecked: false,
+                predictQ,
+                predictSelected: null,
+                predictChecked: false,
+                tasks: null, // built lazily in onbGoToTask(0) from the LIVE v_m/v_r/v_w
+                             // at that moment (after identify + predict may have changed
+                             // them), not from whatever state existed at page load
+                taskIndex: 0,
+                taskSelected: null,
+                taskChecked: false,
+                totalSteps: 4
+            };
+
+            identifyMode.preset().click();
+
+            onbHideChrome();
+            onbBreakpointMql = window.matchMedia('(min-width: 900px)');
+            onbBreakpointMql.addEventListener('change', onbHandleBreakpointChange);
+            onbMountForBreakpoint();
+            onbRenderStep();
+        }
+
+        function finishOnboarding() {
+            onbSetDone();
+
+            if (onbCanvasHomeParent && canvasContainer.parentNode !== onbCanvasHomeParent) {
+                onbCanvasHomeParent.insertBefore(canvasContainer, onbCanvasHomeNextSibling);
+            }
+            onbCanvasHomeParent = null;
+            onbCanvasHomeNextSibling = null;
+
+            onbDesktopOverlay.classList.add('hidden');
+            onbDesktopOverlay.classList.remove('flex');
+            onbMobileCard.classList.add('hidden');
+            onbMobilePill.classList.add('hidden');
+            onbMobilePill.classList.remove('flex');
+            onbUsecaseModal.classList.add('hidden');
+            onbUsecaseModal.classList.remove('flex');
+            onbOutcomeModal.classList.add('hidden');
+            onbOutcomeModal.classList.remove('flex');
+
+            mainAppShell.style.display = '';
+            onbRevealChrome();
+
+            if (onbBreakpointMql) {
+                onbBreakpointMql.removeEventListener('change', onbHandleBreakpointChange);
+                onbBreakpointMql = null;
+            }
+            onbState = null;
+            onbMobileMinimized = false;
+            setTimeout(onbResizeCanvas, 60);
+        }
+
+        if (onbDesktopClose) onbDesktopClose.addEventListener('click', finishOnboarding);
+        if (onbMobileCloseBtn) onbMobileCloseBtn.addEventListener('click', finishOnboarding);
+        if (onbMobileMinimizeBtn) onbMobileMinimizeBtn.addEventListener('click', () => {
+            onbMobileMinimized = true;
+            onbMountForBreakpoint();
+        });
+        if (onbMobilePill) onbMobilePill.addEventListener('click', () => {
+            onbMobileMinimized = false;
+            onbMountForBreakpoint();
+        });
+        if (onbUsecaseContinueBtn) onbUsecaseContinueBtn.addEventListener('click', onbUsecaseContinue);
+        if (onbUsecaseCloseBtn) onbUsecaseCloseBtn.addEventListener('click', finishOnboarding);
+        if (onbOutcomeFinishBtn) onbOutcomeFinishBtn.addEventListener('click', finishOnboarding);
+        if (onbOutcomeCloseBtn) onbOutcomeCloseBtn.addEventListener('click', finishOnboarding);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && onbState) finishOnboarding();
+        });
+
+
+        // ============================================
         // FEEDBACK CTA — opens the Tally feedback form in an in-page modal
         // (never a new tab / redirect), tagging the submission with which
         // simulation it came from via the simulation_name query param.
@@ -1798,6 +2653,10 @@
                 // would overwrite the incoming query string before applyQueryParams() reads it
                 urlSyncEnabled = true;
                 syncUrlFromState();
+
+                // First-time visitors (no deep-link query params, onboarding not
+                // yet completed) get the guided Concept Onboarding walkthrough.
+                initConceptOnboarding(appliedFromQuery);
             }, 100);
 
             // Trigger initial Lucide render
