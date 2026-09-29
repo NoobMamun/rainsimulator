@@ -2410,14 +2410,15 @@
             if (window.lucide) lucide.createIcons();
         }
 
-        function initConceptOnboarding(wasDeepLinked) {
+        function initConceptOnboarding() {
+            // Runs for every first-time visitor (onbGetDone() below is the only
+            // gate) — including one who landed on a link that already carries
+            // ?vm=&vr=&vw=&angle= query params, e.g. a URL the app itself wrote
+            // via syncUrlFromState() after a previous session. The onboarding
+            // must always be seen at least once, so it's shown regardless of
+            // whatever state those params set up; it starts its own scenario
+            // right after.
             if (onbGetDone()) return;
-            // wasDeepLinked reflects the URL as it was WHEN THE PAGE LOADED (from
-            // applyQueryParams()'s return value) — window.location.search itself
-            // can't be used here because syncUrlFromState() rewrites the URL with
-            // the current vm/vr/vw/etc. via replaceState() moments before this
-            // runs, which would make every visit look like a deep link.
-            if (wasDeepLinked) return; // don't interrupt a shared/deep-linked setup; try again on a plain visit
 
             const identifyModeIdx = Math.floor(Math.random() * ONB_MODES.length);
             const identifyMode = ONB_MODES[identifyModeIdx];
@@ -2707,9 +2708,10 @@
                 urlSyncEnabled = true;
                 syncUrlFromState();
 
-                // First-time visitors (no deep-link query params, onboarding not
-                // yet completed) get the guided Concept Onboarding walkthrough.
-                initConceptOnboarding(appliedFromQuery);
+                // Every first-time visitor gets the guided Concept Onboarding
+                // walkthrough — even one who landed on a URL with ?vm=&vr=&...
+                // query params already set, since onbGetDone() is the only gate.
+                initConceptOnboarding();
             }, 100);
 
             // Trigger initial Lucide render
