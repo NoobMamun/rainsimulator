@@ -474,14 +474,17 @@
 
         /* Intro gallery */
         .onb-gallery-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px; }
-        .onb-gallery-card { border:1.5px solid var(--gray-200); border-radius:16px; padding:12px; background:#fff; opacity:0; transform:translateY(10px) scale(.96); animation:onbCardIn .4s var(--ease-out) forwards; transition:transform .18s, box-shadow .18s; }
+        .onb-gallery-card { position:relative; border:1.5px solid var(--gray-200); border-radius:16px; padding:12px; background:#fff; opacity:0; transform:translateY(10px) scale(.96); animation:onbCardIn .4s var(--ease-out) forwards; transition:transform .18s, box-shadow .18s, border-color .18s, background .18s; cursor:pointer; }
         .onb-gallery-card:hover { transform:translateY(-3px); box-shadow:0 10px 24px rgba(0,0,0,.08); }
+        .onb-gallery-card.selected { border-color:#1CAB55; border-width:2px; background:rgba(28,171,85,0.05); box-shadow:0 0 0 3px rgba(28,171,85,0.12); }
+        .onb-gallery-selected-badge { position:absolute; top:8px; right:8px; display:flex; align-items:center; gap:3px; background:#1CAB55; color:#fff; font-size:9.5px; font-weight:800; padding:2px 7px; border-radius:999px; }
         @keyframes onbCardIn { to { opacity:1; transform:translateY(0) scale(1); } }
         .onb-gallery-diagram { width:100%; height:88px; display:flex; align-items:center; justify-content:center; margin-bottom:8px; }
         .onb-gallery-name { font-size:12px; font-weight:800; color:var(--fg-1); margin-bottom:2px; }
         .onb-gallery-desc { font-size:10.5px; color:var(--fg-3); line-height:1.45; }
         #onb-mobile-panel .onb-gallery-grid { gap:6px; margin-bottom:10px; }
         #onb-mobile-panel .onb-gallery-card { padding:6px; border-radius:10px; }
+        #onb-mobile-panel .onb-gallery-selected-badge { top:4px; right:4px; font-size:8px; padding:1px 5px; }
         #onb-mobile-panel .onb-gallery-diagram { height:50px; margin-bottom:4px; }
         #onb-mobile-panel .onb-gallery-name { font-size:10px; }
         #onb-mobile-panel .onb-gallery-desc { display:none; }
@@ -522,8 +525,7 @@
     <div id="main-app-shell" class="max-w-[1216px] mx-auto px-4 md:px-6 py-2 sm:py-6 bn flex flex-col gap-3 sm:gap-6">
         <!-- Header -->
         <header id="app-header" class="mb-1 sm:mb-4 text-center">
-            <div class="flex items-center justify-between gap-2 mb-2 sm:mb-3">
-                <img src="https://cdn.10minuteschool.com/images/svg/Origin%20Labs%20Black.svg" alt="Origin Labs" class="h-4 sm:h-6 w-auto flex-shrink-0">
+            <div class="flex items-center justify-end gap-2 mb-2 sm:mb-3">
                 <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
                     <div id="lang-toggle" class="flex items-center bg-gray-100 border border-gray-200 rounded-full p-0.5 gap-0.5">
                         <button id="lang-btn-bn" type="button" data-lang="bn" class="lang-btn active">বাং</button>
@@ -960,6 +962,9 @@
             hudFrameRunner:  { bn: 'চলন্ত লোক', en: 'Runner' },
             hudWindLabel:    { bn: 'অনুভূমিক বাতাস: ', en: 'Horizontal wind: ' },
             hudWindNone:     { bn: 'নেই', en: 'None' },
+            hudSafetyLabel:  { bn: 'অবস্থা: ', en: 'Status: ' },
+            hudSafetyDry:    { bn: '✅ নিরাপদ', en: '✅ Safe' },
+            hudSafetyWet:    { bn: '🚨 ভিজছে', en: '🚨 Wet' },
             vecAxisXPos:     { bn: '+x (ডানে)', en: '+x (right)' },
             vecAxisXNeg:     { bn: '-x (বামে)', en: '-x (left)' },
             vecAxisYPos:     { bn: '+y (নিচে)', en: '+y (down)' },
@@ -1766,18 +1771,6 @@
             return Math.atan2(-(v_w - v_m), v_r) * (180 / Math.PI);
         }
 
-        // ---- Small static icon (comparison rows) + animated gallery diagram ----
-        function onbStaticIcon(modeId) {
-            const u = '#E7B946', r = '#38BDF8';
-            const svgs = {
-                classic: `<path d="M14 18 A10 10 0 0 1 26 18" stroke="${u}" stroke-width="2.5" fill="none" stroke-linecap="round"/><line x1="20" y1="18" x2="20" y2="32" stroke="${u}" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="4" x2="8" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/><line x1="32" y1="4" x2="32" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/>`,
-                windWith: `<g transform="rotate(15 20 18)"><path d="M14 18 A10 10 0 0 1 26 18" stroke="${u}" stroke-width="2.5" fill="none" stroke-linecap="round"/></g><line x1="20" y1="18" x2="26" y2="32" stroke="${u}" stroke-width="2.5" stroke-linecap="round"/><line x1="8" y1="4" x2="14" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/><line x1="30" y1="4" x2="36" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/>`,
-                windAgainst: `<g transform="rotate(-15 20 18)"><path d="M14 18 A10 10 0 0 1 26 18" stroke="${u}" stroke-width="2.5" fill="none" stroke-linecap="round"/></g><line x1="20" y1="18" x2="14" y2="32" stroke="${u}" stroke-width="2.5" stroke-linecap="round"/><line x1="12" y1="4" x2="6" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/><line x1="34" y1="4" x2="28" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/>`,
-                upright: `<path d="M14 18 A10 10 0 0 1 26 18" stroke="${u}" stroke-width="2.5" fill="none" stroke-linecap="round"/><line x1="20" y1="18" x2="20" y2="32" stroke="${u}" stroke-width="2.5" stroke-linecap="round"/><line x1="10" y1="4" x2="16" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/><line x1="30" y1="4" x2="36" y2="14" stroke="${r}" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="34" r="2" fill="#274FE3"/>`
-            };
-            return `<svg viewBox="0 0 40 40" width="32" height="32" fill="none">${svgs[modeId] || ''}</svg>`;
-        }
-
         function onbAnimatedDiagram(modeId) {
             const rainColor = '#38BDF8', windColor = '#EA580C', umbColor = '#E7B946';
             const rainDrops = (paths) => paths.map((p, i) =>
@@ -1830,19 +1823,19 @@
                 id: 'classic',
                 preset: () => btnPresetClassic,
                 name: { bn: 'বাতাসহীন (স্বাভাবিক)', en: 'No Wind (Normal)' },
-                desc: { bn: 'বাতাস নেই, বৃষ্টি সোজা নিচে পড়ছে — ছাতা সামান্য সামনে হেলিয়ে ধরলেই হয়।', en: "No wind, rain falls straight down — tilt the umbrella slightly forward and you're dry." }
+                desc: { bn: 'বাতাস নেই, কিন্তু নিজে হাঁটার কারণে বৃষ্টি আপেক্ষিকভাবে সামনে থেকে আসে — তাই ছাতা প্রায় ৫৩° সামনে হেলিয়ে ধরতে হয়।', en: "No wind, but since you're walking, the rain appears to come from ahead — so the umbrella needs about a 53° forward tilt." }
             },
             {
                 id: 'windWith',
                 preset: () => btnPresetWindWith,
                 name: { bn: 'বাতাস ও লোক একই দিকে', en: 'Wind & Person Same Direction' },
-                desc: { bn: 'বাতাস লোকটির চলার দিকেই বইছে, তাই আপেক্ষিক বেগ কমে যায় — ছাতা প্রায় সোজা রাখলেই চলে।', en: 'Wind blows the same way the person walks, lowering the relative velocity — the umbrella stays close to vertical.' }
+                desc: { bn: 'বাতাস লোকটির চলার দিকেই বইছে, তাই অনুভূমিক আপেক্ষিক বেগ একটু কমে — কোণ (~৫০°) ক্লাসিকের চেয়ে সামান্য কম হয়, পুরোপুরি সোজা নয়।', en: "Wind blows the same way the person walks, slightly lowering the horizontal relative velocity — the angle (~50°) ends up a touch smaller than classic's, not fully upright." }
             },
             {
                 id: 'windAgainst',
                 preset: () => btnPresetWindAgainst,
                 name: { bn: 'বাতাস ও লোক বিপরীত দিকে', en: 'Wind & Person Opposite Direction' },
-                desc: { bn: 'বাতাস লোকটির উল্টো দিকে বইছে, তাই আপেক্ষিক বেগ বেড়ে যায় — ছাতা অনেক বেশি হেলিয়ে ধরতে হয়।', en: 'Wind blows against the person, raising the relative velocity — the umbrella needs a much steeper tilt.' }
+                desc: { bn: 'বাতাস লোকটির উল্টো দিকে বইছে, তাই অনুভূমিক আপেক্ষিক বেগ বাড়ে — কিন্তু এখানে বৃষ্টিও জোরে পড়ছে বলে কোণ (~৫১°) ক্লাসিকের কাছাকাছিই থেকে যায়।', en: "Wind blows against the person, raising the horizontal relative velocity — but since the rain is also falling faster here, the angle (~51°) stays close to classic's." }
             },
             {
                 id: 'upright',
@@ -1927,15 +1920,16 @@
                 apply: () => { sliderVw.value = clampNum(parseFloat(sliderVw.value) + 8, parseFloat(sliderVw.min), parseFloat(sliderVw.max)); },
                 explanation: { bn: 'সঠিক উত্তর: "আরও বেশি ভিজবে"। সোজা ছাতা প্রয়োজনীয় সামনের দিকের হেলানো কোণ দিতে পারে না, তাই বাতাস বা বেগ যত বাড়ে, ততই ফাঁক দিয়ে বৃষ্টি গায়ে লাগে।', en: 'Correct answer: "They get wetter." An upright umbrella can\'t provide the forward tilt that\'s needed, so as wind or speed grows, more rain slips in through the gap.' }
             }, {
-                q: { bn: 'অটো মোডে ছাতা কী করে?', en: 'What does the umbrella do in Auto mode?' },
+                q: { bn: 'বৃষ্টির দিক পরিবর্তিত হলে একজন ব্যক্তিকে ছাতার অবস্থান পরিবর্তন করতে হয় কেন?', en: "Why does a person need to change the umbrella's position when the rain's direction changes?" },
                 options: [
-                    { bn: 'প্রতি মুহূর্তে সঠিক আপেক্ষিক কোণে নিজে থেকে ঘুরে যায়', en: 'It rotates itself to the correct relative angle at every instant' },
-                    { bn: 'সবসময় উল্লম্ব থাকে', en: 'It always stays vertical' },
-                    { bn: 'এলোমেলোভাবে নড়ে', en: 'It moves randomly' }
+                    { bn: 'ছাতার ওজন পরিবর্তিত হয়', en: "The umbrella's weight changes" },
+                    { bn: 'বৃষ্টির আপেক্ষিক গতির দিক পরিবর্তিত হয়', en: "The direction of the rain's relative velocity changes" },
+                    { bn: 'বৃষ্টির ফোঁটার আকার পরিবর্তিত হয়', en: 'The size of the raindrops changes' },
+                    { bn: 'ব্যক্তির উচ্চতা পরিবর্তিত হয়', en: "The person's height changes" }
                 ],
-                correctIdx: 0,
+                correctIdx: 1,
                 apply: () => {},
-                explanation: { bn: 'সঠিক উত্তর: "নিজে থেকে সঠিক কোণে ঘুরে যায়"। অটো মোড প্রতি মুহূর্তে বর্তমান বেগ ও বাতাস থেকে প্রয়োজনীয় হেলানোর দিক (সামনে/পেছনে) ও কোণ হিসাব করে ছাতাকে সেভাবে ঘুরিয়ে দেয়।', en: 'Correct answer: "It rotates itself to the correct angle." Auto mode continuously computes the required tilt direction (forward/backward) and angle from the current speed and wind, and turns the umbrella to match.' }
+                explanation: { bn: 'সঠিক উত্তর: "বৃষ্টির আপেক্ষিক গতির দিক পরিবর্তিত হয়"। বৃষ্টি বা বাতাসের দিক বদলালে বৃষ্টির আপেক্ষিক (আপাত) বেগের দিকও বদলে যায়, তাই ছাতাও সেই নতুন দিক বরাবর ঘোরাতে হয় — ছাতার ওজন, ফোঁটার আকার বা ব্যক্তির উচ্চতার সাথে এর কোনো সম্পর্ক নেই।', en: 'Correct answer: "The direction of the rain\'s relative velocity changes." When the rain or wind direction changes, the direction of the rain\'s relative (apparent) velocity changes too, so the umbrella must turn to match — it has nothing to do with the umbrella\'s weight, droplet size, or the person\'s height.' }
             }]
         };
 
@@ -1951,7 +1945,6 @@
                 : dirIdx === 1
                     ? { bn: 'পেছনের দিকে (হাঁটার উল্টো দিকে)', en: 'backward (against the walking direction)' }
                     : { bn: 'সোজা উল্লম্বভাবে', en: 'straight up' };
-            const magIdx = Math.abs(req) < 20 ? 0 : (Math.abs(req) < 50 ? 1 : 2);
             return [
                 {
                     id: 'tilt-direction',
@@ -1968,20 +1961,27 @@
                 },
                 {
                     id: 'tilt-magnitude',
-                    q: { bn: 'ছাতার প্রয়োজনীয় কোণ (উল্লম্ব থেকে) আনুমানিক কত হতে পারে?', en: "About how large is the umbrella's required tilt from vertical?" },
+                    q: { bn: 'একজন ব্যক্তি বৃষ্টির মধ্যে স্থির দাঁড়িয়ে আছে এবং ছাতা সোজা করে ধরেছে। হঠাৎ বৃষ্টি তির্যকভাবে পড়তে শুরু করলে কী করা উচিত?', en: 'A person is standing still in the rain, holding the umbrella straight up. If the rain suddenly starts falling at a slant, what should be done?' },
                     options: [
-                        { bn: '০°–২০° (সামান্য হেলানো)', en: '0°–20° (slight tilt)' },
-                        { bn: '২০°–৫০° (মাঝারি হেলানো)', en: '20°–50° (moderate tilt)' },
-                        { bn: '৫০°–৮৯° (অনেক বেশি হেলানো)', en: '50°–89° (very steep tilt)' }
+                        { bn: 'ছাতা বন্ধ করে দিতে হবে', en: 'Close the umbrella' },
+                        { bn: 'ছাতার কোণ বৃষ্টির আপাত দিক অনুযায়ী পরিবর্তন করতে হবে', en: "Change the umbrella's angle to match the rain's apparent direction" },
+                        { bn: 'ছাতা আরও উপরে তুলতে হবে', en: 'Raise the umbrella higher' },
+                        { bn: 'ছাতার আকার পরিবর্তন করতে হবে', en: "Change the umbrella's size" }
                     ],
-                    correctIdx: magIdx,
-                    explanation: (() => {
-                        const bracket = ['০°–২০° (সামান্য হেলানো)', '২০°–৫০° (মাঝারি হেলানো)', '৫০°–৮৯° (অনেক বেশি হেলানো)'][magIdx];
-                        const bracketEn = ['0°–20° (slight tilt)', '20°–50° (moderate tilt)', '50°–89° (very steep tilt)'][magIdx];
-                        return { bn: `সঠিক উত্তর: "${bracket}"। প্রকৃত প্রয়োজনীয় কোণ হলো ${Math.abs(req).toFixed(0)}°, আর হেলানোর দিক ${L(dirLabel)}।`, en: `Correct answer: "${bracketEn}." The actual required angle is ${Math.abs(req).toFixed(0)}°, tilted ${L(dirLabel)}.` };
-                    })(),
+                    correctIdx: 1,
+                    // Forces the canvas to actually show the scene the question
+                    // describes — standing still, umbrella held straight, rain
+                    // slanted by wind — so the visualization matches the premise.
+                    setup: () => {
+                        sliderVm.value = 0;
+                        isAutoUmbrella = false;
+                        sliderUmb.value = 0;
+                        sliderVw.value = 8;
+                        updatePhysicsValues();
+                    },
+                    explanation: { bn: 'সঠিক উত্তর: "ছাতার কোণ বৃষ্টির আপাত দিক অনুযায়ী পরিবর্তন করতে হবে"। বৃষ্টি তির্যক হয়ে গেলে তার আপাত (আপেক্ষিক) দিক বদলে গেছে, তাই ছাতাও সেই নতুন দিক বরাবর ঘুরিয়ে ধরতে হবে — বন্ধ করা, উঁচু তোলা বা আকার পরিবর্তনের কোনোটিই কাজ করবে না।', en: "Correct answer: \"Change the umbrella's angle to match the rain's apparent direction.\" Once the rain turns slanted, its apparent (relative) direction has changed, so the umbrella must be turned to match — closing it, raising it, or changing its size won't help." },
                     onCheck: () => { isAutoUmbrella = true; onbSyncAutoUmbBtn(); updatePhysicsValues(); },
-                    realWorldUse: { bn: 'বাতাস বা বেগ যত বাড়ে, প্রয়োজনীয় কোণও তত বাড়ে — ঝড়ের সময় তাই ছাতা প্রায় শুইয়ে ধরতে হয়।', en: 'The stronger the wind or speed, the larger the required angle grows — which is why in a storm you almost have to hold the umbrella sideways.' }
+                    realWorldUse: { bn: 'বাস্তবে হঠাৎ ঝড়ো বাতাস উঠলে বৃষ্টি তির্যক হয়ে যায় — তখন স্থির দাঁড়িয়ে থাকা মানুষকেও ছাতা বাতাসের দিকে হেলিয়ে ধরতে হয়, নাহলে ভিজে যায়।', en: 'In real life, when a sudden gust makes rain slant, even a person standing still has to tilt the umbrella toward the wind, or they get wet.' }
                 }
             ];
         }
@@ -1989,7 +1989,7 @@
         const ONB_OUTCOME = {
             classic: { bn: 'তুমি শিখলে: বৃষ্টির মধ্যে হাঁটলে বৃষ্টির "আপেক্ষিক বেগ" পরিবর্তিত হয়ে যায় — তাই ছাতা সবসময় হাঁটার দিকে (সামনের দিকে) কিছুটা হেলিয়ে ধরতে হয়, শুধু উল্লম্বভাবে নয়।', en: 'You learned: walking through rain changes its "relative velocity" as you feel it — so the umbrella must always tilt somewhat toward the walking direction (forward), not just stay vertical.' },
             windWith: { bn: 'তুমি শিখলে: বাতাস তোমার চলার দিকে বইলে আপেক্ষিক বেগ কমে যায়, ফলে ছাতা সামনের দিকে আগের চেয়ে কম হেলালেই যথেষ্ট হয়।', en: 'You learned: when wind blows in your direction of motion, the relative velocity shrinks, so the umbrella needs less forward tilt than before.' },
-            windAgainst: { bn: 'তুমি শিখলে: বাতাস তোমার চলার উল্টো দিকে বইলে আপেক্ষিক বেগ বেড়ে যায়, ফলে ছাতা হাঁটার দিকে (সামনের দিকে) আরও বেশি হেলাতে হয়।', en: 'You learned: when wind blows against your direction of motion, the relative velocity grows, so the umbrella needs an even steeper tilt toward the walking direction (forward).' },
+            windAgainst: { bn: 'তুমি শিখলে: বাতাস তোমার চলার উল্টো দিকে বইলে অনুভূমিক আপেক্ষিক বেগ বেড়ে যায়, কিন্তু বৃষ্টির নিজের বেগও পরিস্থিতি অনুযায়ী কোণকে প্রভাবিত করে — তাই শুধু বাতাসের দিক দেখে কোণ অনুমান করা যায় না, প্রতিবার হিসাব করতে হয়।', en: "You learned: wind blowing against your motion raises the horizontal relative velocity, but the rain's own speed also shapes the final angle — so you can't guess the angle from wind direction alone, it has to be worked out each time." },
             upright: { bn: 'তুমি শিখলে: ছাতা সবসময় খাড়া/সোজা রাখলে তা প্রয়োজনীয় সামনের দিকের হেলানো কোণের সাথে মেলে না, তাই বাতাস বা বেগ বদলালেই মানুষটি সহজে ভিজে যায়।', en: 'You learned: keeping the umbrella permanently upright never matches the forward tilt that\'s actually needed, so any change in wind or speed easily gets the person wet.' }
         };
 
@@ -2011,6 +2011,7 @@
         const onbDesktopOverlay = document.getElementById('onb-desktop-overlay');
         const onbDesktopClose = document.getElementById('onb-desktop-close');
         const onbDesktopCanvasPane = document.getElementById('onb-desktop-canvas-pane');
+        const onbDesktopPanelPane = document.getElementById('onb-desktop-panel-pane');
         const onbDesktopPanel = document.getElementById('onb-desktop-panel');
         const onbMobileCard = document.getElementById('onb-mobile-card');
         const onbMobileHeader = document.getElementById('onb-mobile-header');
@@ -2064,6 +2065,14 @@
             controlPanelColumnEl.style.display = 'none';
             canvasCardTopbarEl.style.display = 'none';
             mobileViewSwitcherEl.style.display = 'none';
+            // The big red wet-alert banner is sized for the main simulation screen —
+            // in the boxed onboarding popup it overlapped the close button and the
+            // step panel, so it stays suppressed for the whole walkthrough (the
+            // underlying alertActive/wetFrames state keeps running either way).
+            // The small green "protected" badge is compact enough to keep showing,
+            // and without it a correctly-held umbrella gives no visual confirmation
+            // that the person is actually dry during onboarding.
+            redAlertPanel.style.display = 'none';
         }
 
         function onbRevealChrome() {
@@ -2073,6 +2082,7 @@
             controlPanelColumnEl.style.display = '';
             canvasCardTopbarEl.style.display = '';
             mobileViewSwitcherEl.style.display = '';
+            redAlertPanel.style.display = '';
         }
 
         // Moves the real canvas between the main grid and the desktop popup / keeps
@@ -2110,7 +2120,26 @@
                     onbMobilePill.classList.add('hidden');
                 }
             }
+            onbUpdateGalleryLayout();
             setTimeout(onbResizeCanvas, 60);
+        }
+
+        // For the Gallery step specifically, drop the canvas pane entirely so
+        // the 4 scenario cards can use the full popup width — every other
+        // step keeps the normal 60/40 canvas+panel split.
+        function onbUpdateGalleryLayout() {
+            const isGallery = !!(onbState && onbState.phase === 'gallery');
+            if (isGallery) {
+                onbDesktopCanvasPane.classList.add('hidden');
+                onbDesktopCanvasPane.classList.remove('w-[60%]');
+                onbDesktopPanelPane.classList.remove('w-[40%]');
+                onbDesktopPanelPane.classList.add('w-full');
+            } else {
+                onbDesktopCanvasPane.classList.remove('hidden');
+                onbDesktopCanvasPane.classList.add('w-[60%]');
+                onbDesktopPanelPane.classList.remove('w-full');
+                onbDesktopPanelPane.classList.add('w-[40%]');
+            }
         }
 
         function onbHandleBreakpointChange() {
@@ -2145,8 +2174,11 @@
         }
 
         function onbBuildGalleryHTML() {
+            const s = onbState;
+            const selectedId = s.gallerySelectedMode || s.identifyMode.id;
             const cards = ONB_MODES.map((m, i) => `
-                <div class="onb-gallery-card" style="animation-delay:${i * 90}ms">
+                <div class="onb-gallery-card${m.id === selectedId ? ' selected' : ''}" data-action="gallery-select" data-mode-id="${m.id}" role="button" tabindex="0" aria-pressed="${m.id === selectedId}" style="animation-delay:${i * 90}ms">
+                    ${m.id === selectedId ? `<div class="onb-gallery-selected-badge"><i data-lucide="check" class="w-3 h-3"></i>${L({ bn: 'নির্বাচিত', en: 'Selected' })}</div>` : ''}
                     <div class="onb-gallery-diagram">${onbAnimatedDiagram(m.id)}</div>
                     <div class="onb-gallery-name">${L(m.name)}</div>
                     <div class="onb-gallery-desc">${L(m.desc)}</div>
@@ -2154,43 +2186,46 @@
             return `
                 <div class="onb-badge" style="color:#1CAB55"><i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>${L({ bn: 'পরিচিতি', en: 'Introduction' })}</div>
                 <div class="onb-question">${L({ bn: 'চলো দেখে নিই — বৃষ্টি ও ছাতার ৪টি পরিস্থিতি:', en: "Let's take a look — 4 rain & umbrella scenarios:" })}</div>
-                <div class="onb-gallery-grid">${cards}</div>
+                <div class="onb-gallery-grid" id="onb-gallery-grid">${cards}</div>
                 <button class="onb-next-btn" data-action="gallery-continue">${L({ bn: 'বুঝেছি, শুরু করি →', en: "Got it, let's start →" })}</button>`;
         }
+
+        // A single generic comprehension question, the same for every mode
+        // (unlike the per-mode Predict/Task questions) — it checks whether the
+        // core concept landed, not whether they can name the current scenario.
+        const ONB_CONCEPT_QUESTION = {
+            q: { bn: 'বৃষ্টির মধ্যে একজন ব্যক্তি হাঁটার সময় ছাতা এমনভাবে ধরছে যাতে সে ভিজছে না। এর প্রধান কারণ কী?', en: "While walking in the rain, a person holds the umbrella so they don't get wet. What is the main reason for this?" },
+            options: [
+                { bn: 'বৃষ্টির ফোঁটা সবসময় উল্লম্বভাবে পড়ে', en: 'Raindrops always fall vertically' },
+                { bn: 'ছাতার অবস্থান বৃষ্টির আপাত (আপেক্ষিক) গতির সাথে সামঞ্জস্যপূর্ণ', en: "The umbrella's position matches the rain's apparent (relative) velocity" },
+                { bn: 'ছাতা বৃষ্টির বেগ কমিয়ে দেয়', en: "The umbrella slows down the rain's speed" },
+                { bn: 'ব্যক্তি বৃষ্টির গতিকে পরিবর্তন করে', en: "The person changes the rain's velocity" }
+            ],
+            correctIdx: 1,
+            explanation: {
+                bn: 'সঠিক উত্তর: "ছাতার অবস্থান বৃষ্টির আপাত গতির সাথে সামঞ্জস্যপূর্ণ"। ব্যক্তি নড়াচড়া করলে বৃষ্টির আপেক্ষিক (আপাত) বেগ পরিবর্তিত হয়ে যায় — ছাতা সেই আপেক্ষিক দিক বরাবর ধরলেই বৃষ্টি থেকে বাঁচা যায়; বৃষ্টির প্রকৃত বেগ বা দিক আসলে পরিবর্তন হয় না।',
+                en: "Correct answer: \"The umbrella's position matches the rain's apparent velocity.\" Moving changes the rain's relative (apparent) velocity — holding the umbrella along that relative direction is what keeps you dry; the rain's true velocity never actually changes."
+            }
+        };
 
         function onbBuildIdentifyHTML() {
             const s = onbState;
             const badge = `<div class="onb-step-badge-num"><i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>${onbStepLabelText()}</div>`;
+            const cq = ONB_CONCEPT_QUESTION;
             if (!s.identifyChecked) {
-                const options = ONB_MODES.map((m, i) => `
+                const options = cq.options.map((opt, i) => `
                     <button class="onb-option-btn${s.identifySelected === i ? ' selected' : ''}" data-action="identify-select" data-idx="${i}">
-                        <span class="onb-option-letter">${String.fromCharCode(65 + i)}</span>${L(m.name)}
+                        <span class="onb-option-letter">${String.fromCharCode(65 + i)}</span>${L(opt)}
                     </button>`).join('');
                 return `${badge}
-                    <div class="onb-question">${L({ bn: 'তুমি এখন ক্যানভাসে কোন পরিস্থিতিটি দেখছো?', en: 'Which scenario are you currently looking at in the canvas?' })}</div>
+                    <div class="onb-question">${L(cq.q)}</div>
                     <div class="onb-options">${options}</div>
                     <button class="onb-check-btn" data-action="identify-check" ${s.identifySelected === null ? 'disabled' : ''}>${L({ bn: 'চেক করো', en: 'Check' })}</button>`;
             }
-            const correct = s.identifySelected === s.identifyModeIdx;
-            const selectedMode = ONB_MODES[s.identifySelected];
-            const correctMode = ONB_MODES[s.identifyModeIdx];
-            const compareRow = correct ? '' : `
-                <div class="onb-compare-row">
-                    <div class="onb-compare-item wrong-item">
-                        <div class="onb-compare-label">${L({ bn: 'তুমি বলেছো', en: 'You said' })}</div>
-                        ${onbStaticIcon(selectedMode.id)}
-                        <div class="onb-compare-name">${L(selectedMode.name)}</div>
-                    </div>
-                    <div class="onb-compare-item correct-item">
-                        <div class="onb-compare-label">${L({ bn: 'আসলে এটা', en: "It's actually" })}</div>
-                        ${onbStaticIcon(correctMode.id)}
-                        <div class="onb-compare-name">${L(correctMode.name)}</div>
-                    </div>
-                </div>`;
+            const correct = s.identifySelected === cq.correctIdx;
             return `${badge}
                 <div class="onb-feedback ${correct ? 'correct' : 'wrong'}">${correct ? L({ bn: 'সঠিক!', en: 'Correct!' }) : L({ bn: 'ভুল উত্তর', en: 'Wrong answer' })}</div>
-                ${compareRow}
-                <div class="onb-explain">${L(correctMode.desc)}</div>
+                <div class="onb-explain">${L(cq.explanation)}</div>
                 <button class="onb-next-btn" data-action="go-predict">${L({ bn: 'পরবর্তী ধাপ →', en: 'Next step →' })}</button>`;
         }
 
@@ -2249,6 +2284,7 @@
 
         function onbRenderStep() {
             if (!onbState) return;
+            onbUpdateGalleryLayout();
             const html = onbBuildStepHTML();
             const desktop = onbIsDesktop();
             const target = desktop ? onbDesktopPanel : onbMobilePanel;
@@ -2272,7 +2308,17 @@
             const s = onbState;
             if (!s) return;
             if (action === 'gate-yes') { onbGoToIdentify(); return; }
-            if (action === 'gate-no') { s.phase = 'gallery'; onbRenderStep(); return; }
+            if (action === 'gate-no') { s.phase = 'gallery'; s.gallerySelectedMode = s.identifyMode.id; onbRenderStep(); return; }
+            if (action === 'gallery-select') {
+                const modeId = el.getAttribute('data-mode-id');
+                const mode = ONB_MODES.find(m => m.id === modeId);
+                if (mode) {
+                    s.gallerySelectedMode = modeId;
+                    mode.preset().click();
+                    onbRenderStep();
+                }
+                return;
+            }
             if (action === 'gallery-continue') { onbGoToIdentify(); return; }
             if (action === 'identify-select') { s.identifySelected = parseInt(el.getAttribute('data-idx'), 10); onbRenderStep(); return; }
             if (action === 'identify-check') { s.identifyChecked = true; onbRenderStep(); return; }
@@ -2320,6 +2366,11 @@
             s.taskIndex = index;
             s.taskSelected = null;
             s.taskChecked = false;
+            // A task can force the canvas into the exact scene its question
+            // describes (e.g. "person standing still, umbrella held straight")
+            // so what's visualized on the left matches what's being asked.
+            const task = s.tasks[index];
+            if (typeof task.setup === 'function') task.setup();
             onbRenderStep();
         }
 
@@ -2377,6 +2428,7 @@
                 phase: 'gate',
                 identifyModeIdx,
                 identifyMode,
+                gallerySelectedMode: null, // set to identifyMode.id on entering the gallery; updated on each click
                 identifySelected: null,
                 identifyChecked: false,
                 predictQ,
@@ -2428,6 +2480,7 @@
             }
             onbState = null;
             onbMobileMinimized = false;
+            onbUpdateGalleryLayout();
             setTimeout(onbResizeCanvas, 60);
         }
 
@@ -3065,8 +3118,15 @@
                     continue;
                 }
 
-                // Normal unblocked raindrop falling
-                line(drop.x, drop.y, nextX, drop.y + drop.len);
+                // Normal unblocked raindrop falling. The streak's shape must follow
+                // the same fall direction (horizontalShift, rainYSpeed) for every drop —
+                // previously the endpoint mixed a speedMod-scaled X with a fixed random
+                // drop.len for Y, so each raindrop ended up with a different visual tilt
+                // even though they're all falling through the same wind. Scaling the
+                // direction vector to drop.len keeps the length variety but fixes the slope.
+                let streakMag = Math.sqrt(horizontalShift * horizontalShift * 0.25 + rainYSpeed * rainYSpeed) || 1;
+                let streakScale = drop.len / streakMag;
+                line(drop.x, drop.y, drop.x + horizontalShift * 0.5 * streakScale, drop.y + rainYSpeed * streakScale);
 
                 // Update drop positions
                 drop.y = nextY;
@@ -3148,7 +3208,7 @@
             }
 
             // ── WET DETECTION & ALERTS ──────────────────────────────────────
-            detectRaindropCollision(rainYSpeed, relativeWindX);
+            detectRaindropCollision(rainYSpeed, relativeWindX, isAngleCorrect);
 
             // DRAW RUNNING CHARACTER, WATER DROPLETS ON BODY, AND UMBRELLA
             drawRunner(runnerPos, groundY);
@@ -3258,12 +3318,6 @@
             noFill();
             arc(-3, 5, 6, 6, 0, PI);
 
-            // Umbrella protector dry zone overlay (before drawing solid canopy)
-            noStroke();
-            fill(175, 195, 230, 25); // transparent sky blue protection cone
-
-            rect(-50, -65, 100, 180);
-
             // Umbrella Canopy (Dome) - using 10MS premium gold canopy
             stroke(231, 185, 70); // Gold border
             strokeWeight(2.5);
@@ -3292,15 +3346,16 @@
         // HUD indicators inside visualizer area
         function drawSimulationIndicators(simWidth) {
             let isMobile = window.innerWidth < 640;
-            
+
             let boxX = isMobile ? 6 : 8;
             let boxY = isMobile ? 6 : 8;
             let boxW = isMobile ? 106 : 150;
-            let boxH = isMobile ? 32 : 46;
+            let boxH = isMobile ? 42 : 58;
             let padX = isMobile ? 7 : 10;
             let titleY = isMobile ? 5 : 7;
             let line1Y = isMobile ? 14 : 19;
             let line2Y = isMobile ? 22 : 30;
+            let line3Y = isMobile ? 30 : 41;
             let tSizeTitle = isMobile ? 7 : 9;
             let tSizeSub = isMobile ? 6.2 : 8;
 
@@ -3339,6 +3394,21 @@
             } else {
                 fill(COLOR_VW_GLOW); // pink/fuchsia wind text
                 text(`${v_w > 0 ? '→' : '←'} ${Math.abs(v_w).toFixed(1)} m/s`, padX + textWidth(labelWind), line2Y);
+            }
+
+            // Persistent protection status — unlike the red alert banner (which only
+            // pops up briefly with hysteresis) or the green toast (which only flashes
+            // on a wet→dry transition), this line is always visible, so a correctly
+            // held umbrella has a permanent on-canvas confirmation it's working.
+            fill(148, 163, 184);
+            let labelSafety = t('hudSafetyLabel');
+            text(labelSafety, padX, line3Y);
+            if (alertActive) {
+                fill(248, 113, 113); // soft red
+                text(t('hudSafetyWet'), padX + textWidth(labelSafety), line3Y);
+            } else {
+                fill(52, 211, 153); // soft green
+                text(t('hudSafetyDry'), padX + textWidth(labelSafety), line3Y);
             }
         }
 
@@ -3745,15 +3815,26 @@
             return t < 0 && s >= 0 && s <= 1;
         }
 
-        function detectRaindropCollision(rainYSpeed, relativeWindX) {
+        function detectRaindropCollision(rainYSpeed, relativeWindX, isAngleCorrect) {
             if (v_r <= 0) {                 // No rain → safe
                 wetFrames = 0;
                 if (++dryFrames >= 4 && alertActive) hideRedAlert();
                 return;
             }
 
-            // Empirical Wet State: Person is wet if raindrops physically hit body in current frame OR water droplets exist on body
-            let isPersonWet = personWetThisFrame || bodyDroplets.length > 0;
+            // Wet state combines two signals: the empirical one (a raindrop actually
+            // hit the body, or droplets are still visibly clinging to it this frame)
+            // AND the deterministic one (isAngleCorrect, the same angleDiff <= 3.5°
+            // check the "প্রয়োজনীয়" hint uses). The empirical signal alone isn't
+            // reliable — with no wind, raindrops barely drift horizontally, so only
+            // the handful that happen to start inside the body's narrow x-column
+            // ever reach it, and an overhead umbrella intercepts even a WRONG angle's
+            // vertically-falling drops via the canopy-splash check (which tests the
+            // raindrop's own near-vertical animated path, not the true relative
+            // direction) before they get anywhere near the body. Without this
+            // angle-based fallback, holding a badly wrong angle could read as "dry"
+            // indefinitely whenever wind happens to be low.
+            let isPersonWet = personWetThisFrame || bodyDroplets.length > 0 || !isAngleCorrect;
 
             if (isPersonWet) {
                 dryFrames = 0;
